@@ -1,0 +1,24 @@
+From d43d15441545b4150543c0ec3d7f96eedc9f7d05 Mon Sep 17 00:00:00 2001
+From: Ivan Mateshuk <7620536@mail.ru>
+Date: Tue, 19 Oct 2021 14:11:49 +0300
+Subject: [PATCH] firstFile.txt was updated by git_1 #1
+
+---
+ firstFile.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/firstFile.txt b/firstFile.txt
+index 2175ccc..2df952e 100644
+--- a/firstFile.txt
++++ b/firstFile.txt
+@@ -1,5 +1,5 @@
+-01 in firstFile
+-02 in firstFile
++1 in firstFile
++2 in firstFile
+ 03 in firstFile
+ 04 in firstFile
+ 05 in firstFile
+-- 
+2.32.0.windows.2
+
