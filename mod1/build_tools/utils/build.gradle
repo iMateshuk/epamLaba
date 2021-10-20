@@ -56,6 +56,14 @@ ext.sharedManifest = manifest {
     )
 }
 
+jar {
+    manifest = project.manifest {
+        from sharedManifest
+    }
+
+    from configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+}
+
 task fatJar(type: Jar) {
 
     manifest = project.manifest {
