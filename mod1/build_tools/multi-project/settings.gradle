@@ -5,7 +5,7 @@ include 'core'
 dependencyResolutionManagement {
     repositories {
         flatDir {
-            dirs 'e:\\.Projects\\.epamLaba\\module1\\build_tools\\multi-project\\libs\\'
+            dirs './libs/'
         }
     }
 }
