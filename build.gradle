@@ -1,79 +1,52 @@
-import java.text.SimpleDateFormat
-
 plugins {
     id 'java'
+    /*id 'war'*/
+    /*id "base"*/
+    /*id "io.spring.dependency-management" version "1.0.6.RELEASE"*/
 }
 
-group 'by.epam.esm'
-version '1.0-SNAPSHOT'
+allprojects {
+    group = 'com.epam.esm'
+    version = '1.0-SNAPSHOT'
 
-repositories {
+    apply plugin: 'java'
 
-    mavenCentral()
-}
+    sourceCompatibility = '11'
+    targetCompatibility = '11'
 
-dependencies {
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    ext {
+        junitVersion = '5.8.1'
+        springFrameworkVersion = '5.3.11'
+    }
 
-}
+    repositories {
+        mavenCentral()
+    }
 
-test {
+    test {
+        useJUnitPlatform()
+    }
 
-    useJUnitPlatform()
+    dependencies {
+        compileOnly('javax.servlet:javax.servlet-api:4.0.1')
 
-    dependsOn 'cleanTest'
+        testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 
-    testLogging {
-
-        events "passed", "skipped", "failed"
+        implementation("org.springframework:spring-core:${springFrameworkVersion}")
+        implementation("org.springframework:spring-context:${springFrameworkVersion}")
+        implementation("org.springframework:spring-web:${springFrameworkVersion}")
+        implementation("org.springframework:spring-webmvc:${springFrameworkVersion}")
+        implementation("org.springframework:spring-tx:${springFrameworkVersion}")
+        implementation("org.springframework:spring-orm:${springFrameworkVersion}")
     }
 }
 
-java {
+subprojects {
 
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    task allDeps(type: DependencyReportTask) {}
 }
-
-ext.sharedManifest = manifest {
-
-    attributes(
-            'Built-By'       : System.properties['user.name'],
-            'Build-Timestamp': new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),
-            'Created-By'     : "Gradle ${gradle.gradleVersion}",
-            'Build-Jdk'      : "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
-            'Build-OS'       : "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}",
-            'Specification-Title' 	: "Java String Utility Classes",
-            'Specification-Version'	: "1",
-            'Specification-Vendor'	: "IM, Inc.",
-            'Implementation-Title'	: project.name,
-            'Implementation-Version': version,
-            'Implementation-Vendor'	: "IM, Inc."
-    )
-}
-
-jar {
-    manifest = project.manifest {
-        from sharedManifest
-    }
-
-    from configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-}
-
-task fatJar(type: Jar) {
-
-    manifest = project.manifest {
-        from sharedManifest
-    }
-
-    archivesBaseName = project.name
-    
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-    with jar
-}
-
-
