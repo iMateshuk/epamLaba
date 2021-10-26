@@ -1,3 +1,10 @@
 plugins {
+
     id 'war'
+}
+
+dependencies{
+
+    implementation project(':service')
+    implementation project(':service-impl')
 }

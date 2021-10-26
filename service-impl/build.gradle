@@ -1,3 +1,9 @@
 plugins {
     id 'java'
 }
+
+dependencies{
+    implementation project(':service')
+    implementation project(':dao')
+    implementation project(':dao-impl')
+}
