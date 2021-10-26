@@ -1,4 +1,4 @@
-package com.epam.esm.dao;
+package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.DAO;
 import org.springframework.stereotype.Repository;

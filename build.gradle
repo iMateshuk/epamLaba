@@ -3,6 +3,12 @@ plugins {
     id 'java'
 }
 
+ext {
+
+    junitVersion = '5.8.1'
+    springFrameworkVersion = '5.3.11'
+}
+
 allprojects {
 
     group = 'com.epam.esm'
@@ -15,11 +21,6 @@ allprojects {
 
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
-    }
-
-    ext {
-        junitVersion = '5.8.1'
-        springFrameworkVersion = '5.3.11'
     }
 
     repositories {
