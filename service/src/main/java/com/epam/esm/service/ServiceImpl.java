@@ -1,5 +1,6 @@
-package com.epam.esm;
+package com.epam.esm.service;
 
+import com.epam.esm.dao.DAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

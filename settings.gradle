@@ -2,6 +2,3 @@ rootProject.name = 'gift-certificates'
 include 'controller'
 include 'service'
 include 'dao'
-include 'service-impl'
-include 'dao-impl'
-

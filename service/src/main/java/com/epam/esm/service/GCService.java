@@ -1,4 +1,4 @@
-package com.epam.esm;
+package com.epam.esm.service;
 
 public interface GCService {
 
