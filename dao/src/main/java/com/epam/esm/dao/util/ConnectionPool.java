@@ -27,10 +27,10 @@ public class ConnectionPool {
         }
     }
 
+    private ConnectionPool(){}
+
     public static Connection getConnection() throws SQLException {
 
         return cpds.getConnection();
     }
-
-    private ConnectionPool(){}
 }

@@ -2,10 +2,15 @@ package com.epam.esm.dao.util;
 
 public enum QuerySQL {
 
-    SQL_COLUM_LABEL_ID("id"),
-    SQL_COLUM_LABEL_TITLE("title"),
-    SQL_COLUM_LABEL_U_ID("u_id"),
-    SQL_COLUM_LABEL_COUNT("count"),
+    SQL_GC_COLUMN_ID("id"),
+    SQL_GC_COLUMN_NAME("name"),
+    SQL_GC_COLUMN_DESC("description"),
+    SQL_GC_COLUMN_PRICE("price"),
+    SQL_GC_COLUMN_DUR("duration"),
+    SQL_GC_COLUMN_CD("create_date"),
+    SQL_GC_COLUMN_LUD("last_update_date"),
+
+    SQL_GC_SELECT_ALL("SELECT * FROM gc.gift_certificate"),
 
     ;
 
