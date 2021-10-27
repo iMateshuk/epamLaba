@@ -6,5 +6,8 @@ dependencies {
     // https://mvnrepository.com/artifact/com.mchange/c3p0
     implementation group: 'com.mchange', name: 'c3p0', version: '0.9.5.5'
 
+    // https://mvnrepository.com/artifact/org.springframework/spring-jdbc
+    implementation group: 'org.springframework', name: 'spring-jdbc', version: '${springFrameworkVersion}'
+
     implementation project(':bean')
 }

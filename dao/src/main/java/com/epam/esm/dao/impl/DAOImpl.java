@@ -1,17 +1,20 @@
 package com.epam.esm.dao.impl;
 
+import com.epam.esm.bean.GiftCert;
 import com.epam.esm.dao.DAO;
-import com.epam.esm.dao.util.ConnectionPool;
+import com.epam.esm.dao.jdbc.GiftCertificationMapper;
 import com.epam.esm.dao.util.QuerySQL;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
 
 @Repository
 public class DAOImpl implements DAO {
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
     @Override
     public String list() {
@@ -20,18 +23,12 @@ public class DAOImpl implements DAO {
 
         String answer = "in DAO";
 
-        try (Connection con = ConnectionPool.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+        List<GiftCert> giftCerts = jdbcTemplate.query(sql, new GiftCertificationMapper());
 
-            ResultSet rs = ps.executeQuery();
+        for (GiftCert gc: giftCerts) {
 
-            if (rs.next()) {
-                answer = rs.getString(QuerySQL.SQL_GC_COLUMN_NAME.getSQL()) + " : " + rs.getString(QuerySQL.SQL_GC_COLUMN_DESC.getSQL());
-                System.out.println(answer);
-            }
+            answer += gc.getName() + " : " + gc.getDescription();
 
-        } catch (SQLException e) {
-
-            //throw new DAOException("Can't (sql) :: gclist", e);
         }
 
         return answer;
