@@ -1,6 +1,7 @@
 package com.epam.esm.dao.impl;
 
-import com.epam.esm.bean.GiftCert;
+import com.epam.esm.dao.entity.GCAndTagName;
+import com.epam.esm.dao.entity.GiftCert;
 import com.epam.esm.dao.DAO;
 import com.epam.esm.dao.jdbc.GiftCertificationMapper;
 import com.epam.esm.dao.util.QuerySQL;
@@ -21,16 +22,36 @@ public class DAOImpl implements DAO {
 
         final String sql = QuerySQL.SQL_GC_SELECT_ALL.getSQL();
 
-        String answer = "in DAO";
+        String answer = "in DAO: ";
 
         List<GiftCert> giftCerts = jdbcTemplate.query(sql, new GiftCertificationMapper());
 
         for (GiftCert gc: giftCerts) {
 
-            answer += gc.getName() + " : " + gc.getDescription();
+            answer += gc.getName() + " : " + gc.getDescription() + "; ";
 
         }
 
         return answer;
+    }
+
+    @Override
+    public List<GiftCert> listGift() {
+
+        final String sql = QuerySQL.SQL_GC_SELECT_ALL.getSQL();
+
+        List<GiftCert> giftCerts = jdbcTemplate.query(sql, new GiftCertificationMapper());
+
+        return giftCerts;
+    }
+
+    @Override
+    public List<GCAndTagName> getGiftCert(int id) {
+
+        final String sql = QuerySQL.SQL_GC_SELECT_W_ID.getSQL();
+
+       List<GCAndTagName> gcAndTagNames = jdbcTemplate.query(sql, new GiftCertificationMapper(), id);
+
+        return gcAndTagNames;
     }
 }

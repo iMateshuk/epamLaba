@@ -12,6 +12,16 @@ public enum QuerySQL {
 
     SQL_GC_SELECT_ALL("SELECT * FROM gc.gift_certificate"),
 
+    SQL_GC_SELECT_W_ID("SELECT gift_certificate.*, tag.name FROM gc.tag " +
+            "left join gc.gc_tag on tag.id = tag_id " +
+            "left join gc.gift_certificate on gc_id = gift_certificate.id " +
+            "where tag.id = ?"),
+
+    SQL_GC_SELECT_W_NAME("SELECT gift_certificate.*, tag.name FROM gc.tag " +
+            "left join  gc.gc_tag on tag.id = tag_id " +
+            "left join gc.gift_certificate on gc_id = gift_certificate.id " +
+            "where tag.name = ?"),
+
     ;
 
     private String string;

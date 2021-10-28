@@ -9,5 +9,4 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework/spring-jdbc
     implementation group: 'org.springframework', name: 'spring-jdbc', version: '${springFrameworkVersion}'
 
-    implementation project(':bean')
 }

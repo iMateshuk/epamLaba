@@ -1,18 +1,17 @@
 package com.epam.esm.dao.jdbc;
 
 import com.epam.esm.dao.entity.GCAndTagName;
-import com.epam.esm.dao.entity.GiftCert;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class GiftCertificationMapper implements RowMapper {
+public class GCAndTagNameMapper implements RowMapper {
 
     @Override
-    public GiftCert mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public GCAndTagName mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-        GiftCert gc = new GiftCert();
+        GCAndTagName gc = new GCAndTagName();
 
         gc.setId(rs.getInt("id"));
         gc.setName(rs.getString("name"));
@@ -21,6 +20,8 @@ public class GiftCertificationMapper implements RowMapper {
         gc.setDuration(rs.getInt("duration"));
         gc.setCreateDate(rs.getDate("create_date"));
         gc.setLastUpdateDate(rs.getDate("last_update_date"));
+
+        gc.setTagName(rs.getString("tag_name"));
 
         return gc;
     }

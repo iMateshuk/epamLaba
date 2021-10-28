@@ -1,5 +1,7 @@
 package com.epam.esm.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -17,6 +19,12 @@ public class DispatcherConfig implements WebMvcConfigurer {
 
     private static final String RESOURCES_HANDLERS = "/resources/**";
     private static final String RESOURCES_LOCATION = "/resources/";
+
+    @Bean
+    public ObjectMapper objectMapper(){
+
+        return new ObjectMapper();
+    }
 
     @Override
     public void configureViewResolvers(ViewResolverRegistry viewResolver) {
