@@ -1,6 +1,7 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.dao.DAO;
+import com.epam.esm.dao.GiftCertificateDAO;
+import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.service.Service;
@@ -14,29 +15,20 @@ import java.util.List;
 public class ServiceImpl implements Service {
 
     @Autowired
-    DAO dao;
+    GiftCertificateDAO giftCertificateDAO;
 
-    @Override
-    public String list() {
-
-        return dao.list();
-    }
-
-    @Override
-    public List<GiftCertificateDTO> listGift() {
-
-        return ConvertDTO.getGiftCertDTO(dao.getListGiftCertificate());
-    }
+    @Autowired
+    TagDAO tagDAO;
 
     public List<GiftCertificateDTO> getGiftCertificate(String tagName) {
 
-        List<GiftCertificateEntity> listGiftCertificates = dao.getListGiftCertificate(tagName);
+        List<GiftCertificateEntity> listGiftCertificates = giftCertificateDAO.getListGiftCertificate(tagName);
 
         List<GiftCertificateDTO> gcDTOs = ConvertDTO.getGiftCertDTO(listGiftCertificates);
 
         for (GiftCertificateDTO gcDTO : gcDTOs) {
 
-            List<TagEntity> tags = dao.getListTag(gcDTO.getId());
+            List<TagEntity> tags = tagDAO.getListTag(gcDTO.getId());
 
             for (TagEntity tag : tags) {
 

@@ -1,6 +1,6 @@
 package com.epam.esm.dao.util;
 
-public enum QuerySQL {
+public enum TagSQL {
 
     SQL_GC_COLUMN_ID("id"),
     SQL_GC_COLUMN_NAME("name"),
@@ -10,7 +10,6 @@ public enum QuerySQL {
     SQL_GC_COLUMN_CD("create_date"),
     SQL_GC_COLUMN_LUD("last_update_date"),
 
-    SQL_GC_SELECT_ALL("SELECT * FROM gc.gift_certificate"),
     SQL_TAG_SELECT_ALL("SELECT * FROM gc.tag"),
 
     SQL_TAG_SELECT_ID_A_NAME_W_NAME("SELECT id, name FROM gc.tag WHERE name = ?"),
@@ -20,16 +19,11 @@ public enum QuerySQL {
             "left join gc.tag on gc_tag.tag_id = tag.id " +
             "where gift_certificate.id = ?"),
 
-    SQL_GC_SELECT_W_TAG_NAME("SELECT gift_certificate.* FROM gc.tag " +
-            "left join  gc.gc_tag on tag.id = gc_tag.tag_id " +
-            "left join gc.gift_certificate on gc_tag.gc_id = gift_certificate.id " +
-            "where tag.name = ?"),
-
     ;
 
     private String string;
 
-    QuerySQL(String string) {
+    TagSQL(String string) {
         this.string = string;
     }
 

@@ -16,19 +16,6 @@ public class Controller {
     @Autowired
     private Service gcService;
 
-    @RequestMapping("/list")
-    public String list() {
-
-        return gcService.list();
-    }
-
-    @GetMapping("/load")
-    @ResponseBody
-    public String loadGC() throws JsonProcessingException {
-
-        return objectMapper.writeValueAsString(gcService.listGift());
-    }
-
     @GetMapping("/opt-by-tag-name")
     @ResponseBody
     public String optByTagName(@RequestParam("tagName") String theTagName) throws JsonProcessingException {

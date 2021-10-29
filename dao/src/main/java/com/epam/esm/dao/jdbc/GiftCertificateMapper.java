@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class GiftCertificateMapper implements RowMapper {
+public class GiftCertificateMapper implements RowMapper<GiftCertificateEntity> {
 
     @Override
     public GiftCertificateEntity mapRow(ResultSet rs, int rowNum) throws SQLException {

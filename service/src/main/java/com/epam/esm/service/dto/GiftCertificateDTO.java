@@ -1,6 +1,7 @@
 package com.epam.esm.service.dto;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,6 +13,7 @@ public class GiftCertificateDTO {
     private String description;
     private float price;
     private int duration;
+    private Date lastUpdateDate;
     private List<String> tagNames = new ArrayList<>();
 
     public GiftCertificateDTO() {
@@ -57,6 +59,14 @@ public class GiftCertificateDTO {
         this.duration = duration;
     }
 
+    public Date getLastUpdateDate() {
+        return lastUpdateDate;
+    }
+
+    public void setLastUpdateDate(Date lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
+    }
+
     public List<String> getTagNames() {
         return tagNames;
     }
@@ -67,32 +77,37 @@ public class GiftCertificateDTO {
 
     @Override
     public boolean equals(Object o) {
+
         if (this == o) {
             return true;
         }
+
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
 
         GiftCertificateDTO that = (GiftCertificateDTO) o;
 
-        return id == that.id && Float.compare(that.price, price) == 0 && duration == that.duration && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(tagNames, that.tagNames);
+        return id == that.id && Float.compare(that.price, price) == 0 && duration == that.duration && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(lastUpdateDate, that.lastUpdateDate) && Objects.equals(tagNames, that.tagNames);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, price, duration, tagNames);
+
+        return Objects.hash(id, name, description, price, duration, lastUpdateDate, tagNames);
     }
 
     @Override
     public String toString() {
+
         return getClass().getName() + "{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", duration=" + duration +
-                ", tagsNames=" + tagNames +
+                ", lastUpdateDate=" + lastUpdateDate +
+                ", tagNames=" + tagNames +
                 '}';
     }
 }

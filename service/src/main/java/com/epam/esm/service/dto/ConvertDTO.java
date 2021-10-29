@@ -22,6 +22,7 @@ public class ConvertDTO {
         gcDTO.setDescription(gc.getDescription());
         gcDTO.setDuration(gc.getDuration());
         gcDTO.setPrice(gc.getPrice());
+        gcDTO.setLastUpdateDate(gc.getLastUpdateDate());
 
         return gcDTO;
     }
