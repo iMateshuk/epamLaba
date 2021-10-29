@@ -1,21 +1,21 @@
 package com.epam.esm.service.dto;
 
-import com.epam.esm.dao.entity.GCAndTagName;
-import com.epam.esm.dao.entity.GiftCert;
+import com.epam.esm.dao.entity.GiftCertificateEntity;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ConvertDTO {
 
-    public static List<GiftCertDTO> getGiftCertDTO(List<GiftCert> listGiftCert) {
+    public static List<GiftCertificateDTO> getGiftCertDTO(List<GiftCertificateEntity> listGiftCert) {
+
         return listGiftCert.stream().map(ConvertDTO::convertToGiftCertDTO)
                 .collect(Collectors.toList());
     }
 
-    private static GiftCertDTO convertToGiftCertDTO(GiftCert gc) {
+    private static GiftCertificateDTO convertToGiftCertDTO(GiftCertificateEntity gc) {
 
-        GiftCertDTO gcDTO = new GiftCertDTO();
+        GiftCertificateDTO gcDTO = new GiftCertificateDTO();
 
         gcDTO.setId(gc.getId());
         gcDTO.setName(gc.getName());

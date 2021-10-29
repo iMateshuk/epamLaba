@@ -1,7 +1,7 @@
 package com.epam.esm.dao;
 
-import com.epam.esm.dao.entity.GCAndTagName;
-import com.epam.esm.dao.entity.GiftCert;
+import com.epam.esm.dao.entity.GiftCertificateEntity;
+import com.epam.esm.dao.entity.TagEntity;
 
 import java.util.List;
 
@@ -9,7 +9,13 @@ public interface DAO {
 
     public String list();
 
-    public List<GiftCert> listGift();
+    public List<GiftCertificateEntity> getListGiftCertificate();
 
-    public List<GCAndTagName> getGiftCert(int id);
+    public List<GiftCertificateEntity> getListGiftCertificate(String tagName);
+
+    public TagEntity getTagEntityByName(String tagName);
+
+    public List<TagEntity> getListTag();
+
+    public List<TagEntity> getListTag(int id);
 }

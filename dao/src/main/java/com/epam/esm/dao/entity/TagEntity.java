@@ -3,12 +3,12 @@ package com.epam.esm.dao.entity;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Tag implements Serializable {
+public class TagEntity implements Serializable {
 
     private int id;
     private String name;
 
-    public Tag() {
+    public TagEntity() {
     }
 
     public int getId() {
@@ -44,7 +44,7 @@ public class Tag implements Serializable {
             return false;
         }
 
-        Tag tag = (Tag) o;
+        TagEntity tag = (TagEntity) o;
 
         return id == tag.id && Objects.equals(name, tag.name);
     }

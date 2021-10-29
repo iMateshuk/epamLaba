@@ -1,16 +1,17 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.DAO;
-import com.epam.esm.service.GCService;
+import com.epam.esm.dao.entity.GiftCertificateEntity;
+import com.epam.esm.dao.entity.TagEntity;
+import com.epam.esm.service.Service;
 import com.epam.esm.service.dto.ConvertDTO;
-import com.epam.esm.service.dto.GiftCertDTO;
+import com.epam.esm.service.dto.GiftCertificateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class ServiceImpl implements GCService {
+@org.springframework.stereotype.Service
+public class ServiceImpl implements Service {
 
     @Autowired
     DAO dao;
@@ -22,15 +23,28 @@ public class ServiceImpl implements GCService {
     }
 
     @Override
-    public List<GiftCertDTO> listGift() {
+    public List<GiftCertificateDTO> listGift() {
 
-        return ConvertDTO.getGiftCertDTO(dao.listGift());
+        return ConvertDTO.getGiftCertDTO(dao.getListGiftCertificate());
     }
 
-    @Override
-    public GiftCertDTO getGiftCert(int id) {
+    public List<GiftCertificateDTO> getGiftCertificate(String tagName) {
 
-        /*return ConvertDTO.getGiftCertDTO(dao.getGiftCert(id));*/
-        return null;
+        List<GiftCertificateEntity> listGiftCertificates = dao.getListGiftCertificate(tagName);
+
+        List<GiftCertificateDTO> gcDTOs = ConvertDTO.getGiftCertDTO(listGiftCertificates);
+
+        for (GiftCertificateDTO gcDTO : gcDTOs) {
+
+            List<TagEntity> tags = dao.getListTag(gcDTO.getId());
+
+            for (TagEntity tag : tags) {
+
+                gcDTO.getTagNames().add(tag.getName());
+
+            }
+        }
+
+        return gcDTOs;
     }
 }

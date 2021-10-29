@@ -1,6 +1,6 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.service.GCService;
+import com.epam.esm.service.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ public class Controller {
     ObjectMapper objectMapper;
 
     @Autowired
-    private GCService gcService;
+    private Service gcService;
 
     @RequestMapping("/list")
     public String list() {
@@ -29,11 +29,11 @@ public class Controller {
         return objectMapper.writeValueAsString(gcService.listGift());
     }
 
-    @GetMapping("/getGiftByTag")
+    @GetMapping("/opt-by-tag-name")
     @ResponseBody
-    public String getGC(@RequestParam("theID") int theID) throws JsonProcessingException {
+    public String optByTagName(@RequestParam("tagName") String theTagName) throws JsonProcessingException {
 
-        return objectMapper.writeValueAsString(gcService.getGiftCert(theID));
+        return objectMapper.writeValueAsString(gcService.getGiftCertificate(theTagName));
     }
 
 }
