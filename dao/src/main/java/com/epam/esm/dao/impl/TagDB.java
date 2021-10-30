@@ -2,7 +2,6 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.TagEntity;
-import com.epam.esm.dao.jdbc.TagExtractor;
 import com.epam.esm.dao.jdbc.TagMapper;
 import com.epam.esm.dao.util.TagSQL;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +17,26 @@ public class TagDB implements TagDAO {
     JdbcTemplate jdbcTemplate;
 
     @Override
-    public TagEntity getTagEntityByName(String tagName) {
+    public void createTag(String name) {
 
-        final String sql = TagSQL.SQL_TAG_SELECT_ID_A_NAME_W_NAME.getSQL();
-
-        return jdbcTemplate.query(sql, new TagExtractor(), tagName);
+        jdbcTemplate.update(TagSQL.INSERT_TAG.getSQL(), name);
     }
 
     @Override
-    public List<TagEntity> getListTag(int id) {
+    public List<TagEntity> searchTags() {
 
-        final String sql = TagSQL.SQL_TAG_SELECT_W_GC_ID.getSQL();
+        return jdbcTemplate.query(TagSQL.SELECT_ALL.getSQL(), new TagMapper());
+    }
 
-        return jdbcTemplate.query(sql, new TagMapper(), id);
+    @Override
+    public TagEntity searchTag(int id) {
+
+        return jdbcTemplate.queryForObject(TagSQL.SELECT_ALL_W_ID.getSQL(), new TagMapper(), id);
+    }
+
+    @Override
+    public void deleteTag(int id) {
+
+        jdbcTemplate.update(TagSQL.DEL_DB_CASCADE_W_ID.getSQL(), id);
     }
 }

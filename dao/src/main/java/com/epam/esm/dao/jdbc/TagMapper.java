@@ -11,7 +11,12 @@ public class TagMapper implements RowMapper<TagEntity> {
     @Override
     public TagEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-        return CreateEntity.createTagEntity(rs);
+        TagEntity tag = new TagEntity();
+
+        tag.setId(rs.getInt("id"));
+        tag.setName(rs.getString("name"));
+
+        return tag;
     }
 
 }

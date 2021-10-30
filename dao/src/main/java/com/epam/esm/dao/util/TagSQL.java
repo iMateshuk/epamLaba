@@ -2,22 +2,14 @@ package com.epam.esm.dao.util;
 
 public enum TagSQL {
 
-    SQL_GC_COLUMN_ID("id"),
-    SQL_GC_COLUMN_NAME("name"),
-    SQL_GC_COLUMN_DESC("description"),
-    SQL_GC_COLUMN_PRICE("price"),
-    SQL_GC_COLUMN_DUR("duration"),
-    SQL_GC_COLUMN_CD("create_date"),
-    SQL_GC_COLUMN_LUD("last_update_date"),
+    SELECT_ALL("SELECT * FROM gc.tag"),
+    SELECT_ALL_W_ID("SELECT * FROM gc.tag WHERE id = ?"),
 
-    SQL_TAG_SELECT_ALL("SELECT * FROM gc.tag"),
+    DEL_DB_CASCADE_W_ID("DELETE FROM gc.tag WHERE id = ?"),
+    DEL_NO_CASCADE_W_ID("DELETE gc.tag, gc.gc_tag FROM gc.tag INNER JOIN gc.gc_tag ON tag.id = gc_tag.tag_id WHERE tag.id = ?"),
 
-    SQL_TAG_SELECT_ID_A_NAME_W_NAME("SELECT id, name FROM gc.tag WHERE name = ?"),
+    INSERT_TAG("INSERT INTO gc.tag(name) VALUES(?)"),
 
-    SQL_TAG_SELECT_W_GC_ID("SELECT tag.id, tag.name FROM gc.gift_certificate " +
-            "left join gc.gc_tag on gift_certificate.id = gc_tag.gc_id " +
-            "left join gc.tag on gc_tag.tag_id = tag.id " +
-            "where gift_certificate.id = ?"),
 
     ;
 
@@ -30,5 +22,4 @@ public enum TagSQL {
     public String getSQL() {
         return string;
     }
-
 }
