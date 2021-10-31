@@ -47,8 +47,6 @@ public class GiftCertDB implements GiftCertDAO {
     @Override
     public void updateGiftCert(GiftCertEntity giftCertEntity) {
 
-        System.out.println(giftCertEntity.toString());
-
         List<Object> params = prepareObjects(giftCertEntity);
 
         params.add(Timestamp.from(Instant.now()));
