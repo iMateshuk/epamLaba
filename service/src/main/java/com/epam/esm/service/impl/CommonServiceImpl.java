@@ -1,34 +1,40 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.CommonDAO;
-import com.epam.esm.dao.entity.GiftCertEntity;
+import com.epam.esm.dao.GiftCertificateDAO;
+import com.epam.esm.dao.TagDAO;
+import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.entity.TagEntity;
-import com.epam.esm.service.ServiceCommon;
-import com.epam.esm.service.dto.ConvertEntityToGiftCertDTO;
-import com.epam.esm.service.dto.GiftCertDTO;
+import com.epam.esm.service.CommonService;
+import com.epam.esm.service.dto.GiftCertificateConverter;
+import com.epam.esm.service.dto.GiftCertificateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-public class CommonServiceImpl implements ServiceCommon {
+public class CommonServiceImpl implements CommonService {
 
     @Autowired
     CommonDAO commonDAO;
 
     @Autowired
-    CommonDAO tagDAO;
+    TagDAO tagDAO;
 
-    public List<GiftCertDTO> getGiftCertificate(String tagName) {
+    @Autowired
+    GiftCertificateDAO gcDAO;
 
-        List<GiftCertEntity> listGiftCertificates = commonDAO.getListGiftCertificate(tagName);
+    public List<GiftCertificateDTO> getGiftCertificate(String tagName) {
 
-        List<GiftCertDTO> gcDTOs = ConvertEntityToGiftCertDTO.getGiftCertDTO(listGiftCertificates);
+        List<GiftCertificateEntity> listGiftCertificates = commonDAO.getListGiftCertificate(tagName);
 
-        for (GiftCertDTO gcDTO : gcDTOs) {
+        List<GiftCertificateDTO> gcDTOs = GiftCertificateConverter.toDto(listGiftCertificates);
 
-            List<TagEntity> tags = tagDAO.getListTag(gcDTO.getId());
+        for (GiftCertificateDTO gcDTO : gcDTOs) {
+
+            List<TagEntity> tags = commonDAO.getListTag(gcDTO.getId());
 
             for (TagEntity tag : tags) {
 
@@ -38,5 +44,21 @@ public class CommonServiceImpl implements ServiceCommon {
         }
 
         return gcDTOs;
+    }
+
+    @Override
+    @Transactional
+    public void updateGiftCertWithTags(GiftCertificateDTO gcDTO) {
+
+        for (String tagName : gcDTO.getTagNames()) {
+
+            if (!tagDAO.isTagExist(tagName)) {
+
+                tagDAO.createTag(tagName);
+            }
+        }
+
+        //gcDAO.updateGiftCert(ConvertGiftCertDTOToEntity.getGiftCertEntity(gcDTO));
+
     }
 }

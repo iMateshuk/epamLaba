@@ -17,9 +17,9 @@ public class TagDB implements TagDAO {
     JdbcTemplate jdbcTemplate;
 
     @Override
-    public void createTag(String name) {
+    public void createTag(String tagName) {
 
-        jdbcTemplate.update(TagSQL.INSERT_TAG.getSQL(), name);
+        jdbcTemplate.update(TagSQL.INSERT_TAG.getSQL(), tagName);
     }
 
     @Override
@@ -32,6 +32,18 @@ public class TagDB implements TagDAO {
     public TagEntity searchTag(int id) {
 
         return jdbcTemplate.queryForObject(TagSQL.SELECT_ALL_W_ID.getSQL(), new TagMapper(), id);
+    }
+
+    @Override
+    public TagEntity searchTag(String tagName) {
+
+        return jdbcTemplate.queryForObject(TagSQL.SELECT_ALL_W_NAME.getSQL(), new TagMapper(), tagName);
+    }
+
+    @Override
+    public boolean isTagExist(String tagName) {
+
+        return jdbcTemplate.queryForObject(TagSQL.SELECT_COUNT_W_NAME.getSQL(), Integer.class, tagName) > 0;
     }
 
     @Override

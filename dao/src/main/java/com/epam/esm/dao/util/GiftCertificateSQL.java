@@ -1,6 +1,6 @@
 package com.epam.esm.dao.util;
 
-public enum GiftCertSQL {
+public enum GiftCertificateSQL {
 
     SELECT_ALL("SELECT * FROM gc.gift_certificate"),
     SELECT_ALL_W_ID("SELECT * FROM gc.gift_certificate WHERE id = ?"),
@@ -17,7 +17,7 @@ public enum GiftCertSQL {
 
     private String string;
 
-    GiftCertSQL(String string) {
+    GiftCertificateSQL(String string) {
         this.string = string;
     }
 

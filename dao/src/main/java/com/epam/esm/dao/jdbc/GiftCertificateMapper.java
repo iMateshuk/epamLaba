@@ -1,17 +1,17 @@
 package com.epam.esm.dao.jdbc;
 
-import com.epam.esm.dao.entity.GiftCertEntity;
+import com.epam.esm.dao.entity.GiftCertificateEntity;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class GiftCertMapper implements RowMapper<GiftCertEntity> {
+public class GiftCertificateMapper implements RowMapper<GiftCertificateEntity> {
 
     @Override
-    public GiftCertEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public GiftCertificateEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-        GiftCertEntity gc = new GiftCertEntity();
+        GiftCertificateEntity gc = new GiftCertificateEntity();
 
         gc.setId(rs.getInt("id"));
         gc.setName(rs.getString("name"));

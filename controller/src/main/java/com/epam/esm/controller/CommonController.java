@@ -1,12 +1,10 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.service.ServiceCommon;
-import com.epam.esm.service.dto.GiftCertDTO;
+import com.epam.esm.service.CommonService;
+import com.epam.esm.service.dto.GiftCertificateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,12 +13,19 @@ import java.util.List;
 public class CommonController {
 
     @Autowired
-    private ServiceCommon gcService;
+    private CommonService commonService;
 
-    @GetMapping("/{name}")
-    public List<GiftCertDTO> optByTagName(@RequestParam("name") String theTagName) {
+    @GetMapping("/{tagName}")
+    public List<GiftCertificateDTO> chooseTagName(@PathVariable String tagName) {
 
-        return gcService.getGiftCertificate(theTagName);
+        return commonService.getGiftCertificate(tagName);
+    }
+
+    @PutMapping("/update")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateGiftCertWithTags(@RequestBody GiftCertificateDTO gcDTO){
+
+        commonService.updateGiftCertWithTags(gcDTO);
     }
 
 }
