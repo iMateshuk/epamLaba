@@ -5,7 +5,7 @@ import com.epam.esm.dao.entity.TagEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ConvertTagDTO {
+public class ConvertEntityToTagDTO {
 
     public static TagDTO getTagDTO(TagEntity tagEntity) {
 
@@ -17,9 +17,9 @@ public class ConvertTagDTO {
         return tagDTO;
     }
 
-    public static List<TagDTO> getTagDTOs(List<TagEntity> tagEntities) {
+    public static List<TagDTO> getTagDTO(List<TagEntity> tagEntities) {
 
-        return tagEntities.stream().map(ConvertTagDTO::getTagDTO)
+        return tagEntities.stream().map(ConvertEntityToTagDTO::getTagDTO)
                 .collect(Collectors.toList());
     }
 }

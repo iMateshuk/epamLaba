@@ -1,10 +1,10 @@
 package com.epam.esm.service;
 
-import com.epam.esm.service.dto.GiftCertificateDTO;
+import com.epam.esm.service.dto.GiftCertDTO;
 
 import java.util.List;
 
 public interface ServiceCommon {
 
-    public List<GiftCertificateDTO> getGiftCertificate(String tagName);
+    public List<GiftCertDTO> getGiftCertificate(String tagName);
 }

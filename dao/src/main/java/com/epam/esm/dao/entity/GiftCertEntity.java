@@ -1,100 +1,115 @@
-package com.epam.esm.service.dto;
+package com.epam.esm.dao.entity;
 
-import java.util.ArrayList;
+import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
-
-public class GiftCertificateDTO {
+public class GiftCertEntity implements Serializable {
 
     private int id;
     private String name;
     private String description;
     private float price;
     private int duration;
-    private Date lastUpdateDate;
-    private List<String> tagNames = new ArrayList<>();
+    private Timestamp createDate;
+    private Timestamp lastUpdateDate;
 
-    public GiftCertificateDTO() {
+    public GiftCertEntity() {
     }
 
     public int getId() {
+
         return id;
     }
 
     public void setId(int id) {
+
         this.id = id;
     }
 
     public String getName() {
+
         return name;
     }
 
     public void setName(String name) {
+
         this.name = name;
     }
 
     public String getDescription() {
+
         return description;
     }
 
     public void setDescription(String description) {
+
         this.description = description;
     }
 
     public float getPrice() {
+
         return price;
     }
 
     public void setPrice(float price) {
+
         this.price = price;
     }
 
     public int getDuration() {
+
         return duration;
     }
 
     public void setDuration(int duration) {
+
         this.duration = duration;
     }
 
+    public Date getCreateDate() {
+
+        return createDate;
+    }
+
+    public void setCreateDate(Timestamp createDate) {
+
+        this.createDate = createDate;
+    }
+
     public Date getLastUpdateDate() {
+
         return lastUpdateDate;
     }
 
-    public void setLastUpdateDate(Date lastUpdateDate) {
+    public void setLastUpdateDate(Timestamp lastUpdateDate) {
+
         this.lastUpdateDate = lastUpdateDate;
-    }
-
-    public List<String> getTagNames() {
-        return tagNames;
-    }
-
-    public void setTagNames(List<String> tagNames) {
-        this.tagNames = tagNames;
     }
 
     @Override
     public boolean equals(Object o) {
 
         if (this == o) {
+
             return true;
         }
 
         if (o == null || getClass() != o.getClass()) {
+
             return false;
         }
 
-        GiftCertificateDTO that = (GiftCertificateDTO) o;
+        GiftCertEntity giftCert = (GiftCertEntity) o;
 
-        return id == that.id && Float.compare(that.price, price) == 0 && duration == that.duration && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(lastUpdateDate, that.lastUpdateDate) && Objects.equals(tagNames, that.tagNames);
+        return id == giftCert.id && Float.compare(giftCert.price, price) == 0 && duration == giftCert.duration && Objects.equals(name, giftCert.name) && Objects.equals(description, giftCert.description) && Objects.equals(createDate, giftCert.createDate) && Objects.equals(lastUpdateDate, giftCert.lastUpdateDate);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, name, description, price, duration, lastUpdateDate, tagNames);
+        return Objects.hash(id, name, description, price, duration, createDate, lastUpdateDate);
     }
 
     @Override
@@ -106,8 +121,8 @@ public class GiftCertificateDTO {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", duration=" + duration +
+                ", createDate=" + createDate +
                 ", lastUpdateDate=" + lastUpdateDate +
-                ", tagNames=" + tagNames +
                 '}';
     }
 }
