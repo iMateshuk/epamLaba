@@ -6,14 +6,16 @@ import java.util.List;
 
 public interface GiftCertificateDAO {
 
-    public void createGiftCertificate(GiftCertificateEntity giftCertificateEntity);
+    GiftCertificateEntity createGiftCertificate(GiftCertificateEntity giftCertificateEntity);
 
-    public List<GiftCertificateEntity> searchGiftCertificates();
+    List<GiftCertificateEntity> searchGiftCertificates();
 
-    public GiftCertificateEntity searchGiftCertificate(int id);
+    GiftCertificateEntity searchGiftCertificate(int id);
 
-    public void updateGiftCertificate(GiftCertificateEntity giftCertificateEntity);
+    List<GiftCertificateEntity> getListGiftCertificates(String tagName);
 
-    public void delGiftCertificate(int id);
+    GiftCertificateEntity updateGiftCertificate(GiftCertificateEntity giftCertificateEntity);
+
+    void delGiftCertificate(int id);
 
 }

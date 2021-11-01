@@ -1,7 +1,6 @@
 package com.epam.esm.dao.jdbc;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -20,8 +19,12 @@ import java.util.Objects;
 @PropertySource("classpath:db.properties")
 public class JdbcConfig {
 
-    @Autowired
-    Environment environment;
+    private Environment environment;
+
+    public JdbcConfig(Environment environment) {
+
+        this.environment = environment;
+    }
 
     @Bean
     DataSource dataSource() {

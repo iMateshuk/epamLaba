@@ -4,7 +4,6 @@ import com.epam.esm.dao.TagDAO;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.TagConverter;
 import com.epam.esm.service.dto.TagDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,14 +11,19 @@ import java.util.List;
 @Service
 public class TagServiceImpl implements TagService {
 
-    @Autowired
-    TagDAO tagDAO;
+
+    private final TagDAO tagDAO;
+
+    public TagServiceImpl (TagDAO tagDAO){
+
+        this.tagDAO = tagDAO;
+    }
 
 
     @Override
-    public void createTag(String name) {
+    public TagDTO createTag(String name) {
 
-        tagDAO.createTag(name);
+        return TagConverter.toDto(tagDAO.createTag(name));
     }
 
     @Override

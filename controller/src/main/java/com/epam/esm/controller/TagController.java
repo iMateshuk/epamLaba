@@ -2,7 +2,6 @@ package com.epam.esm.controller;
 
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.TagDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,19 +11,22 @@ import java.util.List;
 @RequestMapping("/tags")
 public class TagController {
 
-    @Autowired
-    TagService tagService;
+    private final TagService tagService;
 
-    @PostMapping("/create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createTag(@RequestBody TagDTO tagDTO) {
+    public TagController(TagService tagService) {
 
-        tagService.createTag(tagDTO.getName());
+        this.tagService = tagService;
     }
 
-    @GetMapping("/search")
-    public List<TagDTO> getTags() {
 
+    @PostMapping("/creators")
+    public TagDTO createTag(@RequestBody TagDTO tagDTO) {
+
+        return tagService.createTag(tagDTO.getName());
+    }
+
+    @GetMapping()
+    public List<TagDTO> getTags() {
 
         return tagService.searchTags();
     }

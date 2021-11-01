@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface TagService {
 
-    public void createTag(String name);
+    TagDTO createTag(String name);
 
-    public List<TagDTO> searchTags();
+    List<TagDTO> searchTags();
 
-    public TagDTO searchTag(int id);
+    TagDTO searchTag(int id);
 
-    public void deleteTag(int id);
+    void deleteTag(int id);
 }

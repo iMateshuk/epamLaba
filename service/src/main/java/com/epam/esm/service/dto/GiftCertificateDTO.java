@@ -14,7 +14,7 @@ public class GiftCertificateDTO {
     private float price;
     private int duration;
     private Date lastUpdateDate;
-    private List<String> tagNames = new ArrayList<>();
+    private List<TagDTO> tags = new ArrayList<>();
 
     public GiftCertificateDTO() {
     }
@@ -67,12 +67,12 @@ public class GiftCertificateDTO {
         this.lastUpdateDate = lastUpdateDate;
     }
 
-    public List<String> getTagNames() {
-        return tagNames;
+    public List<TagDTO> getTags() {
+        return tags;
     }
 
-    public void setTagNames(List<String> tagNames) {
-        this.tagNames = tagNames;
+    public void setTags(List<TagDTO> tags) {
+        this.tags = tags;
     }
 
     @Override
@@ -88,13 +88,13 @@ public class GiftCertificateDTO {
 
         GiftCertificateDTO that = (GiftCertificateDTO) o;
 
-        return id == that.id && Float.compare(that.price, price) == 0 && duration == that.duration && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(lastUpdateDate, that.lastUpdateDate) && Objects.equals(tagNames, that.tagNames);
+        return id == that.id && Float.compare(that.price, price) == 0 && duration == that.duration && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(lastUpdateDate, that.lastUpdateDate) && Objects.equals(tags, that.tags);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, name, description, price, duration, lastUpdateDate, tagNames);
+        return Objects.hash(id, name, description, price, duration, lastUpdateDate, tags);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class GiftCertificateDTO {
                 ", price=" + price +
                 ", duration=" + duration +
                 ", lastUpdateDate=" + lastUpdateDate +
-                ", tagNames=" + tagNames +
+                ", tags=" + tags +
                 '}';
     }
 }

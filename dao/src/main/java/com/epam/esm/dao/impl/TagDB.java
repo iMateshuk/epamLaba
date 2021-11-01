@@ -4,7 +4,6 @@ import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.dao.jdbc.TagMapper;
 import com.epam.esm.dao.util.TagSQL;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -13,19 +12,33 @@ import java.util.List;
 @Repository
 public class TagDB implements TagDAO {
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public TagDB(JdbcTemplate jdbcTemplate) {
+
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
-    public void createTag(String tagName) {
+    public TagEntity createTag(String tagName) {
 
         jdbcTemplate.update(TagSQL.INSERT_TAG.getSQL(), tagName);
+
+        return searchTag(tagName);
     }
 
     @Override
     public List<TagEntity> searchTags() {
 
         return jdbcTemplate.query(TagSQL.SELECT_ALL.getSQL(), new TagMapper());
+    }
+
+    @Override
+    public List<TagEntity> getListTag(int id) {
+
+        final String sql = TagSQL.SELECT_W_GC_ID.getSQL();
+
+        return jdbcTemplate.query(sql, new TagMapper(), id);
     }
 
     @Override
@@ -43,7 +56,9 @@ public class TagDB implements TagDAO {
     @Override
     public boolean isTagExist(String tagName) {
 
-        return jdbcTemplate.queryForObject(TagSQL.SELECT_COUNT_W_NAME.getSQL(), Integer.class, tagName) > 0;
+        Integer count = jdbcTemplate.queryForObject(TagSQL.SELECT_COUNT_W_NAME.getSQL(), Integer.class, tagName);
+
+        return count != null && count > 0;
     }
 
     @Override

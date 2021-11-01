@@ -4,9 +4,9 @@ import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.jdbc.GiftCertificateMapper;
 import com.epam.esm.dao.util.GiftCertificateSQL;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -16,20 +16,26 @@ import java.util.List;
 @Repository
 public class GiftCertificateDB implements GiftCertificateDAO {
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
+    public GiftCertificateDB(JdbcTemplate jdbcTemplate) {
+
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Transactional
     @Override
-    public void createGiftCertificate(GiftCertificateEntity giftCertificateEntity) {
+    public GiftCertificateEntity createGiftCertificate(GiftCertificateEntity giftCertificateEntity) {
 
-        Timestamp timestamp = Timestamp.from(Instant.now());
+        Integer id;
 
         List<Object> params = prepareObjects(giftCertificateEntity);
 
-        params.add(timestamp);
-        params.add(timestamp);
+        jdbcTemplate.update(GiftCertificateSQL.INSERT_GIFT_CERT.getSQL(), params.toArray());
 
-        jdbcTemplate.update(GiftCertificateSQL.INSERT_GIFT_CERT.getSQL(), params.stream().toArray(Object[]::new));
+        id = jdbcTemplate.queryForObject(GiftCertificateSQL.SELECT_LAST_INSERT_ID.getSQL(), Integer.class);
+
+        return searchGiftCertificate(id != null ? id : 0);
     }
 
     @Override
@@ -45,14 +51,26 @@ public class GiftCertificateDB implements GiftCertificateDAO {
     }
 
     @Override
-    public void updateGiftCertificate(GiftCertificateEntity giftCertificateEntity) {
+    public List<GiftCertificateEntity> getListGiftCertificates(String tagName) {
+
+        final String sql = GiftCertificateSQL.SELECT_W_TAG_NAME.getSQL();
+
+        return jdbcTemplate.query(sql, new GiftCertificateMapper(), tagName);
+    }
+
+    @Override
+    public GiftCertificateEntity updateGiftCertificate(GiftCertificateEntity giftCertificateEntity) {
+
+        int id = giftCertificateEntity.getId();
 
         List<Object> params = prepareObjects(giftCertificateEntity);
 
         params.add(Timestamp.from(Instant.now()));
-        params.add(giftCertificateEntity.getId());
+        params.add(id);
 
-        jdbcTemplate.update(GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY.getSQL(), params.stream().toArray(Object[]::new));
+        jdbcTemplate.update(GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY.getSQL(), params.toArray());
+
+        return searchGiftCertificate(id);
     }
 
     @Override

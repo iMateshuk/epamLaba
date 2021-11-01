@@ -6,15 +6,17 @@ import java.util.List;
 
 public interface TagDAO {
 
-    public void createTag(String tagName);
+    TagEntity createTag(String tagName);
 
-    public List<TagEntity> searchTags();
+    List<TagEntity> searchTags();
 
-    public TagEntity searchTag(int id);
+    List<TagEntity> getListTag(int id);
 
-    public TagEntity searchTag(String tagName);
+    TagEntity searchTag(int id);
 
-    public boolean isTagExist(String tagName);
+    TagEntity searchTag(String tagName);
 
-    public void deleteTag(int id);
+    boolean isTagExist(String tagName);
+
+    void deleteTag(int id);
 }

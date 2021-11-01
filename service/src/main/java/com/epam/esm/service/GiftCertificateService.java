@@ -6,13 +6,17 @@ import java.util.List;
 
 public interface GiftCertificateService {
 
-    public void createGiftCertificate(GiftCertificateDTO gcDTO);
+    GiftCertificateDTO createGiftCertificate(GiftCertificateDTO gcDTO);
 
-    public List<GiftCertificateDTO> searchGiftCertificates();
+    List<GiftCertificateDTO> searchGiftCertificates();
 
-    public GiftCertificateDTO searchGiftCertificate(int id);
+    GiftCertificateDTO searchGiftCertificate(int id);
 
-    public void updateGiftCertificate(GiftCertificateDTO gcDTO);
+    List<GiftCertificateDTO> getGiftCertificates(String tagName);
 
-    public void delGiftCertificate(int id);
+    GiftCertificateDTO updateGiftCertWithTags(GiftCertificateDTO giftCertificateDTO);
+
+    GiftCertificateDTO updateGiftCertificate(GiftCertificateDTO gcDTO);
+
+    void delGiftCertificate(int id);
 }

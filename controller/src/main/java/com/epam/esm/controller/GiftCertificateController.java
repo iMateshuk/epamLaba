@@ -2,50 +2,64 @@ package com.epam.esm.controller;
 
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.GiftCertificateDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/giftCertificates")
+@RequestMapping("/certificates")
 public class GiftCertificateController {
 
-    @Autowired
-    GiftCertificateService gcService;
+    private final GiftCertificateService giftCertificateService;
 
-    @PostMapping("/create")
+    public GiftCertificateController(GiftCertificateService giftCertificateService) {
+
+        this.giftCertificateService = giftCertificateService;
+    }
+
+    @PostMapping("/creators")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createGiftCertificate(@RequestBody GiftCertificateDTO gcDTO) {
+    public GiftCertificateDTO createGiftCertificate(@RequestBody GiftCertificateDTO gcDTO) {
 
-        gcService.createGiftCertificate(gcDTO);
+        return giftCertificateService.createGiftCertificate(gcDTO);
     }
 
 
-    @GetMapping("/search")
+    @GetMapping()
     public List<GiftCertificateDTO> getGiftCertificates() {
 
-        return gcService.searchGiftCertificates();
+        return giftCertificateService.searchGiftCertificates();
     }
 
     @GetMapping("/{id}")
     public GiftCertificateDTO getGiftCertificate(@PathVariable int id) {
 
-        return gcService.searchGiftCertificate(id);
+        return giftCertificateService.searchGiftCertificate(id);
+    }
+
+    @GetMapping("/{tagName}")
+    public List<GiftCertificateDTO> chooseTagName(@PathVariable String tagName) {
+
+        return giftCertificateService.getGiftCertificates(tagName);
+    }
+
+    @PutMapping("/updateCert")
+    public GiftCertificateDTO updateGiftCertificate(@RequestBody GiftCertificateDTO gcDTO) {
+
+        return giftCertificateService.updateGiftCertificate(gcDTO);
     }
 
     @PutMapping("/update")
-    @ResponseStatus(HttpStatus.OK)
-    public void updateGiftCertificate(@RequestBody GiftCertificateDTO gcDTO) {
+    public GiftCertificateDTO updateGiftCertWithTags(@RequestBody GiftCertificateDTO giftCertificateDTO){
 
-        gcService.updateGiftCertificate(gcDTO);
+        return giftCertificateService.updateGiftCertWithTags(giftCertificateDTO);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteGiftCertificate(@PathVariable int id) {
 
-        gcService.delGiftCertificate(id);
+        giftCertificateService.delGiftCertificate(id);
     }
 }

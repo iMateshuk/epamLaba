@@ -15,16 +15,16 @@ public class GiftCertificateConverter {
 
     public static GiftCertificateDTO toDto(GiftCertificateEntity giftCertificate) {
 
-        GiftCertificateDTO gcDTO = new GiftCertificateDTO();
+        GiftCertificateDTO giftCertificateDTO = new GiftCertificateDTO();
 
-        gcDTO.setId(giftCertificate.getId());
-        gcDTO.setName(giftCertificate.getName());
-        gcDTO.setDescription(giftCertificate.getDescription());
-        gcDTO.setDuration(giftCertificate.getDuration());
-        gcDTO.setPrice(giftCertificate.getPrice());
-        gcDTO.setLastUpdateDate(giftCertificate.getLastUpdateDate());
+        giftCertificateDTO.setId(giftCertificate.getId());
+        giftCertificateDTO.setName(giftCertificate.getName());
+        giftCertificateDTO.setDescription(giftCertificate.getDescription());
+        giftCertificateDTO.setDuration(giftCertificate.getDuration());
+        giftCertificateDTO.setPrice(giftCertificate.getPrice());
+        giftCertificateDTO.setLastUpdateDate(giftCertificate.getLastUpdateDate());
 
-        return gcDTO;
+        return giftCertificateDTO;
     }
 
     public static List<GiftCertificateEntity> toEntity(List<GiftCertificateDTO> giftCertificates) {
@@ -35,15 +35,15 @@ public class GiftCertificateConverter {
 
     public static GiftCertificateEntity toEntity(GiftCertificateDTO giftCertificate) {
 
-        GiftCertificateEntity gcEntity = new GiftCertificateEntity();
+        GiftCertificateEntity giftCertificateEntity = new GiftCertificateEntity();
 
-        gcEntity.setId(giftCertificate.getId());
-        gcEntity.setName(giftCertificate.getName());
-        gcEntity.setDescription(giftCertificate.getDescription());
-        gcEntity.setPrice(giftCertificate.getPrice());
-        gcEntity.setDuration(giftCertificate.getDuration());
+        giftCertificateEntity.setId(giftCertificate.getId());
+        giftCertificateEntity.setName(giftCertificate.getName());
+        giftCertificateEntity.setDescription(giftCertificate.getDescription());
+        giftCertificateEntity.setPrice(giftCertificate.getPrice());
+        giftCertificateEntity.setDuration(giftCertificate.getDuration());
 
-        return gcEntity;
+        return giftCertificateEntity;
     }
 
 }
