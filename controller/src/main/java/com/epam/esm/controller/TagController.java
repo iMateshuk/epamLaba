@@ -19,7 +19,7 @@ public class TagController {
     }
 
 
-    @PostMapping("/creators")
+    @PostMapping()
     public TagDTO createTag(@RequestBody TagDTO tagDTO) {
 
         return tagService.createTag(tagDTO.getName());

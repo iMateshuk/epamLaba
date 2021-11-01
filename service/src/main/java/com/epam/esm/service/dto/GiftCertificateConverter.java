@@ -2,10 +2,21 @@ package com.epam.esm.service.dto;
 
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 public class GiftCertificateConverter {
+
+    private final static TimeZone tz = TimeZone.getTimeZone("UTC");
+    private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+
+    static{
+
+        df.setTimeZone(tz);
+    }
 
     public static List<GiftCertificateDTO> toDto(List<GiftCertificateEntity> giftCertificates) {
 
@@ -22,7 +33,7 @@ public class GiftCertificateConverter {
         giftCertificateDTO.setDescription(giftCertificate.getDescription());
         giftCertificateDTO.setDuration(giftCertificate.getDuration());
         giftCertificateDTO.setPrice(giftCertificate.getPrice());
-        giftCertificateDTO.setLastUpdateDate(giftCertificate.getLastUpdateDate());
+        giftCertificateDTO.setLastUpdateDate(df.format(giftCertificate.getLastUpdateDate()));
 
         return giftCertificateDTO;
     }

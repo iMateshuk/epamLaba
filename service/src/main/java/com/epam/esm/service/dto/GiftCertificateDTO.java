@@ -1,7 +1,6 @@
 package com.epam.esm.service.dto;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,7 +12,7 @@ public class GiftCertificateDTO {
     private String description;
     private float price;
     private int duration;
-    private Date lastUpdateDate;
+    private String lastUpdateDate;
     private List<TagDTO> tags = new ArrayList<>();
 
     public GiftCertificateDTO() {
@@ -59,11 +58,11 @@ public class GiftCertificateDTO {
         this.duration = duration;
     }
 
-    public Date getLastUpdateDate() {
+    public String getLastUpdateDate() {
         return lastUpdateDate;
     }
 
-    public void setLastUpdateDate(Date lastUpdateDate) {
+    public void setLastUpdateDate(String lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
     }
 
@@ -77,11 +76,9 @@ public class GiftCertificateDTO {
 
     @Override
     public boolean equals(Object o) {
-
         if (this == o) {
             return true;
         }
-
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
@@ -93,7 +90,6 @@ public class GiftCertificateDTO {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(id, name, description, price, duration, lastUpdateDate, tags);
     }
 

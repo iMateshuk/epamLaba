@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/certificates")
@@ -18,40 +19,39 @@ public class GiftCertificateController {
         this.giftCertificateService = giftCertificateService;
     }
 
-    @PostMapping("/creators")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public GiftCertificateDTO createGiftCertificate(@RequestBody GiftCertificateDTO gcDTO) {
 
         return giftCertificateService.createGiftCertificate(gcDTO);
     }
 
-
     @GetMapping()
-    public List<GiftCertificateDTO> getGiftCertificates() {
+    public List<GiftCertificateDTO> getGiftCertificate(@RequestParam Map<String,String> allRequestParams) {
 
-        return giftCertificateService.searchGiftCertificates();
+        return allRequestParams.size() > 0 ? giftCertificateService.searchGiftCertificates(allRequestParams) : giftCertificateService.searchGiftCertificates();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:^\\d+$}")
     public GiftCertificateDTO getGiftCertificate(@PathVariable int id) {
 
         return giftCertificateService.searchGiftCertificate(id);
     }
 
-    @GetMapping("/{tagName}")
+    @GetMapping("/{tagName:^\\D+.*$}")
     public List<GiftCertificateDTO> chooseTagName(@PathVariable String tagName) {
 
         return giftCertificateService.getGiftCertificates(tagName);
     }
 
-    @PutMapping("/updateCert")
+    @PutMapping("/update")
     public GiftCertificateDTO updateGiftCertificate(@RequestBody GiftCertificateDTO gcDTO) {
 
         return giftCertificateService.updateGiftCertificate(gcDTO);
     }
 
-    @PutMapping("/update")
-    public GiftCertificateDTO updateGiftCertWithTags(@RequestBody GiftCertificateDTO giftCertificateDTO){
+    @PutMapping()
+    public GiftCertificateDTO updateGiftCertWithTags(@RequestBody GiftCertificateDTO giftCertificateDTO) {
 
         return giftCertificateService.updateGiftCertWithTags(giftCertificateDTO);
     }

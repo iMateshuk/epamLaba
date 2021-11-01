@@ -13,7 +13,7 @@ public enum GiftCertificateSQL {
 
     DEL_DB_CASCADE_W_ID("DELETE FROM gc.gift_certificate WHERE id = ?"),
 
-    INSERT_GIFT_CERT("INSERT INTO gc.gift_certificate(name,description,price,duration,create_date,last_update_date) VALUES(?,?,?,?,NOW(),NOW())"),
+    INSERT_GIFT_CERT("INSERT INTO gc.gift_certificate(name,description,price,duration,create_date,last_update_date) VALUES(?,?,?,?,UTC_TIMESTAMP,UTC_TIMESTAMP)"),
 
     UPDATE_DATA_IF_NOT_NULL_EMPTY("UPDATE gc.gift_certificate SET name=COALESCE(NULLIF(?, ''), name), " +
             "description=COALESCE(NULLIF(?, ''), description), price=COALESCE(NULLIF(?, ''), price), " +
