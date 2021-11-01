@@ -4,6 +4,7 @@ import com.epam.esm.dao.TagDAO;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.TagConverter;
 import com.epam.esm.service.dto.TagDTO;
+import com.epam.esm.service.util.CheckData;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,8 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagDTO createTag(String name) {
 
+        CheckData.stringValidator(name);
+
         return TagConverter.toDto(tagDAO.createTag(name));
     }
 
@@ -35,11 +38,15 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagDTO searchTag(int id) {
 
+        CheckData.isPositiveInteger(id);
+
         return TagConverter.toDto(tagDAO.searchTag(id));
     }
 
     @Override
     public void deleteTag(int id) {
+
+        CheckData.isPositiveInteger(id);
 
         tagDAO.deleteTag(id);
     }

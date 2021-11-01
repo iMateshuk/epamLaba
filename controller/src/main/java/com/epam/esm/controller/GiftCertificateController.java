@@ -21,9 +21,9 @@ public class GiftCertificateController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public GiftCertificateDTO createGiftCertificate(@RequestBody GiftCertificateDTO gcDTO) {
+    public GiftCertificateDTO createGiftCertificate(@RequestBody GiftCertificateDTO giftCertificateDTO) {
 
-        return giftCertificateService.createGiftCertificate(gcDTO);
+        return giftCertificateService.createGiftCertificate(giftCertificateDTO);
     }
 
     @GetMapping()
@@ -42,12 +42,6 @@ public class GiftCertificateController {
     public List<GiftCertificateDTO> chooseTagName(@PathVariable String tagName) {
 
         return giftCertificateService.getGiftCertificates(tagName);
-    }
-
-    @PutMapping("/update")
-    public GiftCertificateDTO updateGiftCertificate(@RequestBody GiftCertificateDTO gcDTO) {
-
-        return giftCertificateService.updateGiftCertificate(gcDTO);
     }
 
     @PutMapping()

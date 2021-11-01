@@ -9,7 +9,9 @@ import com.epam.esm.service.dto.GiftCertificateConverter;
 import com.epam.esm.service.dto.GiftCertificateDTO;
 import com.epam.esm.service.dto.TagConverter;
 import com.epam.esm.service.dto.TagDTO;
+import com.epam.esm.service.util.CheckData;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -26,31 +28,46 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         this.tagDAO = tagDAO;
     }
 
+    @Transactional
     @Override
-    public GiftCertificateDTO createGiftCertificate(GiftCertificateDTO gcDTO) {
+    public GiftCertificateDTO createGiftCertificate(GiftCertificateDTO requestGiftCertificateDTO) {
 
+        CheckData.giftCertificate(requestGiftCertificateDTO);
 
-        return GiftCertificateConverter.toDto(giftCertificateDAO.createGiftCertificate(GiftCertificateConverter.toEntity(gcDTO)));
+        CheckData.listEmpty(requestGiftCertificateDTO.getTags());
+
+        GiftCertificateDTO createdGiftCertificateDTO = GiftCertificateConverter
+                .toDto(giftCertificateDAO.createGiftCertificate(GiftCertificateConverter.toEntity(requestGiftCertificateDTO)));
+
+        checkTagNameAndBundleWithGiftCertificate(requestGiftCertificateDTO, createdGiftCertificateDTO.getId());
+
+        addTagToDTO(createdGiftCertificateDTO);
+
+        return createdGiftCertificateDTO;
     }
 
     @Override
     public List<GiftCertificateDTO> searchGiftCertificates() {
 
-        List<GiftCertificateDTO> giftCertificateDTOs = GiftCertificateConverter.toDto(giftCertificateDAO.searchGiftCertificates());
+        List<GiftCertificateDTO> createdGiftCertificateDTOs = GiftCertificateConverter
+                .toDto(giftCertificateDAO.searchGiftCertificates());
 
-        addTagToDTO(giftCertificateDTOs);
+        addTagToDTO(createdGiftCertificateDTOs);
 
-        return giftCertificateDTOs;
+        return createdGiftCertificateDTOs;
     }
 
     @Override
     public GiftCertificateDTO searchGiftCertificate(int id) {
 
-        GiftCertificateDTO giftCertificateDTO = GiftCertificateConverter.toDto(giftCertificateDAO.searchGiftCertificate(id));
+        CheckData.isPositiveInteger(id);
 
-        addTagToDTO(giftCertificateDTO);
+        GiftCertificateDTO createdGiftCertificateDTO = GiftCertificateConverter
+                .toDto(giftCertificateDAO.searchGiftCertificate(id));
 
-        return giftCertificateDTO;
+        addTagToDTO(createdGiftCertificateDTO);
+
+        return createdGiftCertificateDTO;
     }
 
     @Override
@@ -69,43 +86,43 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public List<GiftCertificateDTO> getGiftCertificates(String tagName) {
 
+        CheckData.stringValidator(tagName);
+
         List<GiftCertificateEntity> listGiftCertificates = giftCertificateDAO.getListGiftCertificates(tagName);
 
-        List<GiftCertificateDTO> giftCertificateDTOs = GiftCertificateConverter.toDto(listGiftCertificates);
+        List<GiftCertificateDTO> createdGiftCertificateDTOs = GiftCertificateConverter.toDto(listGiftCertificates);
 
-        addTagToDTO(giftCertificateDTOs);
+        addTagToDTO(createdGiftCertificateDTOs);
 
-        return giftCertificateDTOs;
+        return createdGiftCertificateDTOs;
     }
 
     @Override
-    public GiftCertificateDTO updateGiftCertWithTags(GiftCertificateDTO giftCertificateDTO) {
+    public GiftCertificateDTO updateGiftCertWithTags(GiftCertificateDTO requestGiftCertificateDTO) {
 
-        String tagName;
+        GiftCertificateDTO updatedGiftCertificateDTO = updateGiftCertificate(requestGiftCertificateDTO);
 
-        for (TagDTO tagDTO : giftCertificateDTO.getTags()) {
+        if (!requestGiftCertificateDTO.getTags().isEmpty()) {
 
-            tagName = tagDTO.getName();
-
-            if (!tagDAO.isTagExist(tagName)) {
-
-                tagDAO.createTag(tagName);
-            }
+            checkTagNameAndBundleWithGiftCertificate(requestGiftCertificateDTO, requestGiftCertificateDTO.getId());
         }
 
-        //gcDAO.updateGiftCert(ConvertGiftCertDTOToEntity.getGiftCertEntity(gcDTO));
+        addTagToDTO(updatedGiftCertificateDTO);
 
-        return null;
+        return updatedGiftCertificateDTO;
     }
 
     @Override
-    public GiftCertificateDTO updateGiftCertificate(GiftCertificateDTO gcDTO) {
+    public GiftCertificateDTO updateGiftCertificate(GiftCertificateDTO requestGiftCertificateDTO) {
 
-        return GiftCertificateConverter.toDto(giftCertificateDAO.updateGiftCertificate(GiftCertificateConverter.toEntity(gcDTO)));
+        return GiftCertificateConverter.toDto(giftCertificateDAO
+                .updateGiftCertificate(GiftCertificateConverter.toEntity(requestGiftCertificateDTO)));
     }
 
     @Override
     public void delGiftCertificate(int id) {
+
+        CheckData.isPositiveInteger(id);
 
         giftCertificateDAO.delGiftCertificate(id);
     }
@@ -126,6 +143,23 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
             giftCertificateDTO.getTags().add(TagConverter.toDto(tagEntity));
 
+        }
+    }
+
+    private void checkTagNameAndBundleWithGiftCertificate(GiftCertificateDTO requestGiftCertificateDTO, int id) {
+
+        String tagName;
+
+        for (TagDTO tagDTO : requestGiftCertificateDTO.getTags()) {
+
+            tagName = tagDTO.getName();
+
+            if (!tagDAO.isTagExist(tagName)) {
+
+                tagDAO.createTag(tagName);
+            }
+
+            giftCertificateDAO.addGiftCertificateTag(id, tagName);
         }
     }
 }

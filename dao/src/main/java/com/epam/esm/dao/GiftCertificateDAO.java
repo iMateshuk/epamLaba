@@ -18,4 +18,6 @@ public interface GiftCertificateDAO {
 
     void delGiftCertificate(int id);
 
+    void addGiftCertificateTag(int GiftCertificateId, String tagName);
+
 }

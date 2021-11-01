@@ -4,6 +4,7 @@ import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.jdbc.GiftCertificateMapper;
 import com.epam.esm.dao.util.GiftCertificateSQL;
+import com.epam.esm.dao.util.GiftCertificateTagSQL;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,6 +78,12 @@ public class GiftCertificateDB implements GiftCertificateDAO {
     public void delGiftCertificate(int id) {
 
         jdbcTemplate.update(GiftCertificateSQL.DEL_DB_CASCADE_W_ID.getSQL(), id);
+    }
+
+    @Override
+    public void addGiftCertificateTag(int GiftCertificateId, String tagName) {
+
+        jdbcTemplate.update(GiftCertificateTagSQL.INSERT_W_ID_NAME.getSQL(), GiftCertificateId, tagName);
     }
 
     private List<Object> prepareObjects(GiftCertificateEntity giftCertificateEntity) {
