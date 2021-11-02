@@ -8,27 +8,28 @@ public class QueryGenerator {
     private final static String ORDER_RE = ".*ORDER.*";
     private final static String SORT_RE = "^SORT_.*";
     private final static String SORT = "DESC";
+    private final static String EMPTY = "";
 
     public static String sqlSearchWithParameters(Map<RequestedParameter, String> requestedParameters) {
 
         StringBuilder sqlBuilder = new StringBuilder(GiftCertificateTagSQL.SELECT_MAIN_SEARCH.getSQL());
 
         sqlBuilder.append(requestedParameters.get(RequestedParameter.SEARCH_TAG_NAME) != null
-                ? appendSearch(sqlBuilder, GiftCertificateTagSQL.APPEND_W_TAG_NAME, GiftCertificateTagSQL.APPEND_AND_TAG_NAME) : "");
+                ? appendSearch(sqlBuilder, GiftCertificateTagSQL.APPEND_W_TAG_NAME, GiftCertificateTagSQL.APPEND_AND_TAG_NAME) : EMPTY);
 
         sqlBuilder.append(requestedParameters.get(RequestedParameter.SEARCH_NAME) != null
-                ? appendSearch(sqlBuilder, GiftCertificateTagSQL.APPEND_W_SEARCH_NAME, GiftCertificateTagSQL.APPEND_AND_SEARCH_NAME) : "");
+                ? appendSearch(sqlBuilder, GiftCertificateTagSQL.APPEND_W_SEARCH_NAME, GiftCertificateTagSQL.APPEND_AND_SEARCH_NAME) : EMPTY);
 
         sqlBuilder.append(requestedParameters.get(RequestedParameter.SEARCH_DESCRIPTION) != null
-                ? appendSearch(sqlBuilder, GiftCertificateTagSQL.APPEND_W_SEARCH_DESCRIPTION, GiftCertificateTagSQL.APPEND_AND_SEARCH_DESCRIPTION) : "");
+                ? appendSearch(sqlBuilder, GiftCertificateTagSQL.APPEND_W_SEARCH_DESCRIPTION, GiftCertificateTagSQL.APPEND_AND_SEARCH_DESCRIPTION) : EMPTY);
 
         sqlBuilder.append(GiftCertificateTagSQL.APPEND_GROUP.getSQL());
 
         sqlBuilder.append(requestedParameters.get(RequestedParameter.SORT_DATE) != null
-                ? appendOrder(sqlBuilder, GiftCertificateTagSQL.APPEND_ORDER_DATE, requestedParameters.get(RequestedParameter.SORT_DATE)) : "");
+                ? appendOrder(sqlBuilder, GiftCertificateTagSQL.APPEND_ORDER_DATE, requestedParameters.get(RequestedParameter.SORT_DATE)) : EMPTY);
 
         sqlBuilder.append(requestedParameters.get(RequestedParameter.SORT_NAME) != null
-                ? appendOrder(sqlBuilder, GiftCertificateTagSQL.APPEND_ORDER_NAME, requestedParameters.get(RequestedParameter.SORT_NAME)) : "");
+                ? appendOrder(sqlBuilder, GiftCertificateTagSQL.APPEND_ORDER_NAME, requestedParameters.get(RequestedParameter.SORT_NAME)) : EMPTY);
 
         return sqlBuilder.toString();
     }
@@ -45,7 +46,7 @@ public class QueryGenerator {
 
     private static String appendOrder(StringBuilder builder, GiftCertificateTagSQL orderSql, String sortParam) {
 
-        return builder.toString().matches(ORDER_RE) ? "" : sortParam.compareToIgnoreCase(SORT) == 0
-                ? (orderSql.getSQL() +" " + sortParam) : orderSql.getSQL();
+        return builder.toString().matches(ORDER_RE) ? EMPTY : sortParam.compareToIgnoreCase(SORT) == 0
+                ? (orderSql.getSQL() + " " + sortParam) : orderSql.getSQL();
     }
 }
