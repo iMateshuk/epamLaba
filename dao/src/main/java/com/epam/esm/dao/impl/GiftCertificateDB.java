@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -67,8 +66,6 @@ public class GiftCertificateDB implements GiftCertificateDAO {
         final String sql = QueryGenerator.sqlSearchWithParameters(requestedParameters);
 
         QueryGenerator.cleanMap(requestedParameters);
-
-        requestedParameters.values().removeAll(Collections.singleton(null));
 
         //System.out.println(sql);
 
