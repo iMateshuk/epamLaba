@@ -49,31 +49,3 @@ public class QueryGenerator {
                 ? (orderSql.getSQL() +" " + sortParam) : orderSql.getSQL();
     }
 }
-
-
-
-/*        sqlParamValue = sqlParam.getValue();
-
-        if (sqlParamKey.equals(RequestedParameter.SORT_DATE)) {
-        sqlBuild += GiftCertificateTagSQL.APPEND_ORDER_DATE.getSQL();
-
-        if (sqlParamValue.compareToIgnoreCase("DESC") == 0) {
-
-        sqlBuild += sqlParamValue;
-        }
-
-        continue;
-        }
-
-        if (sqlParamKey.equals(RequestedParameter.SORT_NAME)) {
-        if (!sqlBuild.matches(".*ORDER.*")) {
-
-        sqlBuild += GiftCertificateTagSQL.APPEND_ORDER_NAME.getSQL();
-
-        if (sqlParamValue.compareToIgnoreCase("DESC") == 0) {
-
-        sqlBuild += sqlParamValue;
-        }
-        }
-        }*/
-
