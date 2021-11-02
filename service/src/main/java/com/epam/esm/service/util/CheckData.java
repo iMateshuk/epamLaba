@@ -31,14 +31,14 @@ public class CheckData {
 
         String name = requestGiftCertificateDTO.getName();
 
-        if(!stringNullOrEmpty(name)){
+        if(stringNullOrEmpty(name)){
 
             stringValidator(name);
         }
 
         String description = requestGiftCertificateDTO.getDescription();
 
-        if(!stringNullOrEmpty(description)){
+        if(stringNullOrEmpty(description)){
 
             stringValidator(description);
         }
@@ -97,8 +97,8 @@ public class CheckData {
         }
     }
 
-    public static boolean stringNullOrEmpty(String string) {
+    private static boolean stringNullOrEmpty(String string) {
 
-        return string == null || string.isBlank() || string.isEmpty();
+        return string != null && !string.isBlank() && !string.isEmpty();
     }
 }
