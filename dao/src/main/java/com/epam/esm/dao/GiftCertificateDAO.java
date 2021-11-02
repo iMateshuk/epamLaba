@@ -1,18 +1,22 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.dao.entity.GiftCertificateEntity;
+import com.epam.esm.dao.util.RequestedParameter;
 
 import java.util.List;
+import java.util.Map;
 
 public interface GiftCertificateDAO {
 
     GiftCertificateEntity createGiftCertificate(GiftCertificateEntity giftCertificateEntity);
 
-    List<GiftCertificateEntity> searchGiftCertificates();
+    List<GiftCertificateEntity> getGiftCertificates();
 
-    GiftCertificateEntity searchGiftCertificate(int id);
+    GiftCertificateEntity getGiftCertificate(int id);
 
-    List<GiftCertificateEntity> getListGiftCertificates(String tagName);
+    List<GiftCertificateEntity> getGiftCertificates(String tagName);
+
+    List<GiftCertificateEntity> getGiftCertificates(Map<RequestedParameter, String> requestedParameters);
 
     GiftCertificateEntity updateGiftCertificate(GiftCertificateEntity giftCertificateEntity);
 

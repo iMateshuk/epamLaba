@@ -10,6 +10,7 @@ import com.epam.esm.service.dto.GiftCertificateDTO;
 import com.epam.esm.service.dto.TagConverter;
 import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.util.CheckData;
+import com.epam.esm.dao.util.RequestedParameter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,7 +51,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public List<GiftCertificateDTO> searchGiftCertificates() {
 
         List<GiftCertificateDTO> createdGiftCertificateDTOs = GiftCertificateConverter
-                .toDto(giftCertificateDAO.searchGiftCertificates());
+                .toDto(giftCertificateDAO.getGiftCertificates());
 
         addTagToDTO(createdGiftCertificateDTOs);
 
@@ -63,7 +64,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         CheckData.isPositiveInteger(id);
 
         GiftCertificateDTO createdGiftCertificateDTO = GiftCertificateConverter
-                .toDto(giftCertificateDAO.searchGiftCertificate(id));
+                .toDto(giftCertificateDAO.getGiftCertificate(id));
 
         addTagToDTO(createdGiftCertificateDTO);
 
@@ -73,14 +74,16 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public List<GiftCertificateDTO> searchGiftCertificates(Map<String, String> allRequestParams) {
 
-        /*
-        Get certificates with tags (all params are optional and can be used in conjunction):
-            by tag name (ONE tag) - tagName
-            search by part of name/description (can be implemented, using DB function call) - searchName, searchDescription
-            sort by date or by name ASC/DESC - sortDate, sortName
-        */
+        Map<RequestedParameter, String> parameters = CheckData.createMapParameter(allRequestParams);
 
-        return null;
+        CheckData.mapEmpty(parameters);
+
+        List<GiftCertificateDTO> createdGiftCertificateDTOs = GiftCertificateConverter
+                .toDto(giftCertificateDAO.getGiftCertificates(parameters));
+
+        addTagToDTO(createdGiftCertificateDTOs);
+
+        return createdGiftCertificateDTOs;
     }
 
     @Override
@@ -88,7 +91,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
         CheckData.stringValidator(tagName);
 
-        List<GiftCertificateEntity> listGiftCertificates = giftCertificateDAO.getListGiftCertificates(tagName);
+        List<GiftCertificateEntity> listGiftCertificates = giftCertificateDAO.getGiftCertificates(tagName);
 
         List<GiftCertificateDTO> createdGiftCertificateDTOs = GiftCertificateConverter.toDto(listGiftCertificates);
 

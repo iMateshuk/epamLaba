@@ -5,12 +5,16 @@ import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.jdbc.GiftCertificateMapper;
 import com.epam.esm.dao.util.GiftCertificateSQL;
 import com.epam.esm.dao.util.GiftCertificateTagSQL;
+import com.epam.esm.dao.util.QueryGenerator;
+import com.epam.esm.dao.util.RequestedParameter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class GiftCertificateDB implements GiftCertificateDAO {
@@ -34,27 +38,41 @@ public class GiftCertificateDB implements GiftCertificateDAO {
 
         id = jdbcTemplate.queryForObject(GiftCertificateSQL.SELECT_LAST_INSERT_ID.getSQL(), Integer.class);
 
-        return searchGiftCertificate(id != null ? id : 0);
+        return getGiftCertificate(id != null ? id : 0);
     }
 
     @Override
-    public List<GiftCertificateEntity> searchGiftCertificates() {
+    public List<GiftCertificateEntity> getGiftCertificates() {
 
         return jdbcTemplate.query(GiftCertificateSQL.SELECT_ALL.getSQL(), new GiftCertificateMapper());
     }
 
     @Override
-    public GiftCertificateEntity searchGiftCertificate(int id) {
+    public GiftCertificateEntity getGiftCertificate(int id) {
 
         return jdbcTemplate.queryForObject(GiftCertificateSQL.SELECT_ALL_W_ID.getSQL(), new GiftCertificateMapper(), id);
     }
 
     @Override
-    public List<GiftCertificateEntity> getListGiftCertificates(String tagName) {
+    public List<GiftCertificateEntity> getGiftCertificates(String tagName) {
 
         final String sql = GiftCertificateSQL.SELECT_W_TAG_NAME.getSQL();
 
         return jdbcTemplate.query(sql, new GiftCertificateMapper(), tagName);
+    }
+
+    @Override
+    public List<GiftCertificateEntity> getGiftCertificates(Map<RequestedParameter, String> requestedParameters) {
+
+        final String sql = QueryGenerator.sqlSearchWithParameters(requestedParameters);
+
+        QueryGenerator.cleanMap(requestedParameters);
+
+        requestedParameters.values().removeAll(Collections.singleton(null));
+
+        //System.out.println(sql);
+
+        return jdbcTemplate.query(sql, new GiftCertificateMapper(), requestedParameters.values().toArray());
     }
 
     @Override
@@ -68,7 +86,7 @@ public class GiftCertificateDB implements GiftCertificateDAO {
 
         jdbcTemplate.update(GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY.getSQL(), params.toArray());
 
-        return searchGiftCertificate(id);
+        return getGiftCertificate(id);
     }
 
     @Override

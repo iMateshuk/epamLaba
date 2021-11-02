@@ -1,8 +1,11 @@
 package com.epam.esm.service.util;
 
+import com.epam.esm.dao.util.RequestedParameter;
 import com.epam.esm.service.dto.GiftCertificateDTO;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 public class CheckData {
@@ -31,14 +34,14 @@ public class CheckData {
 
         String name = requestGiftCertificateDTO.getName();
 
-        if(stringNullOrEmpty(name)){
+        if (stringNullOrEmpty(name)) {
 
             stringValidator(name);
         }
 
         String description = requestGiftCertificateDTO.getDescription();
 
-        if(stringNullOrEmpty(description)){
+        if (stringNullOrEmpty(description)) {
 
             stringValidator(description);
         }
@@ -49,7 +52,15 @@ public class CheckData {
 
         if (list.isEmpty()) {
 
-            throw new NoSuchElementException(list + " is empty");
+            throw new NoSuchElementException(list.getClass().getName() + " is empty");
+        }
+    }
+
+    public static void mapEmpty(Map<?, ?> map) {
+
+        if (map.isEmpty()) {
+
+            throw new NoSuchElementException(map.getClass().getName() + " is empty");
         }
     }
 
@@ -95,6 +106,18 @@ public class CheckData {
                 throw new IllegalArgumentException(string + "null or less the 0");
             }
         }
+    }
+
+    public static Map<RequestedParameter, String> createMapParameter(Map<String, String> allRequestParams) {
+
+        Map<RequestedParameter, String> allParameters = new LinkedHashMap<>();
+
+        for (RequestedParameter parameter : RequestedParameter.class.getEnumConstants()) {
+
+            allParameters.put(parameter, allRequestParams.get(parameter.getParameterKey()));
+        }
+
+        return allParameters;
     }
 
     private static boolean stringNullOrEmpty(String string) {
