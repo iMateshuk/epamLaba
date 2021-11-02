@@ -17,7 +17,7 @@ public enum GiftCertificateSQL {
 
     UPDATE_DATA_IF_NOT_NULL_EMPTY("UPDATE gc.gift_certificate SET name=COALESCE(NULLIF(?, ''), name), " +
             "description=COALESCE(NULLIF(?, ''), description), price=COALESCE(NULLIF(?, ''), price), " +
-            "duration=COALESCE(NULLIF(?, ''), duration), last_update_date=COALESCE(NULLIF(?, ''), last_update_date) WHERE id = ?"),
+            "duration=COALESCE(NULLIF(?, ''), duration), last_update_date=UTC_TIMESTAMP WHERE id = ?"),
 
     ;
 

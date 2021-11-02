@@ -97,14 +97,21 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return createdGiftCertificateDTOs;
     }
 
+    @Transactional
     @Override
     public GiftCertificateDTO updateGiftCertWithTags(GiftCertificateDTO requestGiftCertificateDTO) {
 
         GiftCertificateDTO updatedGiftCertificateDTO = updateGiftCertificate(requestGiftCertificateDTO);
 
+        CheckData.giftCertificatePartialField(requestGiftCertificateDTO);
+
         if (!requestGiftCertificateDTO.getTags().isEmpty()) {
 
-            checkTagNameAndBundleWithGiftCertificate(requestGiftCertificateDTO, requestGiftCertificateDTO.getId());
+            int id = requestGiftCertificateDTO.getId();
+
+            giftCertificateDAO.delGiftCertificateAndTagBundle(id);
+
+            checkTagNameAndBundleWithGiftCertificate(requestGiftCertificateDTO, id);
         }
 
         addTagToDTO(updatedGiftCertificateDTO);

@@ -9,8 +9,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +64,6 @@ public class GiftCertificateDB implements GiftCertificateDAO {
 
         List<Object> params = prepareObjects(giftCertificateEntity);
 
-        params.add(Timestamp.from(Instant.now()));
         params.add(id);
 
         jdbcTemplate.update(GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY.getSQL(), params.toArray());
@@ -78,6 +75,12 @@ public class GiftCertificateDB implements GiftCertificateDAO {
     public void delGiftCertificate(int id) {
 
         jdbcTemplate.update(GiftCertificateSQL.DEL_DB_CASCADE_W_ID.getSQL(), id);
+    }
+
+    @Override
+    public void delGiftCertificateAndTagBundle(int id) {
+
+        jdbcTemplate.update(GiftCertificateTagSQL.DEL_W_GC_ID.getSQL(), id);
     }
 
     @Override
