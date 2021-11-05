@@ -1,4 +1,4 @@
-package com.epam.esm.dao.util;
+package com.epam.esm.service.util;
 
 public enum RequestedParameter {
 

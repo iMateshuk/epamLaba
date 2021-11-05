@@ -1,12 +1,9 @@
 package com.epam.esm.service.util;
 
-import com.epam.esm.dao.util.RequestedParameter;
 import com.epam.esm.service.dto.GiftCertificateDTO;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class CheckData {
 
@@ -108,16 +105,11 @@ public class CheckData {
         }
     }
 
-    public static Map<RequestedParameter, String> createMapParameter(Map<String, String> allRequestParams) {
+    public static Map<String, String> createMapParameter(Map<String, String> allRequestParams) {
 
-        Map<RequestedParameter, String> allParameters = new LinkedHashMap<>();
-
-        for (RequestedParameter parameter : RequestedParameter.class.getEnumConstants()) {
-
-            allParameters.put(parameter, allRequestParams.get(parameter.getParameterKey()));
-        }
-
-        return allParameters;
+        return Arrays.stream(RequestedParameter.class.getEnumConstants())
+                .filter((parameter) -> allRequestParams.get(parameter.getParameterKey()) != null)
+                .collect(Collectors.toMap(RequestedParameter::toString, (parameter) -> (allRequestParams.get(parameter.getParameterKey()))));
     }
 
     private static boolean stringNullOrEmpty(String string) {

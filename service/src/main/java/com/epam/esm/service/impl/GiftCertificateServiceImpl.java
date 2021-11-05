@@ -10,7 +10,6 @@ import com.epam.esm.service.dto.GiftCertificateDTO;
 import com.epam.esm.service.dto.TagConverter;
 import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.util.CheckData;
-import com.epam.esm.dao.util.RequestedParameter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,7 +73,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public List<GiftCertificateDTO> searchGiftCertificates(Map<String, String> allRequestParams) {
 
-        Map<RequestedParameter, String> parameters = CheckData.createMapParameter(allRequestParams);
+        Map<String, String> parameters = CheckData.createMapParameter(allRequestParams);
 
         CheckData.mapEmpty(parameters);
 

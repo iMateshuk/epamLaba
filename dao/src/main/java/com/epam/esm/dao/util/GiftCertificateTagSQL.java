@@ -10,20 +10,17 @@ public enum GiftCertificateTagSQL {
 
     DEL_W_GC_ID("DELETE FROM gc.gc_tag WHERE gc_id = ?"),
 
-    APPEND_W_TAG_NAME("WHERE tag.name = ? "),
-    APPEND_AND_TAG_NAME("AND tag.name = ? "),
+    SEARCH_TAG_NAME("tag.name = ? "),
 
-    APPEND_W_SEARCH_NAME("WHERE gift_certificate.name LIKE CONCAT('%',?,'%') "),
-    APPEND_AND_SEARCH_NAME("OR gift_certificate.name LIKE CONCAT('%',?,'%') "),
+    SEARCH_NAME("gift_certificate.name LIKE CONCAT('%',?,'%') "),
 
-    APPEND_W_SEARCH_DESCRIPTION("WHERE gift_certificate.description LIKE CONCAT('%',?,'%') "),
-    APPEND_AND_SEARCH_DESCRIPTION("OR gift_certificate.description LIKE CONCAT('%',?,'%') "),
+    SEARCH_DESCRIPTION("gift_certificate.description LIKE CONCAT('%',?,'%') "),
 
     APPEND_GROUP("GROUP BY gift_certificate.id "),
 
-    APPEND_ORDER_DATE("ORDER BY gift_certificate.last_update_date "),
+    SORT_DATE("gift_certificate.last_update_date "),
 
-    APPEND_ORDER_NAME("ORDER BY gift_certificate.name "),
+    SORT_NAME("gift_certificate.name "),
 
 
     ;
