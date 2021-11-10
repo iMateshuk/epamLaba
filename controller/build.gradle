@@ -3,6 +3,13 @@ plugins {
     id 'war'
 }
 
+war {
+    manifest = project.manifest {
+        from sharedManifest
+    }
+
+}
+
 dependencies{
 
     implementation project(':service')

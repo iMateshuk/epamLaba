@@ -24,7 +24,8 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagDTO createTag(String name) {
 
-        CheckData.stringValidator(name);
+        CheckData.tagNameLengthValidator(name);
+        CheckData.tagNameValidator(name);
 
         return TagConverter.toDto(tagDAO.createTag(name));
     }
@@ -39,6 +40,7 @@ public class TagServiceImpl implements TagService {
     public TagDTO searchTag(int id) {
 
         CheckData.isPositiveInteger(id);
+        CheckData.isZeroInteger(id);
 
         return TagConverter.toDto(tagDAO.searchTag(id));
     }
@@ -47,6 +49,7 @@ public class TagServiceImpl implements TagService {
     public void deleteTag(int id) {
 
         CheckData.isPositiveInteger(id);
+        CheckData.isZeroInteger(id);
 
         tagDAO.deleteTag(id);
     }

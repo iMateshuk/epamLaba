@@ -19,7 +19,7 @@ import java.util.Objects;
 @PropertySource("classpath:db.properties")
 public class JdbcConfig {
 
-    private Environment environment;
+    private final Environment environment;
 
     public JdbcConfig(Environment environment) {
 

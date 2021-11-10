@@ -88,7 +88,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public List<GiftCertificateDTO> getGiftCertificates(String tagName) {
 
-        CheckData.stringValidator(tagName);
+        CheckData.tagNameLengthValidator(tagName);
 
         List<GiftCertificateEntity> listGiftCertificates = giftCertificateDAO.getGiftCertificates(tagName);
 

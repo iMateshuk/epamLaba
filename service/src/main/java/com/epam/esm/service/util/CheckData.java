@@ -4,11 +4,13 @@ import com.epam.esm.service.dto.GiftCertificateDTO;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CheckData {
 
     private static final int MIN_VALUE = 0;
     private static final int MIN_LEN = 3;
+    private static final String STRING_RE = "[\\w+( ){0,1}]+";
 
     public static void giftCertificate(GiftCertificateDTO requestGiftCertificateDTO) {
 
@@ -16,7 +18,7 @@ public class CheckData {
 
         isPositiveFloat(requestGiftCertificateDTO.getPrice());
 
-        stringValidator(requestGiftCertificateDTO.getName(), requestGiftCertificateDTO.getDescription());
+        tagNameLengthValidator(requestGiftCertificateDTO.getName(), requestGiftCertificateDTO.getDescription());
     }
 
     public static void giftCertificatePartialField(GiftCertificateDTO requestGiftCertificateDTO) {
@@ -33,14 +35,14 @@ public class CheckData {
 
         if (stringNullOrEmpty(name)) {
 
-            stringValidator(name);
+            tagNameLengthValidator(name);
         }
 
         String description = requestGiftCertificateDTO.getDescription();
 
         if (stringNullOrEmpty(description)) {
 
-            stringValidator(description);
+            tagNameLengthValidator(description);
         }
 
     }
@@ -49,7 +51,8 @@ public class CheckData {
 
         if (list.isEmpty()) {
 
-            throw new NoSuchElementException(list.getClass().getName() + " is empty");
+            throw new IllegalArgumentException(list.getClass().getName() + " is empty");
+            //throw new NoSuchElementException(list.getClass().getName() + " is empty");
         }
     }
 
@@ -57,52 +60,63 @@ public class CheckData {
 
         if (map.isEmpty()) {
 
-            throw new NoSuchElementException(map.getClass().getName() + " is empty");
+            throw new IllegalArgumentException(map.getClass().getName() + " is empty");
         }
     }
 
     public static void isPositiveInteger(Integer... ints) {
 
-        for (Integer theInt : ints) {
+        Stream.of(ints).forEach((item) -> {
 
-            if (theInt < MIN_VALUE) {
+            if (item < MIN_VALUE) {
 
-                throw new IllegalArgumentException(theInt + " less then zero");
+                throw new IllegalArgumentException(item + " less then zero");
             }
-        }
+        });
     }
 
     public static void isZeroInteger(Integer... ints) {
 
-        for (Integer theInt : ints) {
+        Stream.of(ints).forEach( (item) -> {
 
-            if (theInt == MIN_VALUE) {
+            if (item == MIN_VALUE) {
 
-                throw new IllegalArgumentException(theInt + " less then zero");
+                throw new IllegalArgumentException(item + " equal zero");
             }
-        }
+        });
     }
 
     public static void isPositiveFloat(Float... floats) {
 
-        for (Float theFloat : floats) {
+        Stream.of(floats).forEach( (item) -> {
 
-            if (theFloat < MIN_VALUE) {
+            if (item < MIN_VALUE) {
 
-                throw new IllegalArgumentException(theFloat + " null, less or eq zero");
+                throw new IllegalArgumentException(item + " less zero");
             }
-        }
+        });
     }
 
-    public static void stringValidator(String... strings) {
+    public static void tagNameLengthValidator(String... strings) {
 
-        for (String string : strings) {
+        Stream.of(strings).forEach((string) -> {
 
             if (string.length() < MIN_LEN) {
 
-                throw new IllegalArgumentException(string + "null or less the 0");
+                throw new IllegalArgumentException(string + " null or length less the " + MIN_LEN);
             }
-        }
+        });
+    }
+
+    public static void tagNameValidator(String... strings) {
+
+        Stream.of(strings).forEach((string) -> {
+
+            if (!string.matches(STRING_RE)) {
+
+                throw new IllegalArgumentException(string + " invalid in tagNameValidator");
+            }
+        });
     }
 
     public static Map<String, String> createMapParameter(Map<String, String> allRequestParams) {
@@ -112,8 +126,8 @@ public class CheckData {
                 .collect(Collectors.toMap(RequestedParameter::toString, (parameter) -> (allRequestParams.get(parameter.getParameterKey()))));
     }
 
-    private static boolean stringNullOrEmpty(String string) {
+    private static boolean stringNullOrEmpty(String... strings) {
 
-        return string != null && !string.isBlank() && !string.isEmpty();
+        return Stream.of(strings).allMatch(string -> string != null && !string.isBlank() && !string.isEmpty());
     }
 }
