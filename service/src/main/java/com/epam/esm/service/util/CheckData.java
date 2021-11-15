@@ -10,7 +10,7 @@ public class CheckData {
 
     private static final int MIN_VALUE = 0;
     private static final int MIN_LEN = 3;
-    private static final String STRING_RE = "[\\w+( ){0,1}]+";
+    private static final String STRING_RE = "[\\w+( )?]+";
 
     public static void giftCertificate(GiftCertificateDTO requestGiftCertificateDTO) {
 
@@ -77,7 +77,7 @@ public class CheckData {
 
     public static void isZeroInteger(Integer... ints) {
 
-        Stream.of(ints).forEach( (item) -> {
+        Stream.of(ints).forEach((item) -> {
 
             if (item == MIN_VALUE) {
 
@@ -88,7 +88,7 @@ public class CheckData {
 
     public static void isPositiveFloat(Float... floats) {
 
-        Stream.of(floats).forEach( (item) -> {
+        Stream.of(floats).forEach((item) -> {
 
             if (item < MIN_VALUE) {
 

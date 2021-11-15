@@ -70,6 +70,9 @@ allprojects {
         testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
 
         testImplementation("org.springframework:spring-test:5.3.12")
+        testImplementation ("org.mockito:mockito-all:1.10.19")
+        testImplementation ("org.mockito:mockito-junit-jupiter:4.0.0")
+        /*testImplementation("org.springframework:spring-test-mvc:1.0.0.M2")*/
 
 
         implementation("org.springframework:spring-core:5.3.12")
