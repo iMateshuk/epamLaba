@@ -101,11 +101,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Transactional
     @Override
-    public GiftCertificateDTO updateGiftCertWithTags(GiftCertificateDTO requestGiftCertificateDTO) {
-
-        GiftCertificateDTO updatedGiftCertificateDTO = updateGiftCertificate(requestGiftCertificateDTO);
+    public GiftCertificateDTO updateGiftCertificateWithTags(GiftCertificateDTO requestGiftCertificateDTO) {
 
         CheckData.giftCertificatePartialField(requestGiftCertificateDTO);
+
+        GiftCertificateDTO updatedGiftCertificateDTO = updateGiftCertificate(requestGiftCertificateDTO);
 
         if (!requestGiftCertificateDTO.getTags().isEmpty()) {
 
@@ -132,6 +132,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public void delGiftCertificate(int id) {
 
         CheckData.isPositiveInteger(id);
+        CheckData.isZeroInteger(id);
 
         giftCertificateDAO.delGiftCertificate(id);
     }

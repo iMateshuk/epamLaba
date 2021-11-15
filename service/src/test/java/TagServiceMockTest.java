@@ -3,6 +3,7 @@ import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.impl.TagServiceImpl;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,6 +16,29 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /*@ExtendWith(MockitoExtension.class)*/
 public class TagServiceMockTest {
+
+    private static final TagEntity tagEntity01 = new TagEntity();
+    private static final TagEntity tagEntity02 = new TagEntity();
+
+    private static final TagDTO tagDTO01 = new TagDTO();
+    private final static TagDTO tagDTO02 = new TagDTO();
+
+    @BeforeAll
+    public static void setupData() {
+
+        tagEntity01.setId(1);
+        tagEntity01.setName("123_ABC");
+
+        tagEntity01.setId(2);
+        tagEntity01.setName("123 ABC");
+
+
+        tagDTO01.setId(1);
+        tagDTO01.setName("123_ABC");
+
+        tagDTO01.setId(2);
+        tagDTO01.setName("123 ABC");
+    }
 
     @BeforeEach
     public void setup() {
@@ -30,22 +54,6 @@ public class TagServiceMockTest {
 
     @Test
     public void createTagTest() {
-
-        TagEntity tagEntity01 = new TagEntity();
-        tagEntity01.setId(1);
-        tagEntity01.setName("123_ABC");
-
-        TagEntity tagEntity02 = new TagEntity();
-        tagEntity01.setId(2);
-        tagEntity01.setName("123 ABC");
-
-        TagDTO tagDTO01 = new TagDTO();
-        tagDTO01.setId(1);
-        tagDTO01.setName("123_ABC");
-
-        TagDTO tagDTO02 = new TagDTO();
-        tagDTO01.setId(2);
-        tagDTO01.setName("123 ABC");
 
         Mockito.when(mockTagDAO.createTag("123_ABC")).thenReturn(tagEntity01);
         Mockito.when(mockTagDAO.createTag("123 ABC")).thenReturn(tagEntity02);
@@ -64,22 +72,14 @@ public class TagServiceMockTest {
     @Test
     public void tagSearchTest() {
 
-        TagEntity tagEntity = new TagEntity();
-        tagEntity.setId(1);
-        tagEntity.setName("123_ABC");
-
-        TagDTO tagDTO = new TagDTO();
-        tagDTO.setId(1);
-        tagDTO.setName("123_ABC");
-
-        Mockito.when(mockTagDAO.searchTag(1)).thenReturn(tagEntity);
+        Mockito.when(mockTagDAO.searchTag(1)).thenReturn(tagEntity01);
 
         Assertions.assertAll(
                 () -> assertThrows(IllegalArgumentException.class, () -> mockTagService.searchTag(0)),
                 () -> assertThrows(IllegalArgumentException.class, () -> mockTagService.searchTag(-1)),
 
                 () -> assertDoesNotThrow(() -> mockTagService.searchTag(1)),
-                () -> assertEquals(mockTagService.searchTag(1), tagDTO)
+                () -> assertEquals(mockTagService.searchTag(1), tagDTO01)
         );
 
     }

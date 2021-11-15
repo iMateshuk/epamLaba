@@ -15,7 +15,6 @@ public interface GiftCertificateDAO {
 
     List<GiftCertificateEntity> getGiftCertificates(String tagName);
 
-    /*List<GiftCertificateEntity> getGiftCertificates(Map<RequestedParameter, String> requestedParameters);*/
     List<GiftCertificateEntity> getGiftCertificates(Map<String, String> requestedParameters);
 
     GiftCertificateEntity updateGiftCertificate(GiftCertificateEntity giftCertificateEntity);

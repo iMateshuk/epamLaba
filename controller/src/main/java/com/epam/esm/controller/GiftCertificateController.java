@@ -47,7 +47,7 @@ public class GiftCertificateController {
     @PutMapping()
     public GiftCertificateDTO updateGiftCertWithTags(@RequestBody GiftCertificateDTO giftCertificateDTO) {
 
-        return giftCertificateService.updateGiftCertWithTags(giftCertificateDTO);
+        return giftCertificateService.updateGiftCertificateWithTags(giftCertificateDTO);
     }
 
     @DeleteMapping("/{id}")
