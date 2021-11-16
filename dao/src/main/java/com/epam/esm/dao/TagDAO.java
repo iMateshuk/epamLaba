@@ -10,7 +10,7 @@ public interface TagDAO {
 
     List<TagEntity> searchTags();
 
-    List<TagEntity> getListTag(int id);
+    List<TagEntity> getListTag(int giftCertificateId);
 
     TagEntity searchTag(int id);
 

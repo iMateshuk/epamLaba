@@ -2,7 +2,7 @@ package com.epam.esm.dao.util;
 
 import java.util.Map;
 
-public class QueryGenerator {
+public class QueryCreator {
 
     private final static String WHERE_RE = ".*WHERE.*";
     private final static String WHERE = "WHERE ";

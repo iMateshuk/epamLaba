@@ -5,7 +5,7 @@ import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.jdbc.GiftCertificateMapper;
 import com.epam.esm.dao.util.GiftCertificateSQL;
 import com.epam.esm.dao.util.GiftCertificateTagSQL;
-import com.epam.esm.dao.util.QueryGenerator;
+import com.epam.esm.dao.util.QueryCreator;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,9 +62,9 @@ public class GiftCertificateDB implements GiftCertificateDAO {
     @Override
     public List<GiftCertificateEntity> getGiftCertificates(Map<String, String> requestedParameters) {
 
-        final String sql = QueryGenerator.sqlSearchWithParameters(requestedParameters);
+        final String sql = QueryCreator.sqlSearchWithParameters(requestedParameters);
 
-        QueryGenerator.cleanMap(requestedParameters);
+        QueryCreator.cleanMap(requestedParameters);
 
         //System.out.println(sql);
 

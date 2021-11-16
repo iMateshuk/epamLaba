@@ -3,10 +3,13 @@ package com.epam.esm.dao.jdbc;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -27,6 +30,7 @@ public class JdbcConfig {
     }
 
     @Bean
+    @Profile("prod")
     DataSource dataSource() {
 
         final String DRIVER = "driver";
@@ -51,6 +55,20 @@ public class JdbcConfig {
         }
 
         return dataSource;
+    }
+
+    @Bean
+    @Profile("dev")
+    public DataSource embeddedDataSource(){
+
+        System.out.println();
+
+        return new EmbeddedDatabaseBuilder()
+                .setType(EmbeddedDatabaseType.H2)
+                .setName("test;MODE=MySQL;IGNORECASE=TRUE;DATABASE_TO_UPPER=false;INIT=CREATE SCHEMA IF NOT EXISTS gc")
+                .addScript("classpath:sql/gc-dev.sql")
+                .addScript("classpath:sql/fill-gc.sql")
+                .build();
     }
 
     @Bean

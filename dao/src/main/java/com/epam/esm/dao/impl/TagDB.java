@@ -34,11 +34,11 @@ public class TagDB implements TagDAO {
     }
 
     @Override
-    public List<TagEntity> getListTag(int id) {
+    public List<TagEntity> getListTag(int giftCertificateId) {
 
         final String sql = TagSQL.SELECT_W_GC_ID.getSQL();
 
-        return jdbcTemplate.query(sql, new TagMapper(), id);
+        return jdbcTemplate.query(sql, new TagMapper(), giftCertificateId);
     }
 
     @Override

@@ -52,7 +52,6 @@ public class CheckData {
         if (list.isEmpty()) {
 
             throw new IllegalArgumentException(list.getClass().getName() + " is empty");
-            //throw new NoSuchElementException(list.getClass().getName() + " is empty");
         }
     }
 
