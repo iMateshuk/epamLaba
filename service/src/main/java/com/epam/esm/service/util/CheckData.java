@@ -19,6 +19,8 @@ public class CheckData {
         isPositiveFloat(requestGiftCertificateDTO.getPrice());
 
         tagNameLengthValidator(requestGiftCertificateDTO.getName(), requestGiftCertificateDTO.getDescription());
+
+        tagNameValidator(requestGiftCertificateDTO.getName());
     }
 
     public static void giftCertificatePartialField(GiftCertificateDTO requestGiftCertificateDTO) {
