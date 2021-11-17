@@ -51,7 +51,7 @@ public class CheckData {
 
         if (list.isEmpty()) {
 
-            throw new IllegalArgumentException(list.getClass().getName() + " is empty");
+            throw new IllegalArgumentException(list.getClass().getSimpleName() + " is empty");
         }
     }
 
@@ -64,7 +64,7 @@ public class CheckData {
 
         if (map.isEmpty()) {
 
-            throw new IllegalArgumentException(map.getClass().getName() + " is empty");
+            throw new IllegalArgumentException(map.getClass().getSimpleName() + " is empty");
         }
     }
 
@@ -85,7 +85,7 @@ public class CheckData {
 
             if (item == MIN_VALUE) {
 
-                throw new IllegalArgumentException(item + " equal zero");
+                throw new IllegalArgumentException("equal zero");
             }
         });
     }
