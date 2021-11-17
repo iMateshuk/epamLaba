@@ -76,7 +76,7 @@ public class JdbcConfig {
 
     @Bean
     @Profile("prod")
-    public Map<GiftCertificateSQL, String> createGiftCertificateProd() {
+    public Map<GiftCertificateSQL, String> giftCertificateProd() {
 
         Map<GiftCertificateSQL, String> giftCertificateSQLs = new HashMap<>();
 
@@ -88,7 +88,7 @@ public class JdbcConfig {
 
     @Bean
     @Profile("dev")
-    public Map<GiftCertificateSQL, String> createGiftCertificateDev() {
+    public Map<GiftCertificateSQL, String> giftCertificateDev() {
 
         Map<GiftCertificateSQL, String> giftCertificateSQLs = new HashMap<>();
 
