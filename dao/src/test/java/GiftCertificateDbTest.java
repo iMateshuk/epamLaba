@@ -51,7 +51,7 @@ public class GiftCertificateDbTest {
     @Test
     public void createGiftCertificateTest() {
 
-        /*assertNotEquals(0, giftCertificateDAO.createGiftCertificate(giftCertificateEntity).getId());*/
+        assertNotEquals(0, giftCertificateDAO.createGiftCertificate(giftCertificateEntity).getId());
     }
 
     @Test
@@ -102,14 +102,10 @@ public class GiftCertificateDbTest {
     @Test
     public void updateGiftCertificateTest() {
 
-/*        giftCertificateEntity.setId(1);
+        giftCertificateEntity.setId(1);
 
-        assertAll(
-
-                () -> assertNotEquals(giftCertificateDAO.getGiftCertificate(giftCertificateEntity.getId()),
-                        giftCertificateDAO.updateGiftCertificate(giftCertificateEntity))
-        );*/
-
+        assertNotEquals(giftCertificateDAO.getGiftCertificate(giftCertificateEntity.getId()),
+                        giftCertificateDAO.updateGiftCertificate(giftCertificateEntity));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.epam.esm.dao.jdbc;
 
+import com.epam.esm.dao.util.GiftCertificateSQL;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @Configuration
@@ -31,7 +34,7 @@ public class JdbcConfig {
 
     @Bean
     @Profile("prod")
-    DataSource dataSource() {
+    public DataSource dataSource() {
 
         final String DRIVER = "driver";
         final String URL = "url";
@@ -72,7 +75,31 @@ public class JdbcConfig {
     }
 
     @Bean
-    JdbcTemplate jdbcTemplate(DataSource dataSource) {
+    @Profile("prod")
+    public Map<GiftCertificateSQL, String> createGiftCertificateProd() {
+
+        Map<GiftCertificateSQL, String> giftCertificateSQLs = new HashMap<>();
+
+        giftCertificateSQLs.put(GiftCertificateSQL.INSERT_GIFT_CERT, GiftCertificateSQL.INSERT_GIFT_CERT.getSQL());
+        giftCertificateSQLs.put(GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY, GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY.getSQL());
+
+        return giftCertificateSQLs;
+    }
+
+    @Bean
+    @Profile("dev")
+    public Map<GiftCertificateSQL, String> createGiftCertificateDev() {
+
+        Map<GiftCertificateSQL, String> giftCertificateSQLs = new HashMap<>();
+
+        giftCertificateSQLs.put(GiftCertificateSQL.INSERT_GIFT_CERT, GiftCertificateSQL.INSERT_GIFT_CERT_TST.getSQL());
+        giftCertificateSQLs.put(GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY, GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY_TST.getSQL());
+
+        return giftCertificateSQLs;
+    }
+
+    @Bean
+    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
 
         return new JdbcTemplate(dataSource);
     }

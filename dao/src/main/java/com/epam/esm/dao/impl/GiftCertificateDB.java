@@ -18,19 +18,19 @@ import java.util.Map;
 public class GiftCertificateDB implements GiftCertificateDAO {
 
     private final JdbcTemplate jdbcTemplate;
+    private final Map<GiftCertificateSQL, String> giftCertificateSQLs;
 
-    public GiftCertificateDB(JdbcTemplate jdbcTemplate) {
+    public GiftCertificateDB(JdbcTemplate jdbcTemplate, Map<GiftCertificateSQL, String> createGiftCertificateSQLs) {
 
         this.jdbcTemplate = jdbcTemplate;
+        this.giftCertificateSQLs = createGiftCertificateSQLs;
     }
 
     @Transactional
     @Override
     public GiftCertificateEntity createGiftCertificate(GiftCertificateEntity giftCertificateEntity) {
 
-
-
-        jdbcTemplate.update(GiftCertificateSQL.INSERT_GIFT_CERT.getSQL(), prepareObjects(giftCertificateEntity).toArray());
+        jdbcTemplate.update(giftCertificateSQLs.get(GiftCertificateSQL.INSERT_GIFT_CERT), prepareObjects(giftCertificateEntity).toArray());
 
         Integer id = jdbcTemplate.queryForObject(GiftCertificateSQL.SELECT_LAST_INSERT_ID.getSQL(), Integer.class);
 
@@ -64,8 +64,6 @@ public class GiftCertificateDB implements GiftCertificateDAO {
 
         QueryCreator.cleanMap(requestedParameters);
 
-        //System.out.println(sql);
-
         return jdbcTemplate.query(sql, new GiftCertificateMapper(), requestedParameters.values().toArray());
     }
 
@@ -78,7 +76,7 @@ public class GiftCertificateDB implements GiftCertificateDAO {
 
         params.add(id);
 
-        jdbcTemplate.update(GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY.getSQL(), params.toArray());
+        jdbcTemplate.update(giftCertificateSQLs.get(GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY), params.toArray());
 
         return getGiftCertificate(id);
     }
