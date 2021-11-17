@@ -38,6 +38,7 @@ public class CheckData {
         if (!stringNullOrEmpty(name)) {
 
             tagNameLengthValidator(name);
+            tagNameValidator(name);
         }
 
         String description = requestGiftCertificateDTO.getDescription();
