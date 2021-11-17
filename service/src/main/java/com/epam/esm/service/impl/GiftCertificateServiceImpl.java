@@ -3,7 +3,6 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
-import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.GiftCertificateConverter;
 import com.epam.esm.service.dto.GiftCertificateDTO;
@@ -160,21 +159,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private void addTagToDTO(List<GiftCertificateDTO> giftCertificateDTOs) {
 
-        for (GiftCertificateDTO giftCertificateDTO : giftCertificateDTOs) {
-
-            addTagToDTO(giftCertificateDTO);
-        }
+        giftCertificateDTOs.forEach(this::addTagToDTO);
     }
 
     private void addTagToDTO(GiftCertificateDTO giftCertificateDTO) {
 
-        List<TagEntity> tags = tagDAO.getListTag(giftCertificateDTO.getId());
-
-        for (TagEntity tagEntity : tags) {
-
-            giftCertificateDTO.getTags().add(TagConverter.toDto(tagEntity));
-
-        }
+        tagDAO.getListTag(giftCertificateDTO.getId())
+                .forEach((tagEntity) -> giftCertificateDTO.getTags().add(TagConverter.toDto(tagEntity)));
     }
 
     private void checkTagNameAndBundleWithGiftCertificate(GiftCertificateDTO requestGiftCertificateDTO, int id) {
