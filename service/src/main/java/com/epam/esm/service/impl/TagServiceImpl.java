@@ -36,7 +36,7 @@ public class TagServiceImpl implements TagService {
 
         List<TagDTO> tagDTOs = TagConverter.toDto(tagDAO.searchTags());
 
-        if (tagDTOs.isEmpty()) {
+        if (CheckData.isListEmpty(tagDTOs)) {
 
             throw new NoSuchElementException(getClass().getSimpleName() + " exception:tagServ002");
         }
