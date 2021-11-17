@@ -6,6 +6,7 @@ import com.epam.esm.service.dto.GiftCertificateConverter;
 import com.epam.esm.service.dto.GiftCertificateDTO;
 import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.impl.GiftCertificateServiceImpl;
+import com.epam.esm.service.util.CheckData;
 import com.epam.esm.service.util.RequestedParameter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,10 +18,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -130,16 +128,32 @@ public class GiftCertificateTest {
 
         Map<String, String> allRequestParams = new HashMap<>();
 
+        Map<String, String> noFindParams = new HashMap<>();
+
         noMatchParam.put(RequestedParameter.SORT_NAME.toString(), RequestedParameter.SORT_NAME.getParameterKey());
 
         allRequestParams.put(RequestedParameter.SORT_NAME.getParameterKey(), RequestedParameter.SORT_NAME.toString());
+
+        noFindParams.put(RequestedParameter.SEARCH_NAME.getParameterKey(), RequestedParameter.SEARCH_NAME.toString());
+
+        List<GiftCertificateEntity> entities = new ArrayList<>();
+        entities.add(giftCertificateEntity);
+
+        Mockito.when(mockGiftCertificateDAO.getGiftCertificates(CheckData.createMapParameter(allRequestParams)))
+                .thenReturn(entities);
+
+        Mockito.when(mockGiftCertificateDAO.getGiftCertificates(CheckData.createMapParameter(noFindParams)))
+                .thenReturn(new ArrayList<>());
 
         Assertions.assertAll(
 
                 () -> assertThrows(IllegalArgumentException.class, () -> mockGiftCertificate.searchGiftCertificates(cleanMap)),
                 () -> assertThrows(IllegalArgumentException.class, () -> mockGiftCertificate.searchGiftCertificates(noMatchParam)),
 
-                () -> assertDoesNotThrow(() -> mockGiftCertificate.searchGiftCertificates(allRequestParams))
+                () -> assertDoesNotThrow(() -> mockGiftCertificate.searchGiftCertificates(allRequestParams)),
+
+                () -> assertThrows(NoSuchElementException.class, () -> mockGiftCertificate.searchGiftCertificates(noFindParams))
+
         );
     }
 
@@ -206,6 +220,7 @@ public class GiftCertificateTest {
         Assertions.assertAll(
 
                 () -> assertDoesNotThrow(() -> mockGiftCertificate.delGiftCertificate(1)),
+
                 () -> assertThrows(IllegalArgumentException.class, () -> mockGiftCertificate.delGiftCertificate(-1)),
                 () -> assertThrows(IllegalArgumentException.class, () -> mockGiftCertificate.delGiftCertificate(0))
         );

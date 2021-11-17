@@ -11,6 +11,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
+import java.util.NoSuchElementException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -70,13 +73,29 @@ public class TagServiceMockTest {
     }
 
     @Test
+    public void searchTagsTest() {
+
+        Mockito.when(mockTagDAO.searchTags()).thenReturn(new ArrayList<>());
+
+        assertThrows(NoSuchElementException.class, () -> mockTagService.searchTags());
+    }
+
+
+    @Test
     public void tagSearchTest() {
 
+        TagEntity tagEntity99 = new TagEntity();
+        tagEntity99.setName("");
+
         Mockito.when(mockTagDAO.searchTag(1)).thenReturn(tagEntity01);
+        Mockito.when(mockTagDAO.searchTag(99)).thenReturn(tagEntity99);
+        Mockito.when(mockTagDAO.searchTag(100)).thenReturn(new TagEntity());
 
         Assertions.assertAll(
                 () -> assertThrows(IllegalArgumentException.class, () -> mockTagService.searchTag(0)),
                 () -> assertThrows(IllegalArgumentException.class, () -> mockTagService.searchTag(-1)),
+                () -> assertThrows(NoSuchElementException.class, () -> mockTagService.searchTag(100)),
+                () -> assertThrows(NoSuchElementException.class, () -> mockTagService.searchTag(99)),
 
                 () -> assertDoesNotThrow(() -> mockTagService.searchTag(1)),
                 () -> assertEquals(mockTagService.searchTag(1), tagDTO01)

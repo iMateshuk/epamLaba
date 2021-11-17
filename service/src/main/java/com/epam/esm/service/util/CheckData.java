@@ -55,6 +55,11 @@ public class CheckData {
         }
     }
 
+    public static boolean isListEmpty(List<?> list) {
+
+        return list.isEmpty();
+    }
+
     public static void mapEmpty(Map<?, ?> map) {
 
         if (map.isEmpty()) {
@@ -125,7 +130,7 @@ public class CheckData {
                 .collect(Collectors.toMap(RequestedParameter::toString, (parameter) -> (allRequestParams.get(parameter.getParameterKey()))));
     }
 
-    private static boolean stringNullOrEmpty(String... strings) {
+    public static boolean stringNullOrEmpty(String... strings) {
 
         return Stream.of(strings).allMatch(string -> string != null && !string.isBlank() && !string.isEmpty());
     }

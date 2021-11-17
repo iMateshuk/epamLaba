@@ -8,6 +8,7 @@ import com.epam.esm.service.util.CheckData;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class TagServiceImpl implements TagService {
@@ -15,7 +16,7 @@ public class TagServiceImpl implements TagService {
 
     private final TagDAO tagDAO;
 
-    public TagServiceImpl (TagDAO tagDAO){
+    public TagServiceImpl(TagDAO tagDAO) {
 
         this.tagDAO = tagDAO;
     }
@@ -33,7 +34,14 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<TagDTO> searchTags() {
 
-        return TagConverter.toDto(tagDAO.searchTags());
+        List<TagDTO> tagDTOs = TagConverter.toDto(tagDAO.searchTags());
+
+        if (tagDTOs.isEmpty()) {
+
+            throw new NoSuchElementException(getClass().getSimpleName() + " exception:tagServ002");
+        }
+
+        return tagDTOs;
     }
 
     @Override
@@ -42,7 +50,14 @@ public class TagServiceImpl implements TagService {
         CheckData.isPositiveInteger(id);
         CheckData.isZeroInteger(id);
 
-        return TagConverter.toDto(tagDAO.searchTag(id));
+        TagDTO tagDTO = TagConverter.toDto(tagDAO.searchTag(id));
+
+        if (!CheckData.stringNullOrEmpty(tagDTO.getName())) {
+
+            throw new NoSuchElementException(getClass().getSimpleName() + " exception:tagServ003");
+        }
+
+        return tagDTO;
     }
 
     @Override

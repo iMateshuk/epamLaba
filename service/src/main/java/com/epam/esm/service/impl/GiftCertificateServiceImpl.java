@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
@@ -52,6 +53,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         List<GiftCertificateDTO> createdGiftCertificateDTOs = GiftCertificateConverter
                 .toDto(giftCertificateDAO.getGiftCertificates());
 
+        if (CheckData.isListEmpty(createdGiftCertificateDTOs)) {
+
+            throw new NoSuchElementException(getClass().getSimpleName() + " exception:GiftCertificate002");
+        }
+
         addTagToDTO(createdGiftCertificateDTOs);
 
         return createdGiftCertificateDTOs;
@@ -64,6 +70,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
         GiftCertificateDTO createdGiftCertificateDTO = GiftCertificateConverter
                 .toDto(giftCertificateDAO.getGiftCertificate(id));
+
+        if (CheckData.stringNullOrEmpty(createdGiftCertificateDTO.getName())) {
+
+            throw new NoSuchElementException(getClass().getSimpleName() + " exception:GiftCertificate003");
+        }
 
         addTagToDTO(createdGiftCertificateDTO);
 
@@ -80,6 +91,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         List<GiftCertificateDTO> createdGiftCertificateDTOs = GiftCertificateConverter
                 .toDto(giftCertificateDAO.getGiftCertificates(parameters));
 
+        if (CheckData.isListEmpty(createdGiftCertificateDTOs)) {
+
+            throw new NoSuchElementException(getClass().getSimpleName() + " exception:GiftCertificate004");
+        }
+
         addTagToDTO(createdGiftCertificateDTOs);
 
         return createdGiftCertificateDTOs;
@@ -93,6 +109,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         List<GiftCertificateEntity> listGiftCertificates = giftCertificateDAO.getGiftCertificates(tagName);
 
         List<GiftCertificateDTO> createdGiftCertificateDTOs = GiftCertificateConverter.toDto(listGiftCertificates);
+
+        if (CheckData.isListEmpty(createdGiftCertificateDTOs)) {
+
+            throw new NoSuchElementException(getClass().getSimpleName() + " exception:GiftCertificate005");
+        }
 
         addTagToDTO(createdGiftCertificateDTOs);
 
