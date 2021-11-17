@@ -33,14 +33,14 @@ public class CheckData {
 
         String name = requestGiftCertificateDTO.getName();
 
-        if (stringNullOrEmpty(name)) {
+        if (!stringNullOrEmpty(name)) {
 
             tagNameLengthValidator(name);
         }
 
         String description = requestGiftCertificateDTO.getDescription();
 
-        if (stringNullOrEmpty(description)) {
+        if (!stringNullOrEmpty(description)) {
 
             tagNameLengthValidator(description);
         }
@@ -132,6 +132,6 @@ public class CheckData {
 
     public static boolean stringNullOrEmpty(String... strings) {
 
-        return Stream.of(strings).allMatch(string -> string != null && !string.isBlank() && !string.isEmpty());
+        return Stream.of(strings).allMatch(string -> string == null || string.isBlank() || string.isEmpty());
     }
 }

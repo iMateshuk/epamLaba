@@ -31,6 +31,7 @@ public class GiftCertificateDbTest {
     private static final String existTagName = "sky";
 
     private static final int giftCertificateId = 1;
+    private static final int giftCertificateDelId = 2;
 
     @BeforeAll
     public static void setupData() {
@@ -50,7 +51,7 @@ public class GiftCertificateDbTest {
     @Test
     public void createGiftCertificateTest() {
 
-        /*Assertions.assertNotEquals(giftCertificateDAO.createGiftCertificate(giftCertificateEntity).getId(), 0);*/
+        /*assertNotEquals(0, giftCertificateDAO.createGiftCertificate(giftCertificateEntity).getId());*/
     }
 
     @Test
@@ -114,14 +115,18 @@ public class GiftCertificateDbTest {
     @Test
     public void delGiftCertificateAndTagBundleTest() {
 
-        int tagId = tagDAO.createTag(testTagName).getId();
 
         Assertions.assertAll(
+                () -> assertDoesNotThrow(() -> tagDAO.createTag(testTagName)),
 
-                () -> assertDoesNotThrow(() -> giftCertificateDAO.delGiftCertificateAndTagBundle(tagId)),
-                () -> assertThrows(EmptyResultDataAccessException.class, () -> giftCertificateDAO.getGiftCertificate(tagId))
+                () -> assertDoesNotThrow(() -> giftCertificateDAO
+                        .delGiftCertificateAndTagBundle(tagDAO.searchTag(testTagName).getId())),
+
+                () -> assertThrows(EmptyResultDataAccessException.class, () -> giftCertificateDAO
+                        .getGiftCertificate(tagDAO.searchTag(testTagName).getId())),
+
+                () -> assertDoesNotThrow(() -> tagDAO.deleteTag(tagDAO.searchTag(testTagName).getId()))
         );
-
     }
 
     @Test
@@ -131,7 +136,11 @@ public class GiftCertificateDbTest {
 
                 () -> assertDoesNotThrow(() -> tagDAO.createTag(testTagName)),
                 () -> assertDoesNotThrow(() -> giftCertificateDAO.addGiftCertificateTag(giftCertificateId, testTagName)),
-                () -> assertTrue(tagDAO.getListTag(giftCertificateId).stream().anyMatch((value) -> value.getName().equals(testTagName)))
+
+                () -> assertTrue(tagDAO.getListTag(giftCertificateId)
+                        .stream().anyMatch((value) -> value.getName().equals(testTagName))),
+
+                () -> assertDoesNotThrow(() -> tagDAO.deleteTag(tagDAO.searchTag(testTagName).getId()))
         );
     }
 
@@ -140,10 +149,10 @@ public class GiftCertificateDbTest {
 
         Assertions.assertAll(
 
-                () -> assertDoesNotThrow(() -> giftCertificateDAO.delGiftCertificate(giftCertificateId)),
-                () -> assertThrows(EmptyResultDataAccessException.class, () -> giftCertificateDAO.getGiftCertificate(giftCertificateId))
+                () -> assertDoesNotThrow(() -> giftCertificateDAO.delGiftCertificate(giftCertificateDelId)),
+
+                () -> assertThrows(EmptyResultDataAccessException.class,
+                        () -> giftCertificateDAO.getGiftCertificate(giftCertificateDelId))
         );
-
     }
-
 }

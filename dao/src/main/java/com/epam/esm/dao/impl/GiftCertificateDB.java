@@ -28,13 +28,11 @@ public class GiftCertificateDB implements GiftCertificateDAO {
     @Override
     public GiftCertificateEntity createGiftCertificate(GiftCertificateEntity giftCertificateEntity) {
 
-        Integer id;
 
-        List<Object> params = prepareObjects(giftCertificateEntity);
 
-        jdbcTemplate.update(GiftCertificateSQL.INSERT_GIFT_CERT.getSQL(), params.toArray());
+        jdbcTemplate.update(GiftCertificateSQL.INSERT_GIFT_CERT.getSQL(), prepareObjects(giftCertificateEntity).toArray());
 
-        id = jdbcTemplate.queryForObject(GiftCertificateSQL.SELECT_LAST_INSERT_ID.getSQL(), Integer.class);
+        Integer id = jdbcTemplate.queryForObject(GiftCertificateSQL.SELECT_LAST_INSERT_ID.getSQL(), Integer.class);
 
         return getGiftCertificate(id != null ? id : 0);
     }

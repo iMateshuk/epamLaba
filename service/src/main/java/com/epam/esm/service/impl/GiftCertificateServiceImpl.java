@@ -7,7 +7,6 @@ import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.GiftCertificateConverter;
 import com.epam.esm.service.dto.GiftCertificateDTO;
 import com.epam.esm.service.dto.TagConverter;
-import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.util.CheckData;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -127,7 +126,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
         GiftCertificateDTO updatedGiftCertificateDTO = updateGiftCertificate(requestGiftCertificateDTO);
 
-        if (!requestGiftCertificateDTO.getTags().isEmpty()) {
+        if (!CheckData.isListEmpty(requestGiftCertificateDTO.getTags())) {
 
             int id = requestGiftCertificateDTO.getId();
 
@@ -170,18 +169,17 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private void checkTagNameAndBundleWithGiftCertificate(GiftCertificateDTO requestGiftCertificateDTO, int id) {
 
-        String tagName;
+        requestGiftCertificateDTO.getTags().forEach((tagDTO) -> {
 
-        for (TagDTO tagDTO : requestGiftCertificateDTO.getTags()) {
+                    String tagName = tagDTO.getName();
 
-            tagName = tagDTO.getName();
+                    if (!tagDAO.isTagExist(tagName)) {
 
-            if (!tagDAO.isTagExist(tagName)) {
+                        tagDAO.createTag(tagName);
+                    }
 
-                tagDAO.createTag(tagName);
-            }
-
-            giftCertificateDAO.addGiftCertificateTag(id, tagName);
-        }
+                    giftCertificateDAO.addGiftCertificateTag(id, tagName);
+                }
+        );
     }
 }

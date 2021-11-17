@@ -52,7 +52,7 @@ public class TagServiceImpl implements TagService {
 
         TagDTO tagDTO = TagConverter.toDto(tagDAO.searchTag(id));
 
-        if (!CheckData.stringNullOrEmpty(tagDTO.getName())) {
+        if (CheckData.stringNullOrEmpty(tagDTO.getName())) {
 
             throw new NoSuchElementException(getClass().getSimpleName() + " exception:tagServ003");
         }
