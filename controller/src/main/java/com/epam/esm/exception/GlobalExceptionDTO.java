@@ -10,6 +10,11 @@ public class GlobalExceptionDTO {
     public GlobalExceptionDTO() {
     }
 
+    public GlobalExceptionDTO(String errorMessage, int errorCode) {
+        this.errorMessage = errorMessage;
+        this.errorCode = errorCode;
+    }
+
     public String getErrorMessage() {
         return errorMessage;
     }
