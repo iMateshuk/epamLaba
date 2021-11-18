@@ -6,7 +6,7 @@ import com.epam.esm.service.dto.GiftCertificateConverter;
 import com.epam.esm.service.dto.GiftCertificateDTO;
 import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.impl.GiftCertificateServiceImpl;
-import com.epam.esm.service.util.CheckData;
+import com.epam.esm.service.util.ServiceValidator;
 import com.epam.esm.service.util.RequestedParameter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -139,10 +139,10 @@ public class GiftCertificateTest {
         List<GiftCertificateEntity> entities = new ArrayList<>();
         entities.add(giftCertificateEntity);
 
-        Mockito.when(mockGiftCertificateDAO.getGiftCertificates(CheckData.createMapParameter(allRequestParams)))
+        Mockito.when(mockGiftCertificateDAO.getGiftCertificates(ServiceValidator.createMapParameter(allRequestParams)))
                 .thenReturn(entities);
 
-        Mockito.when(mockGiftCertificateDAO.getGiftCertificates(CheckData.createMapParameter(noFindParams)))
+        Mockito.when(mockGiftCertificateDAO.getGiftCertificates(ServiceValidator.createMapParameter(noFindParams)))
                 .thenReturn(new ArrayList<>());
 
         Assertions.assertAll(

@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class CheckData {
+public class ServiceValidator {
 
     private static final int MIN_VALUE = 0;
     private static final int MIN_LEN = 3;

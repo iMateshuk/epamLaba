@@ -7,7 +7,7 @@ import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.GiftCertificateConverter;
 import com.epam.esm.service.dto.GiftCertificateDTO;
 import com.epam.esm.service.dto.TagConverter;
-import com.epam.esm.service.util.CheckData;
+import com.epam.esm.service.util.ServiceValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,9 +31,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public GiftCertificateDTO createGiftCertificate(GiftCertificateDTO requestGiftCertificateDTO) {
 
-        CheckData.giftCertificate(requestGiftCertificateDTO);
+        ServiceValidator.giftCertificate(requestGiftCertificateDTO);
 
-        CheckData.listEmpty(requestGiftCertificateDTO.getTags());
+        ServiceValidator.listEmpty(requestGiftCertificateDTO.getTags());
 
         GiftCertificateDTO createdGiftCertificateDTO = GiftCertificateConverter
                 .toDto(giftCertificateDAO.createGiftCertificate(GiftCertificateConverter.toEntity(requestGiftCertificateDTO)));
@@ -51,7 +51,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         List<GiftCertificateDTO> createdGiftCertificateDTOs = GiftCertificateConverter
                 .toDto(giftCertificateDAO.getGiftCertificates());
 
-        if (CheckData.isListEmpty(createdGiftCertificateDTOs)) {
+        if (ServiceValidator.isListEmpty(createdGiftCertificateDTOs)) {
 
             throw new NoSuchElementException(getClass().getSimpleName() + " exception:GiftCertificate002");
         }
@@ -64,12 +64,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public GiftCertificateDTO searchGiftCertificate(int id) {
 
-        CheckData.isPositiveInteger(id);
+        ServiceValidator.isPositiveInteger(id);
 
         GiftCertificateDTO createdGiftCertificateDTO = GiftCertificateConverter
                 .toDto(giftCertificateDAO.getGiftCertificate(id));
 
-        if (CheckData.stringNullOrEmpty(createdGiftCertificateDTO.getName())) {
+        if (ServiceValidator.stringNullOrEmpty(createdGiftCertificateDTO.getName())) {
 
             throw new NoSuchElementException(getClass().getSimpleName() + " exception:GiftCertificate003");
         }
@@ -82,14 +82,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public List<GiftCertificateDTO> searchGiftCertificates(Map<String, String> allRequestParams) {
 
-        Map<String, String> parameters = CheckData.createMapParameter(allRequestParams);
+        Map<String, String> parameters = ServiceValidator.createMapParameter(allRequestParams);
 
-        CheckData.mapEmpty(parameters);
+        ServiceValidator.mapEmpty(parameters);
 
         List<GiftCertificateDTO> createdGiftCertificateDTOs = GiftCertificateConverter
                 .toDto(giftCertificateDAO.getGiftCertificates(parameters));
 
-        if (CheckData.isListEmpty(createdGiftCertificateDTOs)) {
+        if (ServiceValidator.isListEmpty(createdGiftCertificateDTOs)) {
 
             throw new NoSuchElementException(getClass().getSimpleName() + " exception:GiftCertificate004");
         }
@@ -102,13 +102,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public List<GiftCertificateDTO> getGiftCertificates(String tagName) {
 
-        CheckData.tagNameLengthValidator(tagName);
+        ServiceValidator.tagNameLengthValidator(tagName);
 
         List<GiftCertificateEntity> listGiftCertificates = giftCertificateDAO.getGiftCertificates(tagName);
 
         List<GiftCertificateDTO> createdGiftCertificateDTOs = GiftCertificateConverter.toDto(listGiftCertificates);
 
-        if (CheckData.isListEmpty(createdGiftCertificateDTOs)) {
+        if (ServiceValidator.isListEmpty(createdGiftCertificateDTOs)) {
 
             throw new NoSuchElementException(getClass().getSimpleName() + " exception:GiftCertificate005");
         }
@@ -122,11 +122,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public GiftCertificateDTO updateGiftCertificateWithTags(GiftCertificateDTO requestGiftCertificateDTO) {
 
-        CheckData.giftCertificatePartialField(requestGiftCertificateDTO);
+        ServiceValidator.giftCertificatePartialField(requestGiftCertificateDTO);
 
         GiftCertificateDTO updatedGiftCertificateDTO = updateGiftCertificate(requestGiftCertificateDTO);
 
-        if (!CheckData.isListEmpty(requestGiftCertificateDTO.getTags())) {
+        if (!ServiceValidator.isListEmpty(requestGiftCertificateDTO.getTags())) {
 
             int id = requestGiftCertificateDTO.getId();
 
@@ -150,8 +150,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public void delGiftCertificate(int id) {
 
-        CheckData.isPositiveInteger(id);
-        CheckData.isZeroInteger(id);
+        ServiceValidator.isPositiveInteger(id);
+        ServiceValidator.isZeroInteger(id);
 
         giftCertificateDAO.delGiftCertificate(id);
     }

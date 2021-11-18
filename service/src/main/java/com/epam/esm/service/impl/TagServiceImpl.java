@@ -4,7 +4,7 @@ import com.epam.esm.dao.TagDAO;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.TagConverter;
 import com.epam.esm.service.dto.TagDTO;
-import com.epam.esm.service.util.CheckData;
+import com.epam.esm.service.util.ServiceValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,8 +25,8 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagDTO createTag(String name) {
 
-        CheckData.tagNameLengthValidator(name);
-        CheckData.tagNameValidator(name);
+        ServiceValidator.tagNameLengthValidator(name);
+        ServiceValidator.tagNameValidator(name);
 
         return TagConverter.toDto(tagDAO.createTag(name));
     }
@@ -36,7 +36,7 @@ public class TagServiceImpl implements TagService {
 
         List<TagDTO> tagDTOs = TagConverter.toDto(tagDAO.searchTags());
 
-        if (CheckData.isListEmpty(tagDTOs)) {
+        if (ServiceValidator.isListEmpty(tagDTOs)) {
 
             throw new NoSuchElementException(getClass().getSimpleName() + " exception:tagServ002");
         }
@@ -47,12 +47,12 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagDTO searchTag(int id) {
 
-        CheckData.isPositiveInteger(id);
-        CheckData.isZeroInteger(id);
+        ServiceValidator.isPositiveInteger(id);
+        ServiceValidator.isZeroInteger(id);
 
         TagDTO tagDTO = TagConverter.toDto(tagDAO.searchTag(id));
 
-        if (CheckData.stringNullOrEmpty(tagDTO.getName())) {
+        if (ServiceValidator.stringNullOrEmpty(tagDTO.getName())) {
 
             throw new NoSuchElementException(getClass().getSimpleName() + " exception:tagServ003");
         }
@@ -63,8 +63,8 @@ public class TagServiceImpl implements TagService {
     @Override
     public void deleteTag(int id) {
 
-        CheckData.isPositiveInteger(id);
-        CheckData.isZeroInteger(id);
+        ServiceValidator.isPositiveInteger(id);
+        ServiceValidator.isZeroInteger(id);
 
         tagDAO.deleteTag(id);
     }
