@@ -3,7 +3,6 @@ package com.epam.esm.controller;
 import com.epam.esm.exception.ControllerException;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.TagDTO;
-import com.epam.esm.util.ControllerValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +25,7 @@ public class TagController {
     @PostMapping()
     public TagDTO createTag(@RequestBody TagDTO tagDTO) throws ControllerException {
 
-        controllerValidator.validateValueOfName(tagDTO.getName());
+        controllerValidator.validateValueOfTagName(tagDTO.getName());
         return tagService.createTag(tagDTO.getName());
     }
 
