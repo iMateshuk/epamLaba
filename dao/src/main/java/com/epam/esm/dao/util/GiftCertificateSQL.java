@@ -3,7 +3,8 @@ package com.epam.esm.dao.util;
 public enum GiftCertificateSQL {
 
     SELECT_ALL("SELECT * FROM gc.gift_certificate"),
-    SELECT_ALL_W_ID("SELECT * FROM gc.gift_certificate WHERE id = ?"),
+    SELECT_W_ID("SELECT * FROM gc.gift_certificate WHERE id = ?"),
+    SELECT_W_NAME("SELECT * FROM gc.gift_certificate WHERE name = ?"),
     SELECT_LAST_INSERT_ID("SELECT last_insert_id()"),
 
     SELECT_W_TAG_NAME("SELECT gift_certificate.* FROM gc.tag " +

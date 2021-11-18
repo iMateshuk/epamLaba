@@ -23,11 +23,11 @@ import java.util.Objects;
 @Configuration
 @EnableTransactionManagement
 @PropertySource("classpath:db.properties")
-public class JdbcConfig {
+public class DaoConfig {
 
     private final Environment environment;
 
-    public JdbcConfig(Environment environment) {
+    public DaoConfig(Environment environment) {
 
         this.environment = environment;
     }
@@ -102,6 +102,18 @@ public class JdbcConfig {
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
 
         return new JdbcTemplate(dataSource);
+    }
+
+    @Bean
+    public GiftCertificateMapper giftCertificateMapper() {
+
+        return new GiftCertificateMapper();
+    }
+
+    @Bean
+    public TagMapper tagMapper() {
+
+        return new TagMapper();
     }
 
     @Bean

@@ -3,7 +3,7 @@ import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.impl.GiftCertificateDB;
 import com.epam.esm.dao.impl.TagDB;
-import com.epam.esm.dao.jdbc.JdbcConfig;
+import com.epam.esm.dao.jdbc.DaoConfig;
 import com.epam.esm.dao.util.GiftCertificateTagSQL;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles(value = "dev")
-@ContextConfiguration(classes = {GiftCertificateDB.class, JdbcConfig.class, TagDB.class})
+@ContextConfiguration(classes = {GiftCertificateDB.class, DaoConfig.class, TagDB.class})
 public class GiftCertificateDbTest {
 
     private static final GiftCertificateEntity giftCertificateEntity = new GiftCertificateEntity();

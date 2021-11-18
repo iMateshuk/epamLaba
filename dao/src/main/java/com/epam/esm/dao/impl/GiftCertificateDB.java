@@ -19,11 +19,15 @@ public class GiftCertificateDB implements GiftCertificateDAO {
 
     private final JdbcTemplate jdbcTemplate;
     private final Map<GiftCertificateSQL, String> giftCertificateSQLs;
+    private final GiftCertificateMapper giftCertificateMapper;
 
-    public GiftCertificateDB(JdbcTemplate jdbcTemplate, Map<GiftCertificateSQL, String> createGiftCertificateSQLs) {
+    public GiftCertificateDB(JdbcTemplate jdbcTemplate,
+                             Map<GiftCertificateSQL, String> createGiftCertificateSQLs,
+                             GiftCertificateMapper giftCertificateMapper) {
 
         this.jdbcTemplate = jdbcTemplate;
         this.giftCertificateSQLs = createGiftCertificateSQLs;
+        this.giftCertificateMapper = giftCertificateMapper;
     }
 
     @Transactional
@@ -32,39 +36,35 @@ public class GiftCertificateDB implements GiftCertificateDAO {
 
         jdbcTemplate.update(giftCertificateSQLs.get(GiftCertificateSQL.INSERT_GIFT_CERT), prepareObjects(giftCertificateEntity).toArray());
 
-        Integer id = jdbcTemplate.queryForObject(GiftCertificateSQL.SELECT_LAST_INSERT_ID.getSQL(), Integer.class);
-
-        return getGiftCertificate(id != null ? id : 0);
+        return jdbcTemplate.queryForObject(GiftCertificateSQL.SELECT_W_NAME.getSQL(), giftCertificateMapper, giftCertificateEntity.getName());
     }
 
     @Override
     public List<GiftCertificateEntity> getGiftCertificates() {
 
-        return jdbcTemplate.query(GiftCertificateSQL.SELECT_ALL.getSQL(), new GiftCertificateMapper());
+        return jdbcTemplate.query(GiftCertificateSQL.SELECT_ALL.getSQL(), giftCertificateMapper);
     }
 
     @Override
     public GiftCertificateEntity getGiftCertificate(int id) {
 
-        return jdbcTemplate.queryForObject(GiftCertificateSQL.SELECT_ALL_W_ID.getSQL(), new GiftCertificateMapper(), id);
+        return jdbcTemplate.queryForObject(GiftCertificateSQL.SELECT_W_ID.getSQL(), giftCertificateMapper, id);
     }
 
     @Override
     public List<GiftCertificateEntity> getGiftCertificates(String tagName) {
 
-        final String sql = GiftCertificateSQL.SELECT_W_TAG_NAME.getSQL();
-
-        return jdbcTemplate.query(sql, new GiftCertificateMapper(), tagName);
+        return jdbcTemplate.query(GiftCertificateSQL.SELECT_W_TAG_NAME.getSQL(), giftCertificateMapper, tagName);
     }
 
     @Override
     public List<GiftCertificateEntity> getGiftCertificates(Map<String, String> requestedParameters) {
 
-        final String sql = QueryCreator.sqlSearchWithParameters(requestedParameters);
+        final String sql = QueryCreator.buildSql(requestedParameters);
 
-        QueryCreator.cleanMap(requestedParameters);
+        QueryCreator.removeKeyMatchSort(requestedParameters);
 
-        return jdbcTemplate.query(sql, new GiftCertificateMapper(), requestedParameters.values().toArray());
+        return jdbcTemplate.query(sql, giftCertificateMapper, requestedParameters.values().toArray());
     }
 
     @Override

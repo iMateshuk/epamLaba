@@ -1,5 +1,5 @@
 import com.epam.esm.dao.impl.TagDB;
-import com.epam.esm.dao.jdbc.JdbcConfig;
+import com.epam.esm.dao.jdbc.DaoConfig;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.impl.TagServiceImpl;
@@ -12,7 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TagServiceImpl.class, TagDB.class, JdbcConfig.class})
+@ContextConfiguration(classes = {TagServiceImpl.class, TagDB.class, DaoConfig.class})
 @ActiveProfiles(value = "prod")
 public class TagServiceTest {
 

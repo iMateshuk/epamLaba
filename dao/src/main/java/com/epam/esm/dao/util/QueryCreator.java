@@ -18,7 +18,7 @@ public class QueryCreator {
 
     private final static String EMPTY = "";
 
-    public static String sqlSearchWithParameters(Map<String, String> requestedParameters) {
+    public static String buildSql(Map<String, String> requestedParameters) {
 
         StringBuilder sqlBuilder = new StringBuilder(GiftCertificateTagSQL.SELECT_MAIN_SEARCH.getSQL());
         StringBuilder searchBuilder = new StringBuilder();
@@ -37,7 +37,7 @@ public class QueryCreator {
                 .toString();
     }
 
-    public static void cleanMap(Map<String, String> requestedParameters) {
+    public static void removeKeyMatchSort(Map<String, String> requestedParameters) {
 
         requestedParameters.entrySet().removeIf(current -> current.getValue() == null || current.getKey().matches(SORT_RE));
     }

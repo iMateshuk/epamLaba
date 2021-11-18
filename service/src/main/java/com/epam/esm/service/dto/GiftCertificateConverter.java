@@ -33,6 +33,7 @@ public class GiftCertificateConverter {
         giftCertificateDTO.setDescription(giftCertificate.getDescription());
         giftCertificateDTO.setDuration(giftCertificate.getDuration());
         giftCertificateDTO.setPrice(giftCertificate.getPrice());
+        giftCertificateDTO.setCreateDate(df.format(giftCertificate.getCreateDate()));
         giftCertificateDTO.setLastUpdateDate(df.format(giftCertificate.getLastUpdateDate()));
 
         return giftCertificateDTO;

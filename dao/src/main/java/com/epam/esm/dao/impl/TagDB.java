@@ -13,10 +13,12 @@ import java.util.List;
 public class TagDB implements TagDAO {
 
     private final JdbcTemplate jdbcTemplate;
+    private final TagMapper tagMapper;
 
-    public TagDB(JdbcTemplate jdbcTemplate) {
+    public TagDB(JdbcTemplate jdbcTemplate, TagMapper tagMapper) {
 
         this.jdbcTemplate = jdbcTemplate;
+        this.tagMapper = tagMapper;
     }
 
     @Override
@@ -30,7 +32,7 @@ public class TagDB implements TagDAO {
     @Override
     public List<TagEntity> searchTags() {
 
-        return jdbcTemplate.query(TagSQL.SELECT_ALL.getSQL(), new TagMapper());
+        return jdbcTemplate.query(TagSQL.SELECT_ALL.getSQL(), tagMapper);
     }
 
     @Override
@@ -38,19 +40,19 @@ public class TagDB implements TagDAO {
 
         final String sql = TagSQL.SELECT_W_GC_ID.getSQL();
 
-        return jdbcTemplate.query(sql, new TagMapper(), giftCertificateId);
+        return jdbcTemplate.query(sql, tagMapper, giftCertificateId);
     }
 
     @Override
     public TagEntity searchTag(int id) {
 
-        return jdbcTemplate.queryForObject(TagSQL.SELECT_ALL_W_ID.getSQL(), new TagMapper(), id);
+        return jdbcTemplate.queryForObject(TagSQL.SELECT_ALL_W_ID.getSQL(), tagMapper, id);
     }
 
     @Override
     public TagEntity searchTag(String tagName) {
 
-        return jdbcTemplate.queryForObject(TagSQL.SELECT_ALL_W_NAME.getSQL(), new TagMapper(), tagName);
+        return jdbcTemplate.queryForObject(TagSQL.SELECT_ALL_W_NAME.getSQL(), tagMapper, tagName);
     }
 
     @Override
