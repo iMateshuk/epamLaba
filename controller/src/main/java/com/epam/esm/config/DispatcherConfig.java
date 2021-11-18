@@ -1,5 +1,7 @@
 package com.epam.esm.config;
 
+import com.epam.esm.util.ControllerValidator;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -29,4 +31,11 @@ public class DispatcherConfig implements WebMvcConfigurer {
 
         registry.addResourceHandler(RESOURCES_HANDLERS).addResourceLocations(RESOURCES_LOCATION);
     }
+
+    @Bean
+    public ControllerValidator controllerValidator(){
+
+        return new ControllerValidator();
+    }
+
 }

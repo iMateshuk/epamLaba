@@ -11,6 +11,13 @@ import java.util.NoSuchElementException;
 @RestControllerAdvice
 public class GlobalControllerExceptionHandler {
 
+    @ExceptionHandler(value = {ControllerException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public GlobalExceptionDTO handle(Exception e) {
+
+        return new GlobalExceptionDTO(e.getLocalizedMessage(), 404000);
+    }
+
     @ExceptionHandler(value = {IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public GlobalExceptionDTO handle(IllegalArgumentException e) {
