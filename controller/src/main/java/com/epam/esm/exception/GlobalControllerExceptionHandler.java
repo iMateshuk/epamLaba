@@ -1,6 +1,5 @@
 package com.epam.esm.exception;
 
-import com.epam.esm.service.dto.ErrorDto;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.exception.ValidationException;
 import org.springframework.context.MessageSource;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalControllerExceptionHandler {
 
-    private static final int MULTIPLIER = 100;
+    private static final int MULTIPLIER = 1000;
 
     private final MessageSource messageSource;
 
@@ -46,8 +45,8 @@ public class GlobalControllerExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorDto handleException(Exception e) {
+    public GlobalExceptionDTO handleException(Exception e) {
 
-        return new ErrorDto(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+        return new GlobalExceptionDTO(e.getMessage() + " : " + e.getClass().getName(), HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 }

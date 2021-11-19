@@ -28,9 +28,9 @@ public class GiftCertificateController {
     }
 
     @GetMapping()
-    public List<GiftCertificateDTO> getGiftCertificate(@RequestParam Map<String,String> allRequestParams) {
-        return allRequestParams.size() > 0
-                ? giftCertificateService.searchGiftCertificates(allRequestParams)
+    public List<GiftCertificateDTO> getGiftCertificate(@RequestParam Map<String,String> allParameters) {
+        return allParameters.size() > 0
+                ? giftCertificateService.searchGiftCertificates(allParameters)
                 : giftCertificateService.searchGiftCertificates();
     }
 

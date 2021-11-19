@@ -2,11 +2,8 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.service.TagService;
-import com.epam.esm.service.dto.ErrorDto;
 import com.epam.esm.service.dto.TagConverter;
 import com.epam.esm.service.dto.TagDTO;
-import com.epam.esm.service.exception.ServiceException;
-import com.epam.esm.service.util.ServiceValidator;
 import com.epam.esm.service.util.Validator;
 import org.springframework.stereotype.Service;
 
@@ -30,20 +27,12 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<TagDTO> searchTags() {
-        List<TagDTO> tagDTOs = TagConverter.toDto(tagDAO.searchTags());
-        if (ServiceValidator.isListEmpty(tagDTOs)) {
-            throw new ServiceException(new ErrorDto("tag.service.search.tags"), 20);
-        }
-        return tagDTOs;
+        return TagConverter.toDto(tagDAO.searchTags());
     }
 
     @Override
     public TagDTO searchTag(int id) {
-        TagDTO tagDTO = TagConverter.toDto(tagDAO.searchTag(id));
-        if(tagDTO.getName() == null) {
-            throw new ServiceException(new ErrorDto("tag.service.search.tagId"), 21);
-        }
-        return tagDTO;
+        return TagConverter.toDto(tagDAO.searchTag(id));
     }
 
     @Override

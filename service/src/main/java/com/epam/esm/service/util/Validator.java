@@ -6,6 +6,7 @@ import com.epam.esm.service.exception.ValidationException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Validator {
     private static final int MIN_VALUE = 0;
@@ -84,12 +85,14 @@ public class Validator {
         }
     }
 
-    public void matchField(String field) {
+    public void matchField(String... fields) {
         List<ErrorDto> errors = new ArrayList<>();
 
-        if (!field.matches(RE_MATCH)) {
-            errors.add(new ErrorDto("field.match.error", field));
-        }
+        Stream.of(fields).forEach((field) -> {
+            if (!field.matches(RE_MATCH)) {
+                errors.add(new ErrorDto("field.match.error", field));
+            }
+        });
 
         if (!errors.isEmpty()) {
             throw new ValidationException(errors, 3);
