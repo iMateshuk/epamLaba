@@ -24,6 +24,7 @@ public class GlobalControllerExceptionHandler {
   private static final String DAO_INCORRECT_RESULT = "dao.incorrect.result.error";
 
   private final MessageSource messageSource;
+
   public GlobalControllerExceptionHandler(MessageSource messageSource) {
     this.messageSource = messageSource;
   }
@@ -70,6 +71,6 @@ public class GlobalControllerExceptionHandler {
   @ExceptionHandler(Exception.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public GlobalExceptionDTO handleException(Exception e) {
-    return new GlobalExceptionDTO(e.getMessage() + " : " + e.getClass().getName(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+    return new GlobalExceptionDTO(e.getClass().getCanonicalName(), HttpStatus.INTERNAL_SERVER_ERROR.value());
   }
 }
