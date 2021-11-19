@@ -24,101 +24,85 @@ import java.util.Objects;
 @EnableTransactionManagement
 @PropertySource("classpath:db.properties")
 public class DaoConfig {
+  private final Environment environment;
 
-    private final Environment environment;
+  public DaoConfig(Environment environment) {
+    this.environment = environment;
+  }
 
-    public DaoConfig(Environment environment) {
+  @Bean
+  @Profile("prod")
+  public DataSource dataSource() {
+    final String DRIVER = "driver";
+    final String URL = "url";
+    final String USER = "user";
+    final String PASSWORD = "password";
+    final String POOL_SIZE = "poolsize";
 
-        this.environment = environment;
+    ComboPooledDataSource dataSource = new ComboPooledDataSource();
+
+    try {
+      dataSource.setDriverClass(environment.getProperty(DRIVER));
+      dataSource.setJdbcUrl(environment.getProperty(URL));
+      dataSource.setUser(environment.getProperty(USER));
+      dataSource.setPassword(environment.getProperty(PASSWORD));
+      dataSource.setInitialPoolSize(Integer.parseInt(Objects.requireNonNull(environment.getProperty(POOL_SIZE))));
+
+    } catch (PropertyVetoException e) {
+      throw new ExceptionInInitializerError(e);
     }
+    return dataSource;
+  }
 
-    @Bean
-    @Profile("prod")
-    public DataSource dataSource() {
+  @Bean
+  @Profile("dev")
+  public DataSource embeddedDataSource() {
 
-        final String DRIVER = "driver";
-        final String URL = "url";
-        final String USER = "user";
-        final String PASSWORD = "password";
-        final String POOL_SIZE = "poolsize";
+    return new EmbeddedDatabaseBuilder()
+        .setType(EmbeddedDatabaseType.H2)
+        .setName("test;MODE=MySQL;IGNORECASE=TRUE;DATABASE_TO_UPPER=false;INIT=CREATE SCHEMA IF NOT EXISTS gc")
+        .addScript("classpath:sql/gc-dev.sql")
+        .addScript("classpath:sql/fill-gc.sql")
+        .build();
+  }
 
-        ComboPooledDataSource dataSource = new ComboPooledDataSource();
+  @Bean
+  @Profile("prod")
+  public Map<GiftCertificateSQL, String> giftCertificateProd() {
+    Map<GiftCertificateSQL, String> giftCertificateSQLs = new HashMap<>();
 
-        try {
+    giftCertificateSQLs.put(GiftCertificateSQL.INSERT_GIFT_CERT, GiftCertificateSQL.INSERT_GIFT_CERT.getSQL());
+    giftCertificateSQLs.put(GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY, GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY.getSQL());
+    return giftCertificateSQLs;
+  }
 
-            dataSource.setDriverClass(environment.getProperty(DRIVER));
-            dataSource.setJdbcUrl(environment.getProperty(URL));
-            dataSource.setUser(environment.getProperty(USER));
-            dataSource.setPassword(environment.getProperty(PASSWORD));
-            dataSource.setInitialPoolSize(Integer.parseInt(Objects.requireNonNull(environment.getProperty(POOL_SIZE))));
+  @Bean
+  @Profile("dev")
+  public Map<GiftCertificateSQL, String> giftCertificateDev() {
+    Map<GiftCertificateSQL, String> giftCertificateSQLs = new HashMap<>();
 
-        } catch (PropertyVetoException e) {
+    giftCertificateSQLs.put(GiftCertificateSQL.INSERT_GIFT_CERT, GiftCertificateSQL.INSERT_GIFT_CERT_TST.getSQL());
+    giftCertificateSQLs.put(GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY, GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY_TST.getSQL());
+    return giftCertificateSQLs;
+  }
 
-            throw new ExceptionInInitializerError(e);
-        }
+  @Bean
+  public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+    return new JdbcTemplate(dataSource);
+  }
 
-        return dataSource;
-    }
+  @Bean
+  public GiftCertificateMapper giftCertificateMapper() {
+    return new GiftCertificateMapper();
+  }
 
-    @Bean
-    @Profile("dev")
-    public DataSource embeddedDataSource(){
+  @Bean
+  public TagMapper tagMapper() {
+    return new TagMapper();
+  }
 
-        System.out.println();
-
-        return new EmbeddedDatabaseBuilder()
-                .setType(EmbeddedDatabaseType.H2)
-                .setName("test;MODE=MySQL;IGNORECASE=TRUE;DATABASE_TO_UPPER=false;INIT=CREATE SCHEMA IF NOT EXISTS gc")
-                .addScript("classpath:sql/gc-dev.sql")
-                .addScript("classpath:sql/fill-gc.sql")
-                .build();
-    }
-
-    @Bean
-    @Profile("prod")
-    public Map<GiftCertificateSQL, String> giftCertificateProd() {
-
-        Map<GiftCertificateSQL, String> giftCertificateSQLs = new HashMap<>();
-
-        giftCertificateSQLs.put(GiftCertificateSQL.INSERT_GIFT_CERT, GiftCertificateSQL.INSERT_GIFT_CERT.getSQL());
-        giftCertificateSQLs.put(GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY, GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY.getSQL());
-
-        return giftCertificateSQLs;
-    }
-
-    @Bean
-    @Profile("dev")
-    public Map<GiftCertificateSQL, String> giftCertificateDev() {
-
-        Map<GiftCertificateSQL, String> giftCertificateSQLs = new HashMap<>();
-
-        giftCertificateSQLs.put(GiftCertificateSQL.INSERT_GIFT_CERT, GiftCertificateSQL.INSERT_GIFT_CERT_TST.getSQL());
-        giftCertificateSQLs.put(GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY, GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY_TST.getSQL());
-
-        return giftCertificateSQLs;
-    }
-
-    @Bean
-    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
-
-        return new JdbcTemplate(dataSource);
-    }
-
-    @Bean
-    public GiftCertificateMapper giftCertificateMapper() {
-
-        return new GiftCertificateMapper();
-    }
-
-    @Bean
-    public TagMapper tagMapper() {
-
-        return new TagMapper();
-    }
-
-    @Bean
-    public TransactionManager transactionManager(DataSource dataSource) {
-
-        return new DataSourceTransactionManager(dataSource);
-    }
+  @Bean
+  public TransactionManager transactionManager(DataSource dataSource) {
+    return new DataSourceTransactionManager(dataSource);
+  }
 }

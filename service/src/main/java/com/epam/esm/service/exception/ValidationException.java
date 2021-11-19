@@ -5,7 +5,6 @@ import com.epam.esm.service.dto.ErrorDto;
 import java.util.List;
 
 public class ValidationException extends RuntimeException{
-
     private final List<ErrorDto> validationErrors;
     private final int errorCod;
 

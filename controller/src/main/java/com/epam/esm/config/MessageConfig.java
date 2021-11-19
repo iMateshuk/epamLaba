@@ -8,11 +8,11 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 @Configuration
 public class MessageConfig {
 
-    @Bean
-    public MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
-        source.setBasename("classpath:/locale/locale");
-        source.setUseCodeAsDefaultMessage(true);
-        return source;
-    }
+  @Bean
+  public MessageSource messageSource() {
+    ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
+    source.setBasename("classpath:/locale/locale");
+    source.setUseCodeAsDefaultMessage(true);
+    return source;
+  }
 }

@@ -12,50 +12,50 @@ import java.util.Map;
 @RestController
 @RequestMapping("/certificates")
 public class GiftCertificateController {
-    private final GiftCertificateService giftCertificateService;
-    private final Validator validator;
+  private final GiftCertificateService giftCertificateService;
+  private final Validator validator;
 
-    public GiftCertificateController(GiftCertificateService giftCertificateService, Validator validator) {
-        this.giftCertificateService = giftCertificateService;
-        this.validator = validator;
-    }
+  public GiftCertificateController(GiftCertificateService giftCertificateService, Validator validator) {
+    this.giftCertificateService = giftCertificateService;
+    this.validator = validator;
+  }
 
-    @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED)
-    public GiftCertificateDTO createGiftCertificate(@RequestBody GiftCertificateDTO giftCertificateDTO) {
-        validator.checkCreationCertificate(giftCertificateDTO);
-        return giftCertificateService.createGiftCertificate(giftCertificateDTO);
-    }
+  @PostMapping()
+  @ResponseStatus(HttpStatus.CREATED)
+  public GiftCertificateDTO createGiftCertificate(@RequestBody GiftCertificateDTO giftCertificateDTO) {
+    validator.checkCreationCertificate(giftCertificateDTO);
+    return giftCertificateService.createGiftCertificate(giftCertificateDTO);
+  }
 
-    @GetMapping()
-    public List<GiftCertificateDTO> getGiftCertificate(@RequestParam Map<String,String> allParameters) {
-        return allParameters.size() > 0
-                ? giftCertificateService.searchGiftCertificates(allParameters)
-                : giftCertificateService.searchGiftCertificates();
-    }
+  @GetMapping()
+  public List<GiftCertificateDTO> getGiftCertificate(@RequestParam Map<String, String> allParameters) {
+    return allParameters.size() > 0
+        ? giftCertificateService.searchGiftCertificates(allParameters)
+        : giftCertificateService.searchGiftCertificates();
+  }
 
-    @GetMapping("/{id:^\\d+$}")
-    public GiftCertificateDTO getGiftCertificate(@PathVariable int id) {
-        validator.checkId(id);
-        return giftCertificateService.searchGiftCertificate(id);
-    }
+  @GetMapping("/{id:^\\d+$}")
+  public GiftCertificateDTO getGiftCertificate(@PathVariable int id) {
+    validator.checkId(id);
+    return giftCertificateService.searchGiftCertificate(id);
+  }
 
-    @GetMapping("/{tagName:^\\D+.*$}")
-    public List<GiftCertificateDTO> chooseTagName(@PathVariable String tagName) {
-        validator.checkTagName(tagName);
-        return giftCertificateService.getGiftCertificates(tagName);
-    }
+  @GetMapping("/{tagName:^\\D+.*$}")
+  public List<GiftCertificateDTO> chooseTagName(@PathVariable String tagName) {
+    validator.checkTagName(tagName);
+    return giftCertificateService.getGiftCertificates(tagName);
+  }
 
-    @PutMapping()
-    public GiftCertificateDTO updateGiftCertWithTags(@RequestBody GiftCertificateDTO giftCertificateDTO) {
-        validator.checkUpdateCertificate(giftCertificateDTO);
-        return giftCertificateService.updateGiftCertificateWithTags(giftCertificateDTO);
-    }
+  @PutMapping()
+  public GiftCertificateDTO updateGiftCertWithTags(@RequestBody GiftCertificateDTO giftCertificateDTO) {
+    validator.checkUpdateCertificate(giftCertificateDTO);
+    return giftCertificateService.updateGiftCertificateWithTags(giftCertificateDTO);
+  }
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteGiftCertificate(@PathVariable int id) {
-        validator.checkId(id);
-        giftCertificateService.delGiftCertificate(id);
-    }
+  @DeleteMapping("/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  public void deleteGiftCertificate(@PathVariable int id) {
+    validator.checkId(id);
+    giftCertificateService.delGiftCertificate(id);
+  }
 }

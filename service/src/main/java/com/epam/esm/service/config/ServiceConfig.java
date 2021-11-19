@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ServiceConfig {
-    @Bean
-    public Validator validator(){
-        return new Validator();
-    }
+  @Bean
+  public Validator validator() {
+    return new Validator();
+  }
 }
