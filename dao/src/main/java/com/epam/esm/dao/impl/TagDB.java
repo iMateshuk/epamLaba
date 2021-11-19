@@ -2,7 +2,7 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.TagEntity;
-import com.epam.esm.dao.jdbc.TagMapper;
+import com.epam.esm.dao.config.TagMapper;
 import com.epam.esm.dao.util.TagSQL;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

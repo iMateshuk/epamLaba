@@ -1,58 +1,53 @@
 package com.epam.esm.exception;
 
-import org.springframework.dao.EmptyResultDataAccessException;
+import com.epam.esm.service.dto.ErrorDto;
+import com.epam.esm.service.exception.ServiceException;
+import com.epam.esm.service.exception.ValidationException;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.NoSuchElementException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalControllerExceptionHandler {
 
-    @ExceptionHandler(value = {ControllerException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public GlobalExceptionDTO handle(Exception e) {
+    private static final int MULTIPLIER = 100;
 
-        return new GlobalExceptionDTO(e.getLocalizedMessage(), 404000);
+    private final MessageSource messageSource;
+
+    public GlobalControllerExceptionHandler(MessageSource messageSource) {
+        this.messageSource = messageSource;
     }
 
-    @ExceptionHandler(value = {IllegalArgumentException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public GlobalExceptionDTO handle(IllegalArgumentException e) {
+    @ExceptionHandler(value = {ValidationException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public GlobalExceptionDTO handle(ValidationException exception) {
 
-        return createDTO(404001, e);
+        List<String> validationErrors = exception.getValidationErrors().stream()
+                .map(error -> messageSource.getMessage(error.getErrorMsgKey(), error.getParams(), LocaleContextHolder.getLocale()))
+                .collect(Collectors.toList());
+
+        return new GlobalExceptionDTO(validationErrors,
+                HttpStatus.BAD_REQUEST.value() * MULTIPLIER + exception.getErrorCod());
     }
 
-    @ExceptionHandler(value = {EmptyResultDataAccessException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public GlobalExceptionDTO handle(EmptyResultDataAccessException e) {
+    @ExceptionHandler(value = {ServiceException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public GlobalExceptionDTO handle(ServiceException exception) {
 
-        return createDTO(404002, e);
-    }
-
-    @ExceptionHandler(NoSuchElementException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public GlobalExceptionDTO handle(NoSuchElementException e) {
-
-        return createDTO(404003, e);
+        return new GlobalExceptionDTO(exception.getErrorDto().getErrorMsgKey(),
+                HttpStatus.BAD_REQUEST.value() * MULTIPLIER + exception.getErrorCod());
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public GlobalExceptionDTO handleException(Exception e) {
+    public ErrorDto handleException(Exception e) {
 
-        return createDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(), e);
-    }
-
-    private GlobalExceptionDTO createDTO(int errorCode, Throwable e) {
-
-        GlobalExceptionDTO globalExceptionDTO = new GlobalExceptionDTO();
-
-        globalExceptionDTO.setErrorCode(errorCode);
-        globalExceptionDTO.setErrorMessage(e.getLocalizedMessage());
-
-        return globalExceptionDTO;
+        return new ErrorDto(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 }

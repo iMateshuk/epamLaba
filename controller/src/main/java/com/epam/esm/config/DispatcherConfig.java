@@ -1,7 +1,5 @@
 package com.epam.esm.config;
 
-import com.epam.esm.controller.ControllerValidator;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -13,7 +11,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 @ComponentScan(basePackages = "com.epam.esm")
 public class DispatcherConfig implements WebMvcConfigurer {
-
     private static final String PREFIX = "/WEB-INF/views/";
     private static final String SUFFIX = ".jsp";
 
@@ -22,20 +19,11 @@ public class DispatcherConfig implements WebMvcConfigurer {
 
     @Override
     public void configureViewResolvers(ViewResolverRegistry viewResolver) {
-
         viewResolver.jsp(PREFIX, SUFFIX);
     }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
         registry.addResourceHandler(RESOURCES_HANDLERS).addResourceLocations(RESOURCES_LOCATION);
     }
-
-    @Bean
-    public ControllerValidator controllerValidator(){
-
-        return new ControllerValidator();
-    }
-
 }

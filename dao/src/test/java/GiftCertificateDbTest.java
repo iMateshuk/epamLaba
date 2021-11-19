@@ -3,7 +3,7 @@ import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.impl.GiftCertificateDB;
 import com.epam.esm.dao.impl.TagDB;
-import com.epam.esm.dao.jdbc.DaoConfig;
+import com.epam.esm.dao.config.DaoConfig;
 import com.epam.esm.dao.util.GiftCertificateTagSQL;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -97,7 +97,6 @@ public class GiftCertificateDbTest {
                 () -> assertTrue(giftCertificateDAO.getGiftCertificates(notExistValues).isEmpty())
         );
     }
-
 
     @Test
     public void updateGiftCertificateTest() {

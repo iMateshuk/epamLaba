@@ -6,10 +6,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 public class DispatcherInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
-
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
-
         super.onStartup(servletContext);
         servletContext.setInitParameter("spring.profiles.active", "prod");
     }

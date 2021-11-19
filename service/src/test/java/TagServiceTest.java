@@ -1,81 +1,116 @@
-import com.epam.esm.dao.impl.TagDB;
-import com.epam.esm.dao.jdbc.DaoConfig;
-import com.epam.esm.service.TagService;
+import com.epam.esm.dao.TagDAO;
+import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.impl.TagServiceImpl;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TagServiceImpl.class, TagDB.class, DaoConfig.class})
-@ActiveProfiles(value = "prod")
+import java.util.ArrayList;
+import java.util.NoSuchElementException;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 public class TagServiceTest {
 
-    @Autowired
-    private TagService tagService;
+    private static final TagEntity tagEntity01 = new TagEntity();
+    private static final TagEntity tagEntity02 = new TagEntity();
+
+    private static final TagDTO tagDTO01 = new TagDTO();
+    private final static TagDTO tagDTO02 = new TagDTO();
+
+    @BeforeAll
+    public static void setupData() {
+
+        tagEntity01.setId(1);
+        tagEntity01.setName("123_ABC");
+
+        tagEntity01.setId(2);
+        tagEntity01.setName("123 ABC");
+
+
+        tagDTO01.setId(1);
+        tagDTO01.setName("123_ABC");
+
+        tagDTO01.setId(2);
+        tagDTO01.setName("123 ABC");
+    }
+
+    @BeforeEach
+    public void setup() {
+
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @InjectMocks
+    private TagServiceImpl mockTagService;
+
+    @Mock
+    private TagDAO mockTagDAO;
 
     @Test
-    public void createTagNameWrongLengthTest() {
+    public void createTagTest() {
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> tagService.createTag("0"));
+        Mockito.when(mockTagDAO.createTag("123_ABC")).thenReturn(tagEntity01);
+        Mockito.when(mockTagDAO.createTag("123 ABC")).thenReturn(tagEntity02);
+
+        Assertions.assertAll(
+                () -> assertDoesNotThrow(() -> mockTagService.createTag("123_ABC")),
+                () -> assertEquals(mockTagService.createTag("123_ABC"), tagDTO01),
+
+                () -> assertDoesNotThrow(() -> mockTagService.createTag("123 ABC")),
+                () -> assertEquals(mockTagService.createTag("123 ABC"), tagDTO02),
+
+                () -> assertThrows(IllegalArgumentException.class, () -> mockTagService.createTag("123!_*@"))
+        );
     }
 
     @Test
-    public void createTagWithCorrectNameFirstPositiveTest() {
+    public void searchTagsTest() {
 
-        Assertions.assertDoesNotThrow(() -> tagService.createTag("123_ABC"));
+        Mockito.when(mockTagDAO.searchTags()).thenReturn(new ArrayList<>());
+
+        assertThrows(NoSuchElementException.class, () -> mockTagService.searchTags());
+    }
+
+
+    @Test
+    public void tagSearchTest() {
+
+        TagEntity tagEntity99 = new TagEntity();
+        tagEntity99.setName("");
+
+        Mockito.when(mockTagDAO.searchTag(1)).thenReturn(tagEntity01);
+        Mockito.when(mockTagDAO.searchTag(99)).thenReturn(tagEntity99);
+        Mockito.when(mockTagDAO.searchTag(100)).thenReturn(new TagEntity());
+
+        Assertions.assertAll(
+                () -> assertThrows(IllegalArgumentException.class, () -> mockTagService.searchTag(0)),
+                () -> assertThrows(IllegalArgumentException.class, () -> mockTagService.searchTag(-1)),
+                () -> assertThrows(NoSuchElementException.class, () -> mockTagService.searchTag(100)),
+                () -> assertThrows(NoSuchElementException.class, () -> mockTagService.searchTag(99)),
+
+                () -> assertDoesNotThrow(() -> mockTagService.searchTag(1)),
+                () -> assertEquals(mockTagService.searchTag(1), tagDTO01)
+        );
+
     }
 
     @Test
-    public void createTagWithCorrectNameSecondPositiveTest() {
+    public void deleteTagTest() {
 
-        Assertions.assertDoesNotThrow(() -> tagService.createTag("123 ABC"));
-    }
+        Assertions.assertAll(
+                () -> assertThrows(IllegalArgumentException.class, () -> mockTagService.deleteTag(0)),
+                () -> assertThrows(IllegalArgumentException.class, () -> mockTagService.deleteTag(-1)),
 
-    @Test
-    public void createTagWithWrongNameNegativeTest() {
+                () -> assertDoesNotThrow(() -> mockTagService.deleteTag(1))
+        );
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> tagService.createTag("123!_*@"));
-    }
-
-    @Test
-    public void tagSearchByIdPositiveTest() {
-
-        TagDTO tagDTO = new TagDTO();
-
-        tagDTO.setId(1);
-        tagDTO.setName("spa");
-
-        Assertions.assertEquals(tagService.searchTag(1), tagDTO, "tagSearchByIdPositiveTest should be 'equals'");
-    }
-
-    @Test
-    public void tagSearchByIdZeroTest() {
-
-        Assertions.assertThrows(IllegalArgumentException.class, () -> tagService.searchTag(0));
-    }
-
-    @Test
-    public void tagSearchByIdNegativeTest() {
-
-        Assertions.assertThrows(IllegalArgumentException.class, () -> tagService.searchTag(-1));
-    }
-
-    @Test
-    public void deleteTagByIdZeroTest() {
-
-        Assertions.assertThrows(IllegalArgumentException.class, () -> tagService.deleteTag(0));
-    }
-
-    @Test
-    public void deleteTagByIdZeroNegative() {
-
-        Assertions.assertThrows(IllegalArgumentException.class, () -> tagService.deleteTag(-1));
     }
 
 }

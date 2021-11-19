@@ -2,7 +2,7 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
-import com.epam.esm.dao.jdbc.GiftCertificateMapper;
+import com.epam.esm.dao.config.GiftCertificateMapper;
 import com.epam.esm.dao.util.GiftCertificateSQL;
 import com.epam.esm.dao.util.GiftCertificateTagSQL;
 import com.epam.esm.dao.util.QueryCreator;

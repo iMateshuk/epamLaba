@@ -1,4 +1,4 @@
-package com.epam.esm.dao.jdbc;
+package com.epam.esm.dao.config;
 
 import com.epam.esm.dao.util.GiftCertificateSQL;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
