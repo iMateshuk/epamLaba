@@ -19,6 +19,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Service Gift-Certificate
+ *  Use for business logic of APP
+ *
+ *  @author Ivan Matsiashuk
+ *  @version 1.0
+ */
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
   private final GiftCertificateDAO giftCertificateDAO;
@@ -31,6 +38,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     this.validator = validator;
   }
 
+  /**
+   *
+   * @param requestGiftCertificateDTO
+   * @return GiftCertificateDTO
+   *
+   * The method can throw ValidationException extends RuntimeException
+   * The method uses a transaction
+   */
   @Transactional
   @Override
   public GiftCertificateDTO createGiftCertificate(GiftCertificateDTO requestGiftCertificateDTO) {
@@ -44,6 +59,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     return createdGiftCertificateDTO;
   }
 
+  /**
+   *
+   * @return List of GiftCertificateDTO
+   */
   @Override
   public List<GiftCertificateDTO> searchGiftCertificates() {
     List<GiftCertificateDTO> createdGiftCertificateDTOs = GiftCertificateConverter
@@ -53,6 +72,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     return createdGiftCertificateDTOs;
   }
 
+  /**
+   *
+   * @param id
+   * @return GiftCertificateDTO
+   */
   @Override
   public GiftCertificateDTO searchGiftCertificate(int id) {
     GiftCertificateDTO createdGiftCertificateDTO = GiftCertificateConverter
@@ -62,6 +86,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     return createdGiftCertificateDTO;
   }
 
+  /**
+   *
+   * @param allParameters
+   * @return List of GiftCertificateDTO
+   *
+   * The method can throw ServiceException extends RuntimeException
+   */
   @Override
   public List<GiftCertificateDTO> searchGiftCertificates(Map<String, String> allParameters) {
     Map<String, String> parameters = createMapParameter(allParameters);
@@ -79,6 +110,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     return createdGiftCertificateDTOs;
   }
 
+  /**
+   *
+   * @param tagName
+   * @return List of GiftCertificateDTO
+   *
+   * The method can throw ServiceException extends RuntimeException
+   */
   @Override
   public List<GiftCertificateDTO> getGiftCertificates(String tagName) {
     validator.matchField(tagName);
@@ -93,6 +131,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     return createdGiftCertificateDTOs;
   }
 
+  /**
+   *
+   * @param requestGiftCertificateDTO
+   * @return GiftCertificateDTO
+   *
+   * The method can throw ValidationException extends RuntimeException
+   * The method uses a transaction
+   */
   @Transactional
   @Override
   public GiftCertificateDTO updateGiftCertificateWithTags(GiftCertificateDTO requestGiftCertificateDTO) {
@@ -117,6 +163,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     return updatedGiftCertificateDTO;
   }
 
+  /**
+   *
+   * @param id
+   */
   @Override
   public void delGiftCertificate(int id) {
     giftCertificateDAO.delGiftCertificate(id);

@@ -9,6 +9,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ *  Service Tag
+ *  Use for business logic of APP
+ *
+ *  @author Ivan Matsiashuk
+ *  @version 1.0
+ */
 @Service
 public class TagServiceImpl implements TagService {
   private final TagDAO tagDAO;
@@ -19,22 +26,42 @@ public class TagServiceImpl implements TagService {
     this.validator = validator;
   }
 
+  /**
+   *
+   * @param name
+   * @return TagDTO
+   *
+   * The method can throw ValidationException extends RuntimeException
+   */
   @Override
   public TagDTO createTag(String name) {
     validator.matchField(name);
     return TagConverter.toDto(tagDAO.createTag(name));
   }
 
+  /**
+   *
+   * @return List of TagDTO
+   */
   @Override
   public List<TagDTO> searchTags() {
     return TagConverter.toDto(tagDAO.searchTags());
   }
 
+  /**
+   *
+   * @param id
+   * @return TagDTO
+   */
   @Override
   public TagDTO searchTag(int id) {
     return TagConverter.toDto(tagDAO.searchTag(id));
   }
 
+  /**
+   *
+   * @param id
+   */
   @Override
   public void deleteTag(int id) {
     tagDAO.deleteTag(id);
