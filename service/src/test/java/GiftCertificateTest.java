@@ -123,9 +123,16 @@ public class GiftCertificateTest {
         Map<String, String> cleanMap = new HashMap<>();
         Map<String, String> noMatchParam = new HashMap<>();
         Map<String, String> allRequestParams = new HashMap<>();
+        Map<String, String> parameters = new HashMap<>();
+
+        List<GiftCertificateEntity> certificateEntities = new ArrayList<>();
+        certificateEntities.add(giftCertificateEntity);
 
         noMatchParam.put(RequestedParameter.SORT_NAME.toString(), RequestedParameter.SORT_NAME.getParameterKey());
         allRequestParams.put(RequestedParameter.SORT_NAME.getParameterKey(), RequestedParameter.SORT_NAME.toString());
+        parameters.put(RequestedParameter.SORT_NAME.toString(), RequestedParameter.SORT_NAME.toString());
+
+        Mockito.when(mockGiftCertificateDAO.getGiftCertificates(parameters)).thenReturn(certificateEntities);
 
         Assertions.assertAll(
                 () -> assertThrows(ServiceException.class, () -> mockGiftCertificate.searchGiftCertificates(cleanMap)),
