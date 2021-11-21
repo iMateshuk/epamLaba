@@ -29,7 +29,7 @@ public class TagController {
 
   /**
    *
-   * @param tagDTO
+   * @param tagDTO TagDTO object from @RequestBody
    * @return TagDTO
    */
   @PostMapping()

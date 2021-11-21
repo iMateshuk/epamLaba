@@ -36,7 +36,7 @@ public class GiftCertificateDB implements GiftCertificateDAO {
 
   /**
    *
-   * @param giftCertificateEntity
+   * @param giftCertificateEntity insert in table
    * @return GiftCertificateEntity
    *
    * The method can throw IncorrectResultSizeDataAccessException
@@ -58,7 +58,7 @@ public class GiftCertificateDB implements GiftCertificateDAO {
 
   /**
    *
-   * @param id
+   * @param id PK.
    * @return GiftCertificateEntity
    *
    * The method can throw EmptyResultDataAccessException
@@ -70,7 +70,7 @@ public class GiftCertificateDB implements GiftCertificateDAO {
 
   /**
    *
-   * @param tagName
+   * @param tagName It's name field of Tag.
    * @return List of GiftCertificateEntity
    */
   @Override
@@ -80,7 +80,7 @@ public class GiftCertificateDB implements GiftCertificateDAO {
 
   /**
    *
-   * @param requestedParameters
+   * @param requestedParameters Map<String, String> for QueryCreator.
    * @return List of GiftCertificateEntity
    */
   @Override
@@ -92,7 +92,7 @@ public class GiftCertificateDB implements GiftCertificateDAO {
 
   /**
    *
-   * @param giftCertificateEntity
+   * @param giftCertificateEntity update some collum in table.
    * @return GiftCertificateEntity
    *
    * The method can throw EmptyResultDataAccessException
@@ -108,7 +108,7 @@ public class GiftCertificateDB implements GiftCertificateDAO {
 
   /**
    *
-   * @param id
+   * @param id PK.
    */
   @Override
   public void delGiftCertificate(int id) {
@@ -117,7 +117,7 @@ public class GiftCertificateDB implements GiftCertificateDAO {
 
   /**
    *
-   * @param id
+   * @param id GiftCertificate field.
    */
   @Override
   public void delGiftCertificateAndTagBundle(int id) {
@@ -126,12 +126,12 @@ public class GiftCertificateDB implements GiftCertificateDAO {
 
   /**
    *
-   * @param GiftCertificateId
-   * @param tagName
+   * @param giftCertificateId GiftCertificate field.
+   * @param tagName Tag field.
    */
   @Override
-  public void addGiftCertificateTag(int GiftCertificateId, String tagName) {
-    jdbcTemplate.update(GiftCertificateTagSQL.INSERT_W_ID_NAME.getSQL(), GiftCertificateId, tagName);
+  public void addGiftCertificateTag(int giftCertificateId, String tagName) {
+    jdbcTemplate.update(GiftCertificateTagSQL.INSERT_W_ID_NAME.getSQL(), giftCertificateId, tagName);
   }
 
   private List<Object> prepareObjects(GiftCertificateEntity giftCertificateEntity) {

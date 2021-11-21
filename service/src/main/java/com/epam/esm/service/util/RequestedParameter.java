@@ -9,7 +9,7 @@ public enum RequestedParameter {
 
   ;
 
-  private String parameter;
+  private final String parameter;
 
   RequestedParameter(String string) {
     this.parameter = string;

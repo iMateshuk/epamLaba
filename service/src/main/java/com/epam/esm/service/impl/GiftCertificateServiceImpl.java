@@ -40,7 +40,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
   /**
    *
-   * @param requestGiftCertificateDTO
+   * @param requestGiftCertificateDTO DTO object
    * @return GiftCertificateDTO
    *
    * The method can throw ValidationException extends RuntimeException
@@ -74,7 +74,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
   /**
    *
-   * @param id
+   * @param id positive int
    * @return GiftCertificateDTO
    */
   @Override
@@ -88,7 +88,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
   /**
    *
-   * @param allParameters
+   * @param allParameters Map<String, String>
    * @return List of GiftCertificateDTO
    *
    * The method can throw ServiceException extends RuntimeException
@@ -112,7 +112,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
   /**
    *
-   * @param tagName
+   * @param tagName string of Tag.getName()
    * @return List of GiftCertificateDTO
    *
    * The method can throw ServiceException extends RuntimeException
@@ -133,7 +133,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
   /**
    *
-   * @param requestGiftCertificateDTO
+   * @param requestGiftCertificateDTO DTO object
    * @return GiftCertificateDTO
    *
    * The method can throw ValidationException extends RuntimeException
@@ -165,7 +165,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
   /**
    *
-   * @param id
+   * @param id positive int
    */
   @Override
   public void delGiftCertificate(int id) {

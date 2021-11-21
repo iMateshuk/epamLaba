@@ -17,7 +17,6 @@ public enum TagSQL {
 
     INSERT_TAG("INSERT INTO gc.tag(name) VALUES(?)"),
 
-
     ;
 
     private String sql;

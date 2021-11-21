@@ -29,7 +29,7 @@ public class TagDB implements TagDAO {
   /**
    * Create Tag entry in the table
    *
-   * @param tagName
+   * @param tagName Tag field.
    * @return TagEntity
    *
    * The method can throw DuplicateKeyException
@@ -51,7 +51,7 @@ public class TagDB implements TagDAO {
 
   /**
    *
-   * @param giftCertificateId
+   * @param giftCertificateId GiftCertificate field.
    * @return List of TagEntity
    */
   @Override
@@ -61,7 +61,7 @@ public class TagDB implements TagDAO {
 
   /**
    *
-   * @param id
+   * @param id Tag field.
    * @return TagEntity
    *
    * The method can throw EmptyResultDataAccessException
@@ -73,7 +73,7 @@ public class TagDB implements TagDAO {
 
   /**
    *
-   * @param tagName
+   * @param tagName Tag field.
    * @return TagEntity
    */
   @Override
@@ -83,7 +83,7 @@ public class TagDB implements TagDAO {
 
   /**
    *
-   * @param tagName
+   * @param tagName Tag field.
    * @return True or False
    */
   @Override
@@ -94,7 +94,7 @@ public class TagDB implements TagDAO {
 
   /**
    *
-   * @param id
+   * @param id Tag field.
    */
   @Override
   public void deleteTag(int id) {

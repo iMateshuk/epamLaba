@@ -46,7 +46,7 @@ public class ErrorDto {
   @Override
   public String toString() {
     return getClass().getName() +
-        "errorMsgKey='" + errorMsgKey + '\'' +
+        "errorMsgKey='" + errorMsgKey +
         ", params=" + Arrays.toString(params) +
         '}';
   }

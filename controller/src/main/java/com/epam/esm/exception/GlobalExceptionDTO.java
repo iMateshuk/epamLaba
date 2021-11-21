@@ -1,6 +1,7 @@
 package com.epam.esm.exception;
 
 import java.util.List;
+import java.util.Objects;
 
 public class GlobalExceptionDTO {
   private List<String> errorMessage;
@@ -33,5 +34,30 @@ public class GlobalExceptionDTO {
 
   public void setErrorCode(int errorCode) {
     this.errorCode = errorCode;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    GlobalExceptionDTO that = (GlobalExceptionDTO) o;
+    return errorCode == that.errorCode && Objects.equals(errorMessage, that.errorMessage);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(errorMessage, errorCode);
+  }
+
+  @Override
+  public String toString() {
+    return getClass().getName() +
+        "errorMessage=" + errorMessage +
+        ", errorCode=" + errorCode +
+        '}';
   }
 }

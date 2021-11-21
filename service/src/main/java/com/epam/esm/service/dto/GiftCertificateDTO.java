@@ -104,8 +104,8 @@ public class GiftCertificateDTO {
 
     return getClass().getName() + "{" +
         "id=" + id +
-        ", name='" + name + '\'' +
-        ", description='" + description + '\'' +
+        ", name='" + name +
+        ", description='" + description +
         ", price=" + price +
         ", duration=" + duration +
         ", createDate=" + createDate +
