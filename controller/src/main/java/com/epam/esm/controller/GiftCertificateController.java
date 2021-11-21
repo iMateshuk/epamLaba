@@ -84,7 +84,7 @@ public class GiftCertificateController {
 
   /**
    *
-   * @param giftCertificateDTO
+   * @param giftCertificateDTO from @RequestBody
    * @return GiftCertificateDTO
    *
    * The method can throw ValidationException extends RuntimeException

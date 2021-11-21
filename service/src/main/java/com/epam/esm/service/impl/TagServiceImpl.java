@@ -28,7 +28,7 @@ public class TagServiceImpl implements TagService {
 
   /**
    *
-   * @param name
+   * @param name of new Tag.
    * @return TagDTO
    *
    * The method can throw ValidationException extends RuntimeException
@@ -50,7 +50,7 @@ public class TagServiceImpl implements TagService {
 
   /**
    *
-   * @param id
+   * @param id Tag field.
    * @return TagDTO
    */
   @Override
@@ -60,7 +60,7 @@ public class TagServiceImpl implements TagService {
 
   /**
    *
-   * @param id
+   * @param id Tag field.
    */
   @Override
   public void deleteTag(int id) {
