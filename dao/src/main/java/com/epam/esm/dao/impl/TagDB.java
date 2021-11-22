@@ -31,7 +31,7 @@ public class TagDB implements TagDAO {
    *
    * @param tagName Tag field.
    * @return TagEntity
-   *
+   * <p>
    * The method can throw DuplicateKeyException
    */
   @Override
@@ -63,7 +63,7 @@ public class TagDB implements TagDAO {
    *
    * @param id Tag field.
    * @return TagEntity
-   *
+   * <p>
    * The method can throw EmptyResultDataAccessException
    */
   @Override

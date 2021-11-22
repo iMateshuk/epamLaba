@@ -1,6 +1,7 @@
 package com.epam.esm.exception;
 
 import com.epam.esm.service.dto.ErrorDto;
+import com.epam.esm.service.exception.ServiceConflictException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.exception.ServiceValidationException;
 import com.epam.esm.service.exception.ValidationException;
@@ -58,6 +59,17 @@ public class GlobalControllerExceptionHandler {
     return new GlobalExceptionDTO(
         messageSource.getMessage(errorDto.getErrorMsgKey(), params, LocaleContextHolder.getLocale()),
         HttpStatus.NOT_FOUND.value() * MULTIPLIER + exception.getErrorCod()
+    );
+  }
+
+  @ExceptionHandler(value = {ServiceConflictException.class})
+  @ResponseStatus(HttpStatus.CONFLICT)
+  public GlobalExceptionDTO handle(ServiceConflictException exception) {
+    ErrorDto errorDto = exception.getErrorDto();
+    Object[] params = errorDto.getParams() == null ? null : errorDto.getParams();
+    return new GlobalExceptionDTO(
+        messageSource.getMessage(errorDto.getErrorMsgKey(), params, LocaleContextHolder.getLocale()),
+        HttpStatus.CONFLICT.value() * MULTIPLIER + exception.getErrorCod()
     );
   }
 

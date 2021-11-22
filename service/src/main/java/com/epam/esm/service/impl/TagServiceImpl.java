@@ -5,8 +5,8 @@ import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.ErrorDto;
 import com.epam.esm.service.dto.TagConverter;
 import com.epam.esm.service.dto.TagDTO;
+import com.epam.esm.service.exception.ServiceConflictException;
 import com.epam.esm.service.exception.ServiceException;
-import com.epam.esm.service.exception.ServiceValidationException;
 import com.epam.esm.service.util.Validator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,14 +34,14 @@ public class TagServiceImpl implements TagService {
    * @param name of new Tag.
    * @return TagDTO
    * <p>
-   * The method can throw ValidationException extends RuntimeException
+   * The method can throw ServiceConflictException extends RuntimeException
    */
   @Transactional
   @Override
   public TagDTO createTag(String name) {
     validator.matchField(name);
     if (tagDAO.isTagExist(name)) {
-      throw new ServiceValidationException(new ErrorDto("tag.create.error", name), 201);
+      throw new ServiceConflictException(new ErrorDto("tag.create.error", name), 201);
     }
     return TagConverter.toDto(tagDAO.createTag(name));
   }
@@ -57,6 +57,8 @@ public class TagServiceImpl implements TagService {
   /**
    * @param id Tag field.
    * @return TagDTO
+   * <p>
+   * The method can throw ServiceException extends RuntimeException
    */
   @Override
   public TagDTO searchTag(int id) {
@@ -68,6 +70,8 @@ public class TagServiceImpl implements TagService {
 
   /**
    * @param id Tag field.
+   * <p>
+   * The method can throw ServiceException extends RuntimeException
    */
   @Override
   public void deleteTag(int id) {

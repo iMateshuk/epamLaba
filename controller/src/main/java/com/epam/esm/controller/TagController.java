@@ -53,7 +53,7 @@ public class TagController {
    *
    * @param id must be positive
    * @return TagDTO
-   *
+   * <p>
    * The method can throw ValidationException extends RuntimeException
    */
   @GetMapping("/{id}")
@@ -66,7 +66,7 @@ public class TagController {
   /**
    *
    * @param id must be positive
-   *
+   * <p>
    * The method can throw ValidationException extends RuntimeException
    */
   @DeleteMapping("/{id}")

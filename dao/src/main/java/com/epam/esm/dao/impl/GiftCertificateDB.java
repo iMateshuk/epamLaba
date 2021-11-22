@@ -38,7 +38,7 @@ public class GiftCertificateDB implements GiftCertificateDAO {
    *
    * @param giftCertificateEntity insert in table
    * @return GiftCertificateEntity
-   *
+   * <p>
    * The method can throw IncorrectResultSizeDataAccessException
    */
   @Override
@@ -60,7 +60,7 @@ public class GiftCertificateDB implements GiftCertificateDAO {
    *
    * @param id PK.
    * @return GiftCertificateEntity
-   *
+   * <p>
    * The method can throw EmptyResultDataAccessException
    */
   @Override
@@ -102,7 +102,7 @@ public class GiftCertificateDB implements GiftCertificateDAO {
 
   /**
    *
-   * @param requestedParameters Map<String, String> for QueryCreator.
+   * @param requestedParameters Map of parameters.
    * @return List of GiftCertificateEntity
    */
   @Override
@@ -116,7 +116,7 @@ public class GiftCertificateDB implements GiftCertificateDAO {
    *
    * @param giftCertificateEntity update some collum in table.
    * @return GiftCertificateEntity
-   *
+   * <p>
    * The method can throw EmptyResultDataAccessException
    */
   @Override

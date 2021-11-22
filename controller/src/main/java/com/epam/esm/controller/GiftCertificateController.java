@@ -14,7 +14,6 @@ import java.util.Map;
  * Support CRUD operation
  *
  *  @author Ivan Matsiashuk
- *
  *  @version 1.0
  */
 @RestController
@@ -32,7 +31,7 @@ public class GiftCertificateController {
    *
    * @param giftCertificateDTO with Tags
    * @return GiftCertificateDTO
-   *
+   * <p>
    * The method can throw ValidationException extends RuntimeException
    */
   @PostMapping()
@@ -44,9 +43,9 @@ public class GiftCertificateController {
 
   /**
    *
-   * @param allParameters Map<String, String>
+   * @param allParameters Map of parameters
    * @return List of GiftCertificateDTO
-   *
+   * <p>
    * The method can throw ServiceException extends RuntimeException
    */
   @GetMapping()
@@ -61,7 +60,7 @@ public class GiftCertificateController {
    *
    * @param id must be positive, match RegExp {^\d+$}
    * @return GiftCertificateDTO
-   *
+   * <p>
    * The method can throw ValidationException extends RuntimeException
    */
   @GetMapping("/{id}")
@@ -74,8 +73,9 @@ public class GiftCertificateController {
   /**
    *
    * @param giftCertificateDTO from @RequestBody
+   * @param id positive int
    * @return GiftCertificateDTO
-   *
+   * <p>
    * The method can throw ValidationException extends RuntimeException
    */
   @PatchMapping("/{id}")
@@ -90,7 +90,7 @@ public class GiftCertificateController {
   /**
    *
    * @param id must be positive
-   *
+   * <p>
    * The method can throw ValidationException extends RuntimeException
    */
   @DeleteMapping("/{id}")

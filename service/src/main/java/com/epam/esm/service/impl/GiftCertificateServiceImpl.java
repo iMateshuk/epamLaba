@@ -7,6 +7,7 @@ import com.epam.esm.service.dto.ErrorDto;
 import com.epam.esm.service.dto.GiftCertificateConverter;
 import com.epam.esm.service.dto.GiftCertificateDTO;
 import com.epam.esm.service.dto.TagConverter;
+import com.epam.esm.service.exception.ServiceConflictException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.exception.ServiceValidationException;
 import com.epam.esm.service.util.RequestedParameter;
@@ -21,10 +22,10 @@ import java.util.stream.Collectors;
 
 /**
  * Service Gift-Certificate
- *  Use for business logic of APP
+ * Use for business logic of APP
  *
- *  @author Ivan Matsiashuk
- *  @version 1.0
+ * @author Ivan Matsiashuk
+ * @version 1.0
  */
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
@@ -39,11 +40,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
   }
 
   /**
-   *
    * @param requestGiftCertificateDTO DTO object
    * @return GiftCertificateDTO
-   *
-   * The method can throw ValidationException extends RuntimeException
+   * <p>
+   * The method can throw ServiceConflictException extends RuntimeException<p>
    * The method uses a transaction
    */
   @Transactional
@@ -51,8 +51,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
   public GiftCertificateDTO createGiftCertificate(GiftCertificateDTO requestGiftCertificateDTO) {
     validator.matchField(requestGiftCertificateDTO.getName(), requestGiftCertificateDTO.getDescription());
     String certificateName = requestGiftCertificateDTO.getName();
-    if(giftCertificateDAO.isExistGiftCertificate(certificateName)){
-      throw new ServiceException(new ErrorDto("certificate.name.create.error", certificateName), 101);
+    if (giftCertificateDAO.isExistGiftCertificate(certificateName)) {
+      throw new ServiceConflictException(new ErrorDto("certificate.name.create.error", certificateName), 101);
     }
 
     GiftCertificateDTO createdGiftCertificateDTO = GiftCertificateConverter
@@ -64,7 +64,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
   }
 
   /**
-   *
    * @return List of GiftCertificateDTO
    */
   @Override
@@ -77,9 +76,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
   }
 
   /**
-   *
    * @param id positive int
    * @return GiftCertificateDTO
+   * <p>
+   * The method can throw ServiceException extends RuntimeException
    */
   @Override
   public GiftCertificateDTO searchGiftCertificate(int id) {
@@ -94,11 +94,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
   }
 
   /**
-   *
-   * @param allParameters Map<String, String>
+   * @param allParameters Map of parameters
    * @return List of GiftCertificateDTO
-   *
-   * The method can throw ServiceException extends RuntimeException
+   * <p>
+   * The method can throw ServiceValidationException or ServiceException extends RuntimeException
    */
   @Override
   public List<GiftCertificateDTO> searchGiftCertificates(Map<String, String> allParameters) {
@@ -110,7 +109,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     List<GiftCertificateDTO> createdGiftCertificateDTOs = GiftCertificateConverter
         .toDto(giftCertificateDAO.getGiftCertificates(parameters));
     if (createdGiftCertificateDTOs.isEmpty()) {
-      throw new ServiceValidationException(new ErrorDto("dao.empty.result.error"), 115);
+      throw new ServiceException(new ErrorDto("dao.empty.result.error"), 115);
     }
 
     addTagToDTO(createdGiftCertificateDTOs);
@@ -118,11 +117,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
   }
 
   /**
-   *
    * @param requestGiftCertificateDTO DTO object
    * @return GiftCertificateDTO
-   *
-   * The method can throw ValidationException extends RuntimeException
+   * <p>
+   * The method can throw ServiceException extends RuntimeException<p>
    * The method uses a transaction
    */
   @Transactional
@@ -154,8 +152,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
   }
 
   /**
-   *
    * @param id positive int
+   * <p>
+   * The method can throw ServiceException extends RuntimeException
    */
   @Override
   public void delGiftCertificate(int id) {
