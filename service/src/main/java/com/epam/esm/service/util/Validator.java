@@ -34,9 +34,9 @@ public class Validator {
       errors.add(new ErrorDto("certificate.duration.min.error", MIN_VALUE));
     }
 
-    if (giftCertificateDTO.getTags().isEmpty()) {
+    /*if (giftCertificateDTO.getTags().isEmpty()) {
       errors.add(new ErrorDto("certificate.tags.empty.error", MIN_VALUE));
-    }
+    }*/
 
     if (!errors.isEmpty()) {
       throw new ValidationException(errors, 1);

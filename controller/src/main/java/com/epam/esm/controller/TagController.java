@@ -33,6 +33,7 @@ public class TagController {
    * @return TagDTO
    */
   @PostMapping()
+  @ResponseStatus(HttpStatus.CREATED)
   public TagDTO createTag(@RequestBody TagDTO tagDTO) {
     validator.checkTagName(tagDTO.getName());
     return tagService.createTag(tagDTO.getName());
@@ -43,6 +44,7 @@ public class TagController {
    * @return List of TagDTO
    */
   @GetMapping()
+  @ResponseStatus(HttpStatus.OK)
   public List<TagDTO> getTags() {
     return tagService.searchTags();
   }
@@ -55,6 +57,7 @@ public class TagController {
    * The method can throw ValidationException extends RuntimeException
    */
   @GetMapping("/{id}")
+  @ResponseStatus(HttpStatus.OK)
   public TagDTO getTag(@PathVariable int id) {
     validator.checkId(id);
     return tagService.searchTag(id);
@@ -67,7 +70,7 @@ public class TagController {
    * The method can throw ValidationException extends RuntimeException
    */
   @DeleteMapping("/{id}")
-  @ResponseStatus(HttpStatus.OK)
+  @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteTag(@PathVariable int id) {
     validator.checkId(id);
     tagService.deleteTag(id);

@@ -14,9 +14,7 @@ public interface GiftCertificateService {
 
   List<GiftCertificateDTO> searchGiftCertificates(Map<String, String> allParameters);
 
-  List<GiftCertificateDTO> getGiftCertificates(String tagName);
-
-  GiftCertificateDTO updateGiftCertificateWithTags(GiftCertificateDTO giftCertificateDTO);
+  GiftCertificateDTO patchGiftCertificate(GiftCertificateDTO giftCertificateDTO);
 
   void delGiftCertificate(int id);
 }

@@ -6,6 +6,9 @@ public enum GiftCertificateSQL {
   SELECT_W_NAME("SELECT * FROM gc.gift_certificate WHERE name = ?"),
   SELECT_LAST_INSERT_ID("SELECT last_insert_id()"),
 
+  SELECT_COUNT_W_ID("SELECT count(*) FROM gc.gift_certificate WHERE id = ?"),
+  SELECT_COUNT_W_NAME("SELECT count(*) FROM gc.gift_certificate WHERE name = ?"),
+
   SELECT_W_TAG_NAME("SELECT gift_certificate.* FROM gc.tag " +
       "left join  gc.gc_tag on tag.id = gc_tag.tag_id " +
       "left join gc.gift_certificate on gc_tag.gc_id = gift_certificate.id " +

@@ -17,5 +17,7 @@ public interface TagDAO {
 
   boolean isTagExist(String tagName);
 
+  boolean isTagExist(int id);
+
   void deleteTag(int id);
 }

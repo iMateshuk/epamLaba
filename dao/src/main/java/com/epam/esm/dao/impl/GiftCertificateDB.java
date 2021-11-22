@@ -68,6 +68,23 @@ public class GiftCertificateDB implements GiftCertificateDAO {
     return jdbcTemplate.queryForObject(GiftCertificateSQL.SELECT_W_ID.getSQL(), giftCertificateMapper, id);
   }
 
+  @Override
+  public GiftCertificateEntity getGiftCertificate(String certificateName) {
+    return jdbcTemplate.queryForObject(GiftCertificateSQL.SELECT_W_NAME.getSQL(), giftCertificateMapper, certificateName);
+  }
+
+  @Override
+  public boolean isExistGiftCertificate(String certificateName) {
+    Integer count = jdbcTemplate.queryForObject(GiftCertificateSQL.SELECT_COUNT_W_NAME.getSQL(), Integer.class, certificateName);
+    return count != null && count > 0;
+  }
+
+  @Override
+  public boolean isExistGiftCertificate(int id) {
+    Integer count = jdbcTemplate.queryForObject(GiftCertificateSQL.SELECT_COUNT_W_ID.getSQL(), Integer.class, id);
+    return count != null && count > 0;
+  }
+
   /**
    *
    * @param tagName It's name field of Tag.

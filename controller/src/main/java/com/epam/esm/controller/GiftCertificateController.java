@@ -50,6 +50,7 @@ public class GiftCertificateController {
    * The method can throw ServiceException extends RuntimeException
    */
   @GetMapping()
+  @ResponseStatus(HttpStatus.OK)
   public List<GiftCertificateDTO> getGiftCertificate(@RequestParam Map<String, String> allParameters) {
     return allParameters.size() > 0
         ? giftCertificateService.searchGiftCertificates(allParameters)
@@ -63,23 +64,11 @@ public class GiftCertificateController {
    *
    * The method can throw ValidationException extends RuntimeException
    */
-  @GetMapping("/{id:^\\d+$}")
+  @GetMapping("/{id}")
+  @ResponseStatus(HttpStatus.OK)
   public GiftCertificateDTO getGiftCertificate(@PathVariable int id) {
     validator.checkId(id);
     return giftCertificateService.searchGiftCertificate(id);
-  }
-
-  /**
-   *
-   * @param tagName match RegExp {^\D+.*$}
-   * @return List of GiftCertificateDTO
-   *
-   * The method can throw ValidationException extends RuntimeException
-   */
-  @GetMapping("/{tagName:^\\D+.*$}")
-  public List<GiftCertificateDTO> chooseTagName(@PathVariable String tagName) {
-    validator.checkTagName(tagName);
-    return giftCertificateService.getGiftCertificates(tagName);
   }
 
   /**
@@ -89,10 +78,13 @@ public class GiftCertificateController {
    *
    * The method can throw ValidationException extends RuntimeException
    */
-  @PutMapping()
-  public GiftCertificateDTO updateGiftCertWithTags(@RequestBody GiftCertificateDTO giftCertificateDTO) {
+  @PatchMapping("/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  public GiftCertificateDTO updateGiftCertWithTags(@PathVariable int id, @RequestBody GiftCertificateDTO giftCertificateDTO) {
+    validator.checkId(id);
+    giftCertificateDTO.setId(id);
     validator.checkUpdateCertificate(giftCertificateDTO);
-    return giftCertificateService.updateGiftCertificateWithTags(giftCertificateDTO);
+    return giftCertificateService.patchGiftCertificate(giftCertificateDTO);
   }
 
   /**
@@ -102,7 +94,7 @@ public class GiftCertificateController {
    * The method can throw ValidationException extends RuntimeException
    */
   @DeleteMapping("/{id}")
-  @ResponseStatus(HttpStatus.OK)
+  @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteGiftCertificate(@PathVariable int id) {
     validator.checkId(id);
     giftCertificateService.delGiftCertificate(id);

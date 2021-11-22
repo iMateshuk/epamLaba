@@ -76,6 +76,7 @@ public class TagServiceTest {
 
     @Test
     public void tagSearchTest() {
+        Mockito.when(mockTagDAO.isTagExist(1)).thenReturn(true);
         Mockito.when(mockTagDAO.searchTag(1)).thenReturn(tagEntity01);
         Assertions.assertAll(
                 () -> assertDoesNotThrow(() -> mockTagService.searchTag(1)),
@@ -86,7 +87,7 @@ public class TagServiceTest {
 
     @Test
     public void deleteTagTest() {
-        Mockito.when(mockTagDAO.searchTag(1)).thenReturn(tagEntity01);
+        Mockito.when(mockTagDAO.isTagExist(1)).thenReturn(true);
         Assertions.assertAll(
                 () -> assertDoesNotThrow(() -> mockTagService.deleteTag(1))
         );
