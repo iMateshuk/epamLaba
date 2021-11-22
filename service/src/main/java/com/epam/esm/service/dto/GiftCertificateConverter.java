@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class GiftCertificateConverter {
   private final static TimeZone tz = TimeZone.getTimeZone("UTC");
-  private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+  private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
   static {
     df.setTimeZone(tz);
   }
