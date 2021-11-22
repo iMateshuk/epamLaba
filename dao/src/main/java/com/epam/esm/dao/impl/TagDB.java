@@ -84,7 +84,7 @@ public class TagDB implements TagDAO {
   /**
    *
    * @param tagName Tag field.
-   * @return True or False
+   * @return true when find name
    */
   @Override
   public boolean isTagExist(String tagName) {
@@ -92,6 +92,11 @@ public class TagDB implements TagDAO {
     return count != null && count > 0;
   }
 
+  /**
+   *
+   * @param id table PK
+   * @return true when find id
+   */
   @Override
   public boolean isTagExist(int id) {
     Integer count = jdbcTemplate.queryForObject(TagSQL.SELECT_COUNT_W_ID.getSQL(), Integer.class, id);

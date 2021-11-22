@@ -12,8 +12,6 @@ public interface GiftCertificateDAO {
 
   GiftCertificateEntity getGiftCertificate(int id);
 
-  GiftCertificateEntity getGiftCertificate(String certificateName);
-
   boolean isExistGiftCertificate(String certificateName);
 
   List<GiftCertificateEntity> getGiftCertificates(String tagName);
