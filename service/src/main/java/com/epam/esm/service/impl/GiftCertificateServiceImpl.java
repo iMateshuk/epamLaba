@@ -44,7 +44,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
    * @return GiftCertificateDTO
    * <p>
    * The method can throw ServiceConflictException extends RuntimeException<p>
-   * The method uses a transaction
    */
   @Transactional
   @Override
@@ -66,6 +65,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
   /**
    * @return List of GiftCertificateDTO
    */
+  @Transactional
   @Override
   public List<GiftCertificateDTO> searchGiftCertificates() {
     List<GiftCertificateDTO> createdGiftCertificateDTOs = GiftCertificateConverter
@@ -81,6 +81,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
    * <p>
    * The method can throw ServiceException extends RuntimeException
    */
+  @Transactional
   @Override
   public GiftCertificateDTO searchGiftCertificate(int id) {
     if (!giftCertificateDAO.isExistGiftCertificate(id)) {
@@ -99,6 +100,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
    * <p>
    * The method can throw ServiceValidationException or ServiceException extends RuntimeException
    */
+  @Transactional
   @Override
   public List<GiftCertificateDTO> searchGiftCertificates(Map<String, String> allParameters) {
     Map<String, String> parameters = createMapParameter(allParameters);
@@ -156,6 +158,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
    * <p>
    * The method can throw ServiceException extends RuntimeException
    */
+  @Transactional
   @Override
   public void delGiftCertificate(int id) {
     if (!giftCertificateDAO.isExistGiftCertificate(id)) {

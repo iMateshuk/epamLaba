@@ -49,6 +49,7 @@ public class TagServiceImpl implements TagService {
   /**
    * @return List of TagDTO
    */
+  @Transactional
   @Override
   public List<TagDTO> searchTags() {
     return TagConverter.toDto(tagDAO.searchTags());
@@ -60,6 +61,7 @@ public class TagServiceImpl implements TagService {
    * <p>
    * The method can throw ServiceException extends RuntimeException
    */
+  @Transactional
   @Override
   public TagDTO searchTag(int id) {
     if (!tagDAO.isTagExist(id)) {
@@ -73,6 +75,7 @@ public class TagServiceImpl implements TagService {
    * <p>
    * The method can throw ServiceException extends RuntimeException
    */
+  @Transactional
   @Override
   public void deleteTag(int id) {
     if (!tagDAO.isTagExist(id)) {
