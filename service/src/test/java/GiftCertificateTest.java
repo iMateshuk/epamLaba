@@ -168,6 +168,8 @@ public class GiftCertificateTest {
     existGiftCertificateDTO.setPrice(1.99f);
     existGiftCertificateDTO.setTags(existTagDTOs);
 
+    Mockito.when(mockGiftCertificateDAO.isExistGiftCertificate(requestGiftCertificateDTO.getId()))
+        .thenReturn(true);
     GiftCertificateEntity requestedGiftCertificateEntity = GiftCertificateConverter.toEntity(requestGiftCertificateDTO);
     Mockito.when(mockGiftCertificateDAO.updateGiftCertificate(requestedGiftCertificateEntity))
         .thenReturn(giftCertificateEntity);
