@@ -82,7 +82,6 @@ public class TagServiceTest {
                 () -> assertDoesNotThrow(() -> mockTagService.searchTag(1)),
                 () -> assertEquals(mockTagService.searchTag(1), tagDTO01)
         );
-
     }
 
     @Test
@@ -91,7 +90,5 @@ public class TagServiceTest {
         Assertions.assertAll(
                 () -> assertDoesNotThrow(() -> mockTagService.deleteTag(1))
         );
-
     }
-
 }
