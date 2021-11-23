@@ -32,7 +32,7 @@ public class TagController {
    * @param tagDTO TagDTO object from @RequestBody
    * @return TagDTO
    */
-  @PostMapping()
+  @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public TagDTO createTag(@RequestBody TagDTO tagDTO) {
     validator.checkTagName(tagDTO.getName());
@@ -43,7 +43,7 @@ public class TagController {
    *
    * @return List of TagDTO
    */
-  @GetMapping()
+  @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public List<TagDTO> getTags() {
     return tagService.searchTags();

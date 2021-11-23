@@ -34,7 +34,7 @@ public class GiftCertificateController {
    * <p>
    * The method can throw ValidationException extends RuntimeException
    */
-  @PostMapping()
+  @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public GiftCertificateDTO createGiftCertificate(@RequestBody GiftCertificateDTO giftCertificateDTO) {
     validator.checkCreationCertificate(giftCertificateDTO);
@@ -48,7 +48,7 @@ public class GiftCertificateController {
    * <p>
    * The method can throw ServiceException extends RuntimeException
    */
-  @GetMapping()
+  @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public List<GiftCertificateDTO> getGiftCertificate(@RequestParam Map<String, String> allParameters) {
     return allParameters.size() > 0

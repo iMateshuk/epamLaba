@@ -4,18 +4,18 @@ import com.epam.esm.service.dto.ErrorDto;
 
 public class ServiceValidationException extends RuntimeException {
   private final ErrorDto errorDto;
-  private final int errorCod;
+  private final int errorCode;
 
   public ServiceValidationException(ErrorDto errorDto, int errorCod) {
     this.errorDto = errorDto;
-    this.errorCod = errorCod;
+    this.errorCode = errorCod;
   }
 
   public ErrorDto getErrorDto() {
     return errorDto;
   }
 
-  public int getErrorCod() {
-    return errorCod;
+  public int getErrorCode() {
+    return errorCode;
   }
 }

@@ -2,7 +2,6 @@ package com.epam.esm.dao.entity;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.Objects;
 
 public class GiftCertificateEntity implements Serializable {
@@ -58,7 +57,7 @@ public class GiftCertificateEntity implements Serializable {
     this.duration = duration;
   }
 
-  public Date getCreateDate() {
+  public Timestamp getCreateDate() {
     return createDate;
   }
 
@@ -66,7 +65,7 @@ public class GiftCertificateEntity implements Serializable {
     this.createDate = createDate;
   }
 
-  public Date getLastUpdateDate() {
+  public Timestamp getLastUpdateDate() {
     return lastUpdateDate;
   }
 

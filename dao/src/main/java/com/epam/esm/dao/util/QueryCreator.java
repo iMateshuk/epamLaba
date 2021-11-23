@@ -3,15 +3,15 @@ package com.epam.esm.dao.util;
 import java.util.Map;
 
 public class QueryCreator {
-  private final static String WHERE_RE = ".*WHERE.*";
+  private final static String MATCH_WHERE = ".*WHERE.*";
   private final static String WHERE = "WHERE ";
 
-  private final static String ORDER_RE = ".*ORDER.*";
+  private final static String MATCH_ORDER = ".*ORDER.*";
   private final static String ORDER_BY = "ORDER BY ";
-  private final static String SORT = "DESC";
+  private final static String SORT_DESC = "DESC";
 
-  private final static String SORT_RE = "^SORT_.*";
-  private final static String SEARCH_RE = "^SEARCH_.*";
+  private final static String MATCH_SORT = "^SORT_.*";
+  private final static String MATCH_SEARCH = "^SEARCH_.*";
 
   private final static String OR = "OR ";
 
@@ -22,10 +22,10 @@ public class QueryCreator {
     StringBuilder searchBuilder = new StringBuilder();
     StringBuilder orderBuilder = new StringBuilder();
 
-    requestedParameters.entrySet().stream().filter((parameter) -> parameter.getKey().matches(SORT_RE))
+    requestedParameters.entrySet().stream().filter((parameter) -> parameter.getKey().matches(MATCH_SORT))
         .forEach((parameter) -> orderBuilder.append(appendOrder(orderBuilder, parameter.getKey(), parameter.getValue())));
 
-    requestedParameters.entrySet().stream().filter((parameter) -> parameter.getKey().matches(SEARCH_RE))
+    requestedParameters.entrySet().stream().filter((parameter) -> parameter.getKey().matches(MATCH_SEARCH))
         .forEach((parameter) -> searchBuilder.append(appendSearch(searchBuilder, parameter.getKey())));
 
     return sqlBuilder
@@ -36,16 +36,16 @@ public class QueryCreator {
   }
 
   public static void removeKeyMatchSort(Map<String, String> requestedParameters) {
-    requestedParameters.entrySet().removeIf(current -> current.getValue() == null || current.getKey().matches(SORT_RE));
+    requestedParameters.entrySet().removeIf(current -> current.getValue() == null || current.getKey().matches(MATCH_SORT));
   }
 
   private static String appendSearch(StringBuilder builder, String key) {
-    String match = builder.toString().matches(WHERE_RE) ? OR : WHERE;
+    String match = builder.toString().matches(MATCH_WHERE) ? OR : WHERE;
     return match + GiftCertificateTagSQL.valueOf(key).getSQL();
   }
 
   private static String appendOrder(StringBuilder builder, String key, String value) {
     String sql = ORDER_BY + GiftCertificateTagSQL.valueOf(key).getSQL();
-    return builder.toString().matches(ORDER_RE) ? EMPTY : value.compareToIgnoreCase(SORT) == 0 ? sql + value : sql;
+    return builder.toString().matches(MATCH_ORDER) ? EMPTY : value.compareToIgnoreCase(SORT_DESC) == 0 ? sql + value : sql;
   }
 }

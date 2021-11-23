@@ -47,7 +47,7 @@ public class GlobalControllerExceptionHandler {
     Object[] params = errorDto.getParams() == null ? null : errorDto.getParams();
     return new GlobalExceptionDTO(
         messageSource.getMessage(errorDto.getErrorMsgKey(), params, LocaleContextHolder.getLocale()),
-        HttpStatus.BAD_REQUEST.value() * MULTIPLIER + exception.getErrorCod()
+        HttpStatus.BAD_REQUEST.value() * MULTIPLIER + exception.getErrorCode()
     );
   }
 
@@ -58,7 +58,7 @@ public class GlobalControllerExceptionHandler {
     Object[] params = errorDto.getParams() == null ? null : errorDto.getParams();
     return new GlobalExceptionDTO(
         messageSource.getMessage(errorDto.getErrorMsgKey(), params, LocaleContextHolder.getLocale()),
-        HttpStatus.NOT_FOUND.value() * MULTIPLIER + exception.getErrorCod()
+        HttpStatus.NOT_FOUND.value() * MULTIPLIER + exception.getErrorCode()
     );
   }
 
@@ -69,7 +69,7 @@ public class GlobalControllerExceptionHandler {
     Object[] params = errorDto.getParams() == null ? null : errorDto.getParams();
     return new GlobalExceptionDTO(
         messageSource.getMessage(errorDto.getErrorMsgKey(), params, LocaleContextHolder.getLocale()),
-        HttpStatus.CONFLICT.value() * MULTIPLIER + exception.getErrorCod()
+        HttpStatus.CONFLICT.value() * MULTIPLIER + exception.getErrorCode()
     );
   }
 
@@ -99,7 +99,6 @@ public class GlobalControllerExceptionHandler {
         HttpStatus.BAD_REQUEST.value() * MULTIPLIER + 305
     );
   }
-
 
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
