@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/*@SpringBootTest(classes= {TagServiceImpl.class})*/
 public class TagServiceTest {
     private static final TagEntity tagEntity01 = new TagEntity();
     private static final TagEntity tagEntity02 = new TagEntity();
@@ -43,7 +44,7 @@ public class TagServiceTest {
 
     @BeforeEach
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @InjectMocks

@@ -1,29 +1,34 @@
 package com.epam.esm.config;
 
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
+import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+
+import java.util.Locale;
 
 @Configuration
-@EnableWebMvc
 @ComponentScan(basePackages = "com.epam.esm")
-public class DispatcherConfig implements WebMvcConfigurer {
-  private static final String PREFIX = "/WEB-INF/views/";
-  private static final String SUFFIX = ".jsp";
-
-  private static final String RESOURCES_HANDLERS = "/resources/**";
-  private static final String RESOURCES_LOCATION = "/resources/";
-
-  @Override
-  public void configureViewResolvers(ViewResolverRegistry viewResolver) {
-    viewResolver.jsp(PREFIX, SUFFIX);
+public class DispatcherConfig {
+  @Bean
+  public MessageSource messageSource() {
+    ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
+    source.setBasename("classpath:/locale/locale");
+    source.setUseCodeAsDefaultMessage(true);
+    source.setDefaultLocale(Locale.ENGLISH);
+    source.setDefaultEncoding("UTF-8");
+    source.setFallbackToSystemLocale(false);
+    return source;
   }
 
-  @Override
-  public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    registry.addResourceHandler(RESOURCES_HANDLERS).addResourceLocations(RESOURCES_LOCATION);
+  @Bean
+  public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> webServerFactoryCustomizer() {
+    return factory -> {
+      factory.setContextPath("/gift-certificate-app");
+      factory.setPort(8080);
+    };
   }
 }

@@ -1,28 +1,25 @@
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.TagDAO;
+import com.epam.esm.dao.config.DaoConfig;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.impl.GiftCertificateDB;
 import com.epam.esm.dao.impl.TagDB;
-import com.epam.esm.dao.config.DaoConfig;
 import com.epam.esm.dao.util.GiftCertificateTagSQL;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(SpringExtension.class)
 @ActiveProfiles(value = "dev")
-@ContextConfiguration(classes = {GiftCertificateDB.class, DaoConfig.class, TagDB.class})
+@SpringBootTest(classes = {GiftCertificateDB.class, DaoConfig.class, TagDB.class})
 public class GiftCertificateDbTest {
 
   private static final GiftCertificateEntity giftCertificateEntity = new GiftCertificateEntity();
