@@ -36,9 +36,9 @@ public class GiftCertificateController {
    */
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public GiftCertificateDTO createGiftCertificate(@RequestBody GiftCertificateDTO giftCertificateDTO) {
+  public GiftCertificateDTO insertCertificate(@RequestBody GiftCertificateDTO giftCertificateDTO) {
     validator.checkCreationCertificate(giftCertificateDTO);
-    return giftCertificateService.createGiftCertificate(giftCertificateDTO);
+    return giftCertificateService.insertCertificate(giftCertificateDTO);
   }
 
   /**
@@ -50,10 +50,10 @@ public class GiftCertificateController {
    */
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  public List<GiftCertificateDTO> getGiftCertificate(@RequestParam Map<String, String> allParameters) {
+  public List<GiftCertificateDTO> findAllCertificate(@RequestParam Map<String, String> allParameters) {
     return allParameters.size() > 0
-        ? giftCertificateService.searchGiftCertificates(allParameters)
-        : giftCertificateService.searchGiftCertificates();
+        ? giftCertificateService.findAllCertificates(allParameters)
+        : giftCertificateService.findAllCertificates();
   }
 
   /**
@@ -65,9 +65,9 @@ public class GiftCertificateController {
    */
   @GetMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
-  public GiftCertificateDTO getGiftCertificate(@PathVariable int id) {
+  public GiftCertificateDTO findCertificate(@PathVariable int id) {
     validator.checkId(id);
-    return giftCertificateService.searchGiftCertificate(id);
+    return giftCertificateService.findCertificate(id);
   }
 
   /**
@@ -80,11 +80,11 @@ public class GiftCertificateController {
    */
   @PatchMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
-  public GiftCertificateDTO updateGiftCertWithTags(@PathVariable int id, @RequestBody GiftCertificateDTO giftCertificateDTO) {
+  public GiftCertificateDTO updateCertificate(@PathVariable int id, @RequestBody GiftCertificateDTO giftCertificateDTO) {
     validator.checkId(id);
     giftCertificateDTO.setId(id);
     validator.checkUpdateCertificate(giftCertificateDTO);
-    return giftCertificateService.patchGiftCertificate(giftCertificateDTO);
+    return giftCertificateService.updateCertificate(giftCertificateDTO);
   }
 
   /**
@@ -95,8 +95,8 @@ public class GiftCertificateController {
    */
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteGiftCertificate(@PathVariable int id) {
+  public void deleteCertificate(@PathVariable int id) {
     validator.checkId(id);
-    giftCertificateService.delGiftCertificate(id);
+    giftCertificateService.deleteCertificate(id);
   }
 }

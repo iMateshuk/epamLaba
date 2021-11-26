@@ -4,11 +4,12 @@ import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.config.GiftCertificateMapper;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.util.GiftCertificateSQL;
-import com.epam.esm.dao.util.GiftCertificateTagSQL;
 import com.epam.esm.dao.util.QueryCreator;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +18,8 @@ import java.util.Map;
  * Repository Gift-Certificate
  * DAO to MySQL
  *
- *  @author Ivan Matsiashuk
- *  @version 1.0
+ * @author Ivan Matsiashuk
+ * @version 1.0
  */
 @Repository
 public class GiftCertificateDB implements GiftCertificateDAO {
@@ -34,135 +35,119 @@ public class GiftCertificateDB implements GiftCertificateDAO {
     this.giftCertificateMapper = giftCertificateMapper;
   }
 
+  @PersistenceContext
+  private EntityManager entityManager;
+
   /**
-   *
-   * @param giftCertificateEntity insert in table
+   * @param giftCertificate insert in table
    * @return GiftCertificateEntity
    * <p>
    * The method can throw IncorrectResultSizeDataAccessException
    */
   @Override
-  public GiftCertificateEntity createGiftCertificate(GiftCertificateEntity giftCertificateEntity) {
-    jdbcTemplate.update(giftCertificateSQLs.get(GiftCertificateSQL.INSERT_GIFT_CERT), prepareObjects(giftCertificateEntity).toArray());
-    return jdbcTemplate.queryForObject(GiftCertificateSQL.SELECT_W_NAME.getSQL(), giftCertificateMapper, giftCertificateEntity.getName());
+  public GiftCertificateEntity insertCertificate(GiftCertificateEntity giftCertificate) {
+    return entityManager.merge(giftCertificate);
   }
 
   /**
-   *
    * @return List of GiftCertificateEntity
    */
   @Override
-  public List<GiftCertificateEntity> getGiftCertificates() {
-    return jdbcTemplate.query(GiftCertificateSQL.SELECT_ALL.getSQL(), giftCertificateMapper);
+  public List<GiftCertificateEntity> findAllCertificates() {
+    return entityManager.createQuery(GiftCertificateSQL.QL_SELECT_ALL.getSQL(), GiftCertificateEntity.class)
+        .getResultList();
   }
 
   /**
-   *
    * @param id PK.
    * @return GiftCertificateEntity
    * <p>
    * The method can throw EmptyResultDataAccessException
    */
   @Override
-  public GiftCertificateEntity getGiftCertificate(int id) {
-    return jdbcTemplate.queryForObject(GiftCertificateSQL.SELECT_W_ID.getSQL(), giftCertificateMapper, id);
+  public GiftCertificateEntity findCertificate(int id) {
+    return entityManager.find(GiftCertificateEntity.class, id);
   }
 
   /**
-   *
    * @param certificateName uniq name
    * @return true when find certificateName
    */
   @Override
-  public boolean isExistGiftCertificate(String certificateName) {
-    Integer count = jdbcTemplate.queryForObject(GiftCertificateSQL.SELECT_COUNT_W_NAME.getSQL(), Integer.class, certificateName);
-    return count != null && count > 0;
+  public boolean isExistCertificate(String certificateName) {
+    return searchCertificate(certificateName) != null;
   }
 
   /**
-   *
    * @param id table PK
    * @return true when find certificateName
    */
   @Override
-  public boolean isExistGiftCertificate(int id) {
-    Integer count = jdbcTemplate.queryForObject(GiftCertificateSQL.SELECT_COUNT_W_ID.getSQL(), Integer.class, id);
-    return count != null && count > 0;
+  public boolean isExistCertificate(int id) {
+    return entityManager.contains(findCertificate(id));
   }
 
   /**
-   *
-   * @param tagName It's name field of Tag.
-   * @return List of GiftCertificateEntity
-   */
-  @Override
-  public List<GiftCertificateEntity> getGiftCertificates(String tagName) {
-    return jdbcTemplate.query(GiftCertificateSQL.SELECT_W_TAG_NAME.getSQL(), giftCertificateMapper, tagName);
-  }
-
-  /**
-   *
    * @param requestedParameters Map of parameters.
    * @return List of GiftCertificateEntity
    */
   @Override
-  public List<GiftCertificateEntity> getGiftCertificates(Map<String, String> requestedParameters) {
+  public List<GiftCertificateEntity> findAllCertificates(Map<String, String> requestedParameters) {
     final String sql = QueryCreator.buildSql(requestedParameters);
     QueryCreator.removeKeyMatchSort(requestedParameters);
     return jdbcTemplate.query(sql, giftCertificateMapper, requestedParameters.values().toArray());
   }
 
   /**
-   *
-   * @param giftCertificateEntity update some collum in table.
+   * @param giftCertificate update some collum in table.
    * @return GiftCertificateEntity
    * <p>
    * The method can throw EmptyResultDataAccessException
    */
   @Override
-  public GiftCertificateEntity updateGiftCertificate(GiftCertificateEntity giftCertificateEntity) {
-    int id = giftCertificateEntity.getId();
-    List<Object> params = prepareObjects(giftCertificateEntity);
-    params.add(id);
-    jdbcTemplate.update(giftCertificateSQLs.get(GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY), params.toArray());
-    return getGiftCertificate(id);
+  public GiftCertificateEntity updateCertificate(GiftCertificateEntity giftCertificate) {
+    GiftCertificateEntity entity = findCertificate(giftCertificate.getId());
+    entityManager.detach(entity);
+    String name = giftCertificate.getName();
+    if (name != null) {
+      entity.setName(name);
+    }
+    String description = giftCertificate.getDescription();
+    if (description != null) {
+      entity.setDescription(description);
+    }
+    float price = giftCertificate.getPrice();
+    if (price > 0) {
+      entity.setPrice(price);
+    }
+    int duration = giftCertificate.getDuration();
+    if (duration > 0) {
+      entity.setDuration(duration);
+    }
+    entity.setTags(giftCertificate.getTags());
+    return entityManager.merge(entity);
   }
 
   /**
-   *
    * @param id PK.
    */
   @Override
-  public void delGiftCertificate(int id) {
-    jdbcTemplate.update(GiftCertificateSQL.DEL_DB_CASCADE_W_ID.getSQL(), id);
+  public void deleteCertificate(int id) {
+    entityManager.remove(findCertificate(id));
   }
 
-  /**
-   *
-   * @param id GiftCertificate field.
-   */
-  @Override
-  public void delGiftCertificateAndTagBundle(int id) {
-    jdbcTemplate.update(GiftCertificateTagSQL.DEL_W_GC_ID.getSQL(), id);
+  private GiftCertificateEntity searchCertificate(String certificateName) {
+    return entityManager.createQuery(GiftCertificateSQL.QL_SELECT_ALL_W_NAME.getSQL(), GiftCertificateEntity.class)
+        .setParameter("name", certificateName).getResultList().stream().findFirst().orElse(null);
   }
 
-  /**
-   *
-   * @param giftCertificateId GiftCertificate field.
-   * @param tagName Tag field.
-   */
-  @Override
-  public void addGiftCertificateTag(int giftCertificateId, String tagName) {
-    jdbcTemplate.update(GiftCertificateTagSQL.INSERT_W_ID_NAME.getSQL(), giftCertificateId, tagName);
-  }
-
-  private List<Object> prepareObjects(GiftCertificateEntity giftCertificateEntity) {
+  private List<Object> prepareObjects(GiftCertificateEntity giftCertificate) {
     List<Object> params = new ArrayList<>();
 
-    params.add(giftCertificateEntity.getName());
-    params.add(giftCertificateEntity.getDescription());
-    params.add(giftCertificateEntity.getPrice());
-    params.add(giftCertificateEntity.getDuration());
+    params.add(giftCertificate.getName());
+    params.add(giftCertificate.getDescription());
+    params.add(giftCertificate.getPrice());
+    params.add(giftCertificate.getDuration());
     return params;
   }
 }

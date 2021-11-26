@@ -1,114 +1,93 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.TagDAO;
-import com.epam.esm.dao.config.TagMapper;
 import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.dao.util.TagSQL;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 /**
  * Repository Tag
  * DAO to MySQL
  *
- *  @author Ivan Matsiashuk
- *  @version 1.0
+ * @author Ivan Matsiashuk
+ * @version 1.0
  */
 @Repository
 public class TagDB implements TagDAO {
-  private final JdbcTemplate jdbcTemplate;
-  private final TagMapper tagMapper;
 
-  public TagDB(JdbcTemplate jdbcTemplate, TagMapper tagMapper) {
-    this.jdbcTemplate = jdbcTemplate;
-    this.tagMapper = tagMapper;
-  }
+  @PersistenceContext
+  private EntityManager entityManager;
 
   /**
    * Create Tag entry in the table
    *
    * @param tagName Tag field.
-   * @return TagEntity
+   * @return Tag entity.
    * <p>
    * The method can throw DuplicateKeyException
    */
   @Override
-  public TagEntity createTag(String tagName) {
-    jdbcTemplate.update(TagSQL.INSERT_TAG.getSQL(), tagName);
-    return searchTag(tagName);
+  public TagEntity insertTag(String tagName) {
+    entityManager.persist(new TagEntity(tagName));
+    return findTag(tagName);
   }
 
   /**
-   *
-   * @return List of TagEntity
+   * @return List of Tag
    */
   @Override
-  public List<TagEntity> searchTags() {
-    return jdbcTemplate.query(TagSQL.SELECT_ALL.getSQL(), tagMapper);
+  public List<TagEntity> findAllTags() {
+    return entityManager.createQuery(TagSQL.QL_SELECT_ALL.getSQL(), TagEntity.class).getResultList();
   }
 
   /**
-   *
-   * @param giftCertificateId GiftCertificate field.
-   * @return List of TagEntity
-   */
-  @Override
-  public List<TagEntity> getListTag(int giftCertificateId) {
-    return jdbcTemplate.query(TagSQL.SELECT_W_GC_ID.getSQL(), tagMapper, giftCertificateId);
-  }
-
-  /**
-   *
-   * @param id Tag field.
-   * @return TagEntity
+   * @param id PK Tag field.
+   * @return Tag entity
    * <p>
    * The method can throw EmptyResultDataAccessException
    */
   @Override
-  public TagEntity searchTag(int id) {
-    return jdbcTemplate.queryForObject(TagSQL.SELECT_ALL_W_ID.getSQL(), tagMapper, id);
+  public TagEntity findTag(int id) {
+    return entityManager.find(TagEntity.class, id);
   }
 
   /**
-   *
    * @param tagName Tag field.
-   * @return TagEntity
+   * @return Tag entity or null.
    */
   @Override
-  public TagEntity searchTag(String tagName) {
-    return jdbcTemplate.queryForObject(TagSQL.SELECT_ALL_W_NAME.getSQL(), tagMapper, tagName);
+  public TagEntity findTag(String tagName) {
+    return entityManager.createQuery(TagSQL.QL_SELECT_ALL_W_NAME.getSQL(), TagEntity.class)
+        .setParameter("name", tagName).getResultList().stream().findFirst().orElse(null);
   }
 
   /**
-   *
    * @param tagName Tag field.
-   * @return true when find name
+   * @return true when find name.
    */
   @Override
   public boolean isTagExist(String tagName) {
-    Integer count = jdbcTemplate.queryForObject(TagSQL.SELECT_COUNT_W_NAME.getSQL(), Integer.class, tagName);
-    return count != null && count > 0;
+    return findTag(tagName) != null;
   }
 
   /**
-   *
-   * @param id table PK
-   * @return true when find id
+   * @param id PK Tag field.
+   * @return true when find id.
    */
   @Override
   public boolean isTagExist(int id) {
-    Integer count = jdbcTemplate.queryForObject(TagSQL.SELECT_COUNT_W_ID.getSQL(), Integer.class, id);
-    return count != null && count > 0;
+    return entityManager.contains(findTag(id));
   }
 
   /**
-   *
-   * @param id Tag field.
+   * @param id PK Tag field.
    */
   @Override
   public void deleteTag(int id) {
-    jdbcTemplate.update(TagSQL.DEL_DB_CASCADE_W_ID.getSQL(), id);
+    entityManager.remove(findTag(id));
   }
 }

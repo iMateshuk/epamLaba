@@ -1,12 +1,10 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDAO;
-import com.epam.esm.dao.TagDAO;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.ErrorDto;
 import com.epam.esm.service.dto.GiftCertificateConverter;
 import com.epam.esm.service.dto.GiftCertificateDTO;
-import com.epam.esm.service.dto.TagConverter;
 import com.epam.esm.service.exception.ServiceConflictException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.exception.ServiceValidationException;
@@ -30,12 +28,10 @@ import java.util.stream.Collectors;
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
   private final GiftCertificateDAO giftCertificateDAO;
-  private final TagDAO tagDAO;
   private final Validator validator;
 
-  public GiftCertificateServiceImpl(GiftCertificateDAO giftCertificateDAO, TagDAO tagDAO, Validator validator) {
+  public GiftCertificateServiceImpl(GiftCertificateDAO giftCertificateDAO, Validator validator) {
     this.giftCertificateDAO = giftCertificateDAO;
-    this.tagDAO = tagDAO;
     this.validator = validator;
   }
 
@@ -47,19 +43,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
    */
   @Transactional
   @Override
-  public GiftCertificateDTO createGiftCertificate(GiftCertificateDTO requestGiftCertificateDTO) {
-    validator.matchField(requestGiftCertificateDTO.getName(), requestGiftCertificateDTO.getDescription());
+  public GiftCertificateDTO insertCertificate(GiftCertificateDTO requestGiftCertificateDTO) {
     String certificateName = requestGiftCertificateDTO.getName();
-    if (giftCertificateDAO.isExistGiftCertificate(certificateName)) {
+    validator.matchField(certificateName, requestGiftCertificateDTO.getDescription());
+    if (giftCertificateDAO.isExistCertificate(certificateName)) {
       throw new ServiceConflictException(new ErrorDto("certificate.name.create.error", certificateName), 101);
     }
-
-    GiftCertificateDTO createdGiftCertificateDTO = GiftCertificateConverter
-        .toDto(giftCertificateDAO.createGiftCertificate(GiftCertificateConverter.toEntity(requestGiftCertificateDTO)));
-
-    checkTagNameAndBundleWithGiftCertificate(requestGiftCertificateDTO, createdGiftCertificateDTO.getId());
-    addTagToDTO(createdGiftCertificateDTO);
-    return createdGiftCertificateDTO;
+    return GiftCertificateConverter
+        .toDto(giftCertificateDAO.insertCertificate(GiftCertificateConverter.toEntity(requestGiftCertificateDTO)));
   }
 
   /**
@@ -67,12 +58,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
    */
   @Transactional
   @Override
-  public List<GiftCertificateDTO> searchGiftCertificates() {
-    List<GiftCertificateDTO> createdGiftCertificateDTOs = GiftCertificateConverter
-        .toDto(giftCertificateDAO.getGiftCertificates());
-
-    addTagToDTO(createdGiftCertificateDTOs);
-    return createdGiftCertificateDTOs;
+  public List<GiftCertificateDTO> findAllCertificates() {
+    return GiftCertificateConverter
+        .toDto(giftCertificateDAO.findAllCertificates());
   }
 
   /**
@@ -83,15 +71,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
    */
   @Transactional
   @Override
-  public GiftCertificateDTO searchGiftCertificate(int id) {
-    if (!giftCertificateDAO.isExistGiftCertificate(id)) {
+  public GiftCertificateDTO findCertificate(int id) {
+    if (!giftCertificateDAO.isExistCertificate(id)) {
       throw new ServiceException(new ErrorDto("certificate.search.error", id), 103);
     }
-    GiftCertificateDTO createdGiftCertificateDTO = GiftCertificateConverter
-        .toDto(giftCertificateDAO.getGiftCertificate(id));
-
-    addTagToDTO(createdGiftCertificateDTO);
-    return createdGiftCertificateDTO;
+    return GiftCertificateConverter
+        .toDto(giftCertificateDAO.findCertificate(id));
   }
 
   /**
@@ -102,19 +87,18 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
    */
   @Transactional
   @Override
-  public List<GiftCertificateDTO> searchGiftCertificates(Map<String, String> allParameters) {
+  public List<GiftCertificateDTO> findAllCertificates(Map<String, String> allParameters) {
     Map<String, String> parameters = createMapParameter(allParameters);
     if (parameters.isEmpty()) {
       throw new ServiceValidationException(new ErrorDto("certificate.parameters.error"), 105);
     }
 
     List<GiftCertificateDTO> createdGiftCertificateDTOs = GiftCertificateConverter
-        .toDto(giftCertificateDAO.getGiftCertificates(parameters));
+        .toDto(giftCertificateDAO.findAllCertificates(parameters));
     if (createdGiftCertificateDTOs.isEmpty()) {
       throw new ServiceException(new ErrorDto("dao.empty.result.error"), 115);
     }
 
-    addTagToDTO(createdGiftCertificateDTOs);
     return createdGiftCertificateDTOs;
   }
 
@@ -127,9 +111,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
    */
   @Transactional
   @Override
-  public GiftCertificateDTO patchGiftCertificate(GiftCertificateDTO requestGiftCertificateDTO) {
+  public GiftCertificateDTO updateCertificate(GiftCertificateDTO requestGiftCertificateDTO) {
     int id = requestGiftCertificateDTO.getId();
-    if (!giftCertificateDAO.isExistGiftCertificate(id)) {
+    if (!giftCertificateDAO.isExistCertificate(id)) {
       throw new ServiceException(new ErrorDto("certificate.search.error", id), 106);
     }
 
@@ -143,14 +127,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
       validator.matchField(certificateDescription);
     }
 
-    GiftCertificateDTO updatedGiftCertificateDTO = updateGiftCertificate(requestGiftCertificateDTO);
-    if (!requestGiftCertificateDTO.getTags().isEmpty()) {
-      giftCertificateDAO.delGiftCertificateAndTagBundle(id);
-      checkTagNameAndBundleWithGiftCertificate(requestGiftCertificateDTO, id);
-    }
-
-    addTagToDTO(updatedGiftCertificateDTO);
-    return updatedGiftCertificateDTO;
+    return GiftCertificateConverter.toDto(giftCertificateDAO
+        .updateCertificate(GiftCertificateConverter.toEntity(requestGiftCertificateDTO)));
   }
 
   /**
@@ -160,37 +138,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
    */
   @Transactional
   @Override
-  public void delGiftCertificate(int id) {
-    if (!giftCertificateDAO.isExistGiftCertificate(id)) {
+  public void deleteCertificate(int id) {
+    if (!giftCertificateDAO.isExistCertificate(id)) {
       throw new ServiceException(new ErrorDto("certificate.delete.error", id), 104);
     }
-    giftCertificateDAO.delGiftCertificate(id);
-  }
-
-  private GiftCertificateDTO updateGiftCertificate(GiftCertificateDTO requestGiftCertificateDTO) {
-    return GiftCertificateConverter.toDto(giftCertificateDAO
-        .updateGiftCertificate(GiftCertificateConverter.toEntity(requestGiftCertificateDTO)));
-  }
-
-  private void addTagToDTO(List<GiftCertificateDTO> giftCertificateDTOs) {
-    giftCertificateDTOs.forEach(this::addTagToDTO);
-  }
-
-  private void addTagToDTO(GiftCertificateDTO giftCertificateDTO) {
-    tagDAO.getListTag(giftCertificateDTO.getId())
-        .stream().filter((tagEntity) -> tagEntity.getName() != null)
-        .forEach((tagEntity) -> giftCertificateDTO.getTags().add(TagConverter.toDto(tagEntity)));
-  }
-
-  private void checkTagNameAndBundleWithGiftCertificate(GiftCertificateDTO requestGiftCertificateDTO, int id) {
-    requestGiftCertificateDTO.getTags().forEach((tagDTO) -> {
-          String tagName = tagDTO.getName();
-          if (!tagDAO.isTagExist(tagName)) {
-            tagDAO.createTag(tagName);
-          }
-          giftCertificateDAO.addGiftCertificateTag(id, tagName);
-        }
-    );
+    giftCertificateDAO.deleteCertificate(id);
   }
 
   private Map<String, String> createMapParameter(Map<String, String> allRequestParams) {

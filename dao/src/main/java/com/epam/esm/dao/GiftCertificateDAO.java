@@ -6,25 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 public interface GiftCertificateDAO {
-  GiftCertificateEntity createGiftCertificate(GiftCertificateEntity giftCertificateEntity);
+  GiftCertificateEntity insertCertificate(GiftCertificateEntity giftCertificate);
 
-  List<GiftCertificateEntity> getGiftCertificates();
+  List<GiftCertificateEntity> findAllCertificates();
 
-  GiftCertificateEntity getGiftCertificate(int id);
+  GiftCertificateEntity findCertificate(int id);
 
-  boolean isExistGiftCertificate(String certificateName);
+  boolean isExistCertificate(String certificateName);
 
-  List<GiftCertificateEntity> getGiftCertificates(String tagName);
+  boolean isExistCertificate(int id);
 
-  boolean isExistGiftCertificate(int id);
+  List<GiftCertificateEntity> findAllCertificates(Map<String, String> requestedParameters);
 
-  List<GiftCertificateEntity> getGiftCertificates(Map<String, String> requestedParameters);
+  GiftCertificateEntity updateCertificate(GiftCertificateEntity giftCertificate);
 
-  GiftCertificateEntity updateGiftCertificate(GiftCertificateEntity giftCertificateEntity);
-
-  void delGiftCertificate(int id);
-
-  void delGiftCertificateAndTagBundle(int id);
-
-  void addGiftCertificateTag(int GiftCertificateId, String tagName);
+  void deleteCertificate(int id);
 }

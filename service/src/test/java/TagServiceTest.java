@@ -58,30 +58,30 @@ public class TagServiceTest {
 
     @Test
     public void createTagTest() {
-        Mockito.when(mockTagDAO.createTag("123_ABC")).thenReturn(tagEntity01);
-        Mockito.when(mockTagDAO.createTag("123 ABC")).thenReturn(tagEntity02);
+        Mockito.when(mockTagDAO.insertTag("123_ABC")).thenReturn(tagEntity01);
+        Mockito.when(mockTagDAO.insertTag("123 ABC")).thenReturn(tagEntity02);
         Assertions.assertAll(
-                () -> assertEquals(mockTagService.createTag("123_ABC"), tagDTO01),
-                () -> assertEquals(mockTagService.createTag("123 ABC"), tagDTO02)
+                () -> assertEquals(mockTagService.insertTag("123_ABC"), tagDTO01),
+                () -> assertEquals(mockTagService.insertTag("123 ABC"), tagDTO02)
         );
         Mockito.doThrow(ValidationException.class).when(mockValidator).matchField("123!_*@");
-        assertThrows(ValidationException.class, () -> mockTagService.createTag("123!_*@"));
+        assertThrows(ValidationException.class, () -> mockTagService.insertTag("123!_*@"));
     }
 
     @Test
     public void searchTagsTest() {
-        Mockito.when(mockTagDAO.searchTags()).thenReturn(new ArrayList<>());
-        assertDoesNotThrow(() -> mockTagService.searchTags());
+        Mockito.when(mockTagDAO.findAllTags()).thenReturn(new ArrayList<>());
+        assertDoesNotThrow(() -> mockTagService.findAllTags());
     }
 
 
     @Test
     public void tagSearchTest() {
         Mockito.when(mockTagDAO.isTagExist(1)).thenReturn(true);
-        Mockito.when(mockTagDAO.searchTag(1)).thenReturn(tagEntity01);
+        Mockito.when(mockTagDAO.findTag(1)).thenReturn(tagEntity01);
         Assertions.assertAll(
-                () -> assertDoesNotThrow(() -> mockTagService.searchTag(1)),
-                () -> assertEquals(mockTagService.searchTag(1), tagDTO01)
+                () -> assertDoesNotThrow(() -> mockTagService.findTag(1)),
+                () -> assertEquals(mockTagService.findTag(1), tagDTO01)
         );
     }
 

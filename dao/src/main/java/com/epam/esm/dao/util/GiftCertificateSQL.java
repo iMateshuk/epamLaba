@@ -29,6 +29,10 @@ public enum GiftCertificateSQL {
   UPDATE_DATA_IF_NOT_NULL_EMPTY_TST("UPDATE gc.gift_certificate SET name=?, " +
       "description=?, price=?, duration=?, last_update_date=CURRENT_TIMESTAMP WHERE id = ?"),
 
+
+  QL_SELECT_ALL("SELECT certificate FROM Certificate certificate"),
+  QL_SELECT_ALL_W_NAME("SELECT certificate FROM Certificate certificate WHERE certificate.name = :name"),
+
   ;
 
   private final String sql;

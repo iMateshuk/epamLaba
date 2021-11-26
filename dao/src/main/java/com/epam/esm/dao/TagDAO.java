@@ -5,15 +5,13 @@ import com.epam.esm.dao.entity.TagEntity;
 import java.util.List;
 
 public interface TagDAO {
-  TagEntity createTag(String tagName);
+  TagEntity insertTag(String tagName);
 
-  List<TagEntity> searchTags();
+  List<TagEntity> findAllTags();
 
-  List<TagEntity> getListTag(int giftCertificateId);
+  TagEntity findTag(int id);
 
-  TagEntity searchTag(int id);
-
-  TagEntity searchTag(String tagName);
+  TagEntity findTag(String tagName);
 
   boolean isTagExist(String tagName);
 

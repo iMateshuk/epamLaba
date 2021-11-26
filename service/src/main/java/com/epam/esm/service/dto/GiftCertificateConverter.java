@@ -1,6 +1,7 @@
 package com.epam.esm.service.dto;
 
 import com.epam.esm.dao.entity.GiftCertificateEntity;
+import com.epam.esm.dao.entity.TagEntity;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 public class GiftCertificateConverter {
   private final static TimeZone tz = TimeZone.getTimeZone("UTC");
   private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+
   static {
     df.setTimeZone(tz);
   }
@@ -30,6 +32,7 @@ public class GiftCertificateConverter {
     giftCertificateDTO.setPrice(giftCertificate.getPrice());
     giftCertificateDTO.setCreateDate(df.format(giftCertificate.getCreateDate()));
     giftCertificateDTO.setLastUpdateDate(df.format(giftCertificate.getLastUpdateDate()));
+    giftCertificateDTO.setTags(convertTagEntityToTagDto(giftCertificate.getTags()));
     return giftCertificateDTO;
   }
 
@@ -46,6 +49,21 @@ public class GiftCertificateConverter {
     giftCertificateEntity.setDescription(giftCertificate.getDescription());
     giftCertificateEntity.setPrice(giftCertificate.getPrice());
     giftCertificateEntity.setDuration(giftCertificate.getDuration());
+    giftCertificateEntity.setTags(convertTagDtoToTagEntity(giftCertificate.getTags()));
     return giftCertificateEntity;
+  }
+
+  private static List<TagDTO> convertTagEntityToTagDto(List<TagEntity> tags) {
+    return tags.stream()
+        .filter((tagEntity) -> tagEntity.getName() != null)
+        .map(TagConverter::toDto)
+        .collect(Collectors.toList());
+  }
+
+  private static List<TagEntity> convertTagDtoToTagEntity(List<TagDTO> tags) {
+    return tags.stream()
+        .filter((tagDTO) -> tagDTO.getName() != null)
+        .map(TagConverter::toEntity)
+        .collect(Collectors.toList());
   }
 }

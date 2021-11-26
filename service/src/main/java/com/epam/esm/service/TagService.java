@@ -5,11 +5,11 @@ import com.epam.esm.service.dto.TagDTO;
 import java.util.List;
 
 public interface TagService {
-  TagDTO createTag(String name);
+  TagDTO insertTag(String name);
 
-  List<TagDTO> searchTags();
+  List<TagDTO> findAllTags();
 
-  TagDTO searchTag(int id);
+  TagDTO findTag(int id);
 
   void deleteTag(int id);
 }

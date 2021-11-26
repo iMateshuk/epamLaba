@@ -34,9 +34,9 @@ public class TagController {
    */
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public TagDTO createTag(@RequestBody TagDTO tagDTO) {
+  public TagDTO insertTag(@RequestBody TagDTO tagDTO) {
     validator.checkTagName(tagDTO.getName());
-    return tagService.createTag(tagDTO.getName());
+    return tagService.insertTag(tagDTO.getName());
   }
 
   /**
@@ -45,8 +45,8 @@ public class TagController {
    */
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  public List<TagDTO> getTags() {
-    return tagService.searchTags();
+  public List<TagDTO> findAllTags() {
+    return tagService.findAllTags();
   }
 
   /**
@@ -58,9 +58,9 @@ public class TagController {
    */
   @GetMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
-  public TagDTO getTag(@PathVariable int id) {
+  public TagDTO findTag(@PathVariable int id) {
     validator.checkId(id);
-    return tagService.searchTag(id);
+    return tagService.findTag(id);
   }
 
   /**

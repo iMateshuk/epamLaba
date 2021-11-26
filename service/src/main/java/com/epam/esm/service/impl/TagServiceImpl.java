@@ -38,12 +38,12 @@ public class TagServiceImpl implements TagService {
    */
   @Transactional
   @Override
-  public TagDTO createTag(String name) {
+  public TagDTO insertTag(String name) {
     validator.matchField(name);
     if (tagDAO.isTagExist(name)) {
       throw new ServiceConflictException(new ErrorDto("tag.create.error", name), 201);
     }
-    return TagConverter.toDto(tagDAO.createTag(name));
+    return TagConverter.toDto(tagDAO.insertTag(name));
   }
 
   /**
@@ -51,8 +51,8 @@ public class TagServiceImpl implements TagService {
    */
   @Transactional
   @Override
-  public List<TagDTO> searchTags() {
-    return TagConverter.toDto(tagDAO.searchTags());
+  public List<TagDTO> findAllTags() {
+    return TagConverter.toDto(tagDAO.findAllTags());
   }
 
   /**
@@ -63,11 +63,11 @@ public class TagServiceImpl implements TagService {
    */
   @Transactional
   @Override
-  public TagDTO searchTag(int id) {
+  public TagDTO findTag(int id) {
     if (!tagDAO.isTagExist(id)) {
       throw new ServiceException(new ErrorDto("tag.search.error", id), 203);
     }
-    return TagConverter.toDto(tagDAO.searchTag(id));
+    return TagConverter.toDto(tagDAO.findTag(id));
   }
 
   /**

@@ -15,8 +15,22 @@ public class TagConverter {
     return tagDTO;
   }
 
+  public static TagEntity toEntity(TagDTO tagDTO) {
+    TagEntity tagEntity = new TagEntity();
+
+    tagEntity.setId(tagDTO.getId());
+    tagEntity.setName(tagDTO.getName());
+    return tagEntity;
+  }
+
   public static List<TagDTO> toDto(List<TagEntity> tagEntities) {
-    return tagEntities.stream().map(TagConverter::toDto)
+    return tagEntities.stream()
+        .map(TagConverter::toDto)
+        .collect(Collectors.toList());
+  }
+
+  public static List<TagEntity> toEntity(List<TagDTO> tagDTOS) {
+    return tagDTOS.stream().map(TagConverter::toEntity)
         .collect(Collectors.toList());
   }
 }

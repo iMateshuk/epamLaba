@@ -4,14 +4,12 @@ import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 import java.util.Locale;
 
 @Configuration
-@ComponentScan(basePackages = "com.epam.esm")
 public class DispatcherConfig {
   @Bean
   public MessageSource messageSource() {
