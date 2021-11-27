@@ -45,8 +45,8 @@ public class Validator {
 
   public void checkUpdateCertificate(GiftCertificateDTO giftCertificateDTO) {
     List<ErrorDto> errors = new ArrayList<>();
-
-    if (giftCertificateDTO.getId() <= MIN_VALUE) {
+    Integer id = giftCertificateDTO.getId();
+    if (id != null && id <= MIN_VALUE) {
       errors.add(new ErrorDto("certificate.id.min.error", MIN_VALUE));
     }
 
@@ -59,12 +59,12 @@ public class Validator {
     if (description != null && description.length() < MIN_LEN_NAME) {
       errors.add(new ErrorDto("certificate.description.min.length.error", MIN_LEN_NAME));
     }
-
-    if (giftCertificateDTO.getPrice() < MIN_VALUE) {
+    Float price = giftCertificateDTO.getPrice();
+    if (price != null && price < MIN_VALUE) {
       errors.add(new ErrorDto("certificate.price.min.error", MIN_VALUE));
     }
-
-    if (giftCertificateDTO.getDuration() < MIN_VALUE) {
+    Integer duration = giftCertificateDTO.getDuration();
+    if (duration != null && duration < MIN_VALUE) {
       errors.add(new ErrorDto("certificate.duration.min.error", MIN_VALUE));
     }
 

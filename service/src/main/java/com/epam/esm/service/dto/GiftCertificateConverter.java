@@ -49,7 +49,10 @@ public class GiftCertificateConverter {
     giftCertificateEntity.setDescription(giftCertificate.getDescription());
     giftCertificateEntity.setPrice(giftCertificate.getPrice());
     giftCertificateEntity.setDuration(giftCertificate.getDuration());
-    giftCertificateEntity.setTags(convertTagDtoToTagEntity(giftCertificate.getTags()));
+    List<TagDTO> tags = giftCertificate.getTags();
+    if (tags != null) {
+      giftCertificateEntity.setTags(convertTagDtoToTagEntity(tags));
+    }
     return giftCertificateEntity;
   }
 

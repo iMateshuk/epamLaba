@@ -6,7 +6,6 @@ import com.epam.esm.dao.util.TagSQL;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
 /**
@@ -18,9 +17,11 @@ import java.util.List;
  */
 @Repository
 public class TagDB implements TagDAO {
+  private final EntityManager entityManager;
 
-  @PersistenceContext
-  private EntityManager entityManager;
+  public TagDB(EntityManager entityManager) {
+    this.entityManager = entityManager;
+  }
 
   /**
    * Create Tag entry in the table
@@ -88,6 +89,8 @@ public class TagDB implements TagDAO {
    */
   @Override
   public void deleteTag(int id) {
-    entityManager.remove(findTag(id));
+    TagEntity tagEntity = findTag(id);
+    tagEntity.getCerts().forEach(certificate -> certificate.getTags().remove(tagEntity));
+    entityManager.remove(tagEntity);
   }
 }

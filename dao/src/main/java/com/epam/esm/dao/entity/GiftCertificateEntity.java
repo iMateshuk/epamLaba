@@ -2,6 +2,7 @@ package com.epam.esm.dao.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -17,12 +18,13 @@ import java.util.Objects;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class GiftCertificateEntity implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
-  private int id;
+  private Integer id;
 
   @Column(nullable = false)
   private String name;
@@ -31,10 +33,10 @@ public class GiftCertificateEntity implements Serializable {
   private String description;
 
   @Column(nullable = false)
-  private float price;
+  private Float price;
 
   @Column(nullable = false)
-  private int duration;
+  private Integer duration;
 
   @CreationTimestamp
   @Column(name = "create_date", nullable = false, updatable = false)
@@ -44,14 +46,21 @@ public class GiftCertificateEntity implements Serializable {
   @Column(name = "last_update_date", nullable = false)
   private Timestamp lastUpdateDate;
 
-  @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
+  @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
   @JoinTable(name = "gc_tag", schema = "gc",
       joinColumns = @JoinColumn(name = "gc_id", referencedColumnName = "id"),
       inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
   private List<TagEntity> tags;
 
-  public GiftCertificateEntity() {
+/*  public void addTag(TagEntity tag) {
+    tags.add(tag);
+    tag.getCerts().add(this);
   }
+
+  public void removeTag(TagEntity tag) {
+    tags.remove(tag);
+    tag.getCerts().remove(this);
+  }*/
 
   @Override
   public boolean equals(Object o) {
@@ -62,7 +71,11 @@ public class GiftCertificateEntity implements Serializable {
       return false;
     }
     GiftCertificateEntity that = (GiftCertificateEntity) o;
-    return id == that.id && Float.compare(that.price, price) == 0 && duration == that.duration && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(createDate, that.createDate) && Objects.equals(lastUpdateDate, that.lastUpdateDate) && Objects.equals(tags, that.tags);
+    return Objects.equals(id, that.id)
+        && Objects.equals(name, that.name) && Objects.equals(description, that.description)
+        && Objects.equals(price, that.price) && Objects.equals(duration, that.duration)
+        && Objects.equals(createDate, that.createDate) && Objects.equals(lastUpdateDate, that.lastUpdateDate)
+        && Objects.equals(tags, that.tags);
   }
 
   @Override

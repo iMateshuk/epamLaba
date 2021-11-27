@@ -1,15 +1,16 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.GiftCertificateDAO;
+import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.config.GiftCertificateMapper;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
+import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.dao.util.GiftCertificateSQL;
 import com.epam.esm.dao.util.QueryCreator;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,19 +25,19 @@ import java.util.Map;
 @Repository
 public class GiftCertificateDB implements GiftCertificateDAO {
   private final JdbcTemplate jdbcTemplate;
-  private final Map<GiftCertificateSQL, String> giftCertificateSQLs;
   private final GiftCertificateMapper giftCertificateMapper;
+  private final EntityManager entityManager;
+  private final TagDAO tagDAO;
 
   public GiftCertificateDB(JdbcTemplate jdbcTemplate,
-                           Map<GiftCertificateSQL, String> createGiftCertificateSQLs,
-                           GiftCertificateMapper giftCertificateMapper) {
+                           GiftCertificateMapper giftCertificateMapper,
+                           EntityManager entityManager,
+                           TagDAO tagDAO) {
     this.jdbcTemplate = jdbcTemplate;
-    this.giftCertificateSQLs = createGiftCertificateSQLs;
     this.giftCertificateMapper = giftCertificateMapper;
+    this.entityManager = entityManager;
+    this.tagDAO = tagDAO;
   }
-
-  @PersistenceContext
-  private EntityManager entityManager;
 
   /**
    * @param giftCertificate insert in table
@@ -46,7 +47,9 @@ public class GiftCertificateDB implements GiftCertificateDAO {
    */
   @Override
   public GiftCertificateEntity insertCertificate(GiftCertificateEntity giftCertificate) {
-    return entityManager.merge(giftCertificate);
+    findAndSetTagId(giftCertificate);
+    entityManager.persist(giftCertificate);
+    return findCertificate(giftCertificate.getId());
   }
 
   /**
@@ -106,26 +109,30 @@ public class GiftCertificateDB implements GiftCertificateDAO {
    */
   @Override
   public GiftCertificateEntity updateCertificate(GiftCertificateEntity giftCertificate) {
-    GiftCertificateEntity entity = findCertificate(giftCertificate.getId());
-    entityManager.detach(entity);
+    GiftCertificateEntity certificateEntity = findCertificate(giftCertificate.getId());
+
     String name = giftCertificate.getName();
     if (name != null) {
-      entity.setName(name);
+      certificateEntity.setName(name);
     }
     String description = giftCertificate.getDescription();
     if (description != null) {
-      entity.setDescription(description);
+      certificateEntity.setDescription(description);
     }
-    float price = giftCertificate.getPrice();
-    if (price > 0) {
-      entity.setPrice(price);
+    Float price = giftCertificate.getPrice();
+    if (price != null) {
+      certificateEntity.setPrice(price);
     }
-    int duration = giftCertificate.getDuration();
-    if (duration > 0) {
-      entity.setDuration(duration);
+    Integer duration = giftCertificate.getDuration();
+    if (duration != null) {
+      certificateEntity.setDuration(duration);
     }
-    entity.setTags(giftCertificate.getTags());
-    return entityManager.merge(entity);
+    List<TagEntity> entities = giftCertificate.getTags();
+    if (entities != null) {
+      findAndSetTagId(giftCertificate);
+      certificateEntity.setTags(entities);
+    }
+    return entityManager.merge(certificateEntity);
   }
 
   /**
@@ -133,7 +140,9 @@ public class GiftCertificateDB implements GiftCertificateDAO {
    */
   @Override
   public void deleteCertificate(int id) {
-    entityManager.remove(findCertificate(id));
+    GiftCertificateEntity certificate = findCertificate(id);
+    certificate.getTags().forEach(tagEntity -> tagEntity.getCerts().remove(certificate));
+    entityManager.remove(certificate);
   }
 
   private GiftCertificateEntity searchCertificate(String certificateName) {
@@ -149,5 +158,15 @@ public class GiftCertificateDB implements GiftCertificateDAO {
     params.add(giftCertificate.getPrice());
     params.add(giftCertificate.getDuration());
     return params;
+  }
+
+  private void findAndSetTagId(GiftCertificateEntity certificate) {
+    certificate.getTags()
+        .forEach((tagEntity) -> {
+          TagEntity entity = tagDAO.findTag(tagEntity.getName());
+          if (entity != null) {
+            tagEntity.setId(entity.getId());
+          }
+        });
   }
 }

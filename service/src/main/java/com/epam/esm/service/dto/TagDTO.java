@@ -1,30 +1,20 @@
 package com.epam.esm.service.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.Objects;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class TagDTO implements Serializable {
-  private int id;
+  private Integer id;
   private String name;
-
-  public TagDTO() {
-  }
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
 
   @Override
   public boolean equals(Object o) {
@@ -35,7 +25,7 @@ public class TagDTO implements Serializable {
       return false;
     }
     TagDTO tagDTO = (TagDTO) o;
-    return id == tagDTO.id && Objects.equals(name, tagDTO.name);
+    return Objects.equals(id, tagDTO.id) && Objects.equals(name, tagDTO.name);
   }
 
   @Override
