@@ -5,17 +5,17 @@ import com.epam.esm.dao.entity.TagEntity;
 import java.util.List;
 
 public interface TagDAO {
-  TagEntity insertTag(String tagName);
+  TagEntity insertByName(String tagName);
 
-  List<TagEntity> findAllTags();
+  List<TagEntity> findAll();
 
-  TagEntity findTag(int id);
+  TagEntity findById(int id);
 
-  TagEntity findTag(String tagName);
+  TagEntity findByName(String tagName);
 
-  boolean isTagExist(String tagName);
+  boolean isExistByName(String tagName);
 
-  boolean isTagExist(int id);
+  boolean isExistById(int id);
 
-  void deleteTag(int id);
+  void deleteById(int id);
 }

@@ -6,15 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 public interface GiftCertificateService {
-  GiftCertificateDTO insertCertificate(GiftCertificateDTO gcDTO);
+  GiftCertificateDTO insert(GiftCertificateDTO gcDTO);
 
-  List<GiftCertificateDTO> findAllCertificates();
+  List<GiftCertificateDTO> findAll();
 
-  GiftCertificateDTO findCertificate(int id);
+  GiftCertificateDTO findById(int id);
 
-  List<GiftCertificateDTO> findAllCertificates(Map<String, String> allParameters);
+  List<GiftCertificateDTO> findAllWithParam(Map<String, String> allParameters);
 
-  GiftCertificateDTO updateCertificate(GiftCertificateDTO giftCertificateDTO);
+  GiftCertificateDTO update(GiftCertificateDTO giftCertificateDTO);
 
-  void deleteCertificate(int id);
+  void deleteById(int id);
 }

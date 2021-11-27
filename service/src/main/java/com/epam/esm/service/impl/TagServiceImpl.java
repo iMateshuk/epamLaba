@@ -38,12 +38,12 @@ public class TagServiceImpl implements TagService {
    */
   @Transactional
   @Override
-  public TagDTO insertTag(String name) {
+  public TagDTO insertByName(String name) {
     validator.matchField(name);
-    if (tagDAO.isTagExist(name)) {
+    if (tagDAO.isExistByName(name)) {
       throw new ServiceConflictException(new ErrorDto("tag.create.error", name), 201);
     }
-    return TagConverter.toDto(tagDAO.insertTag(name));
+    return TagConverter.toDto(tagDAO.insertByName(name));
   }
 
   /**
@@ -51,8 +51,8 @@ public class TagServiceImpl implements TagService {
    */
   @Transactional
   @Override
-  public List<TagDTO> findAllTags() {
-    return TagConverter.toDto(tagDAO.findAllTags());
+  public List<TagDTO> findAll() {
+    return TagConverter.toDto(tagDAO.findAll());
   }
 
   /**
@@ -63,11 +63,11 @@ public class TagServiceImpl implements TagService {
    */
   @Transactional
   @Override
-  public TagDTO findTag(int id) {
-    if (!tagDAO.isTagExist(id)) {
+  public TagDTO findById(int id) {
+    if (!tagDAO.isExistById(id)) {
       throw new ServiceException(new ErrorDto("tag.search.error", id), 203);
     }
-    return TagConverter.toDto(tagDAO.findTag(id));
+    return TagConverter.toDto(tagDAO.findById(id));
   }
 
   /**
@@ -77,10 +77,10 @@ public class TagServiceImpl implements TagService {
    */
   @Transactional
   @Override
-  public void deleteTag(int id) {
-    if (!tagDAO.isTagExist(id)) {
+  public void deleteById(int id) {
+    if (!tagDAO.isExistById(id)) {
       throw new ServiceException(new ErrorDto("tag.delete.error", id), 204);
     }
-    tagDAO.deleteTag(id);
+    tagDAO.deleteById(id);
   }
 }

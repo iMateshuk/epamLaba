@@ -58,38 +58,38 @@ public class TagServiceTest {
 
     @Test
     public void createTagTest() {
-        Mockito.when(mockTagDAO.insertTag("123_ABC")).thenReturn(tagEntity01);
-        Mockito.when(mockTagDAO.insertTag("123 ABC")).thenReturn(tagEntity02);
+        Mockito.when(mockTagDAO.insertByName("123_ABC")).thenReturn(tagEntity01);
+        Mockito.when(mockTagDAO.insertByName("123 ABC")).thenReturn(tagEntity02);
         Assertions.assertAll(
-                () -> assertEquals(mockTagService.insertTag("123_ABC"), tagDTO01),
-                () -> assertEquals(mockTagService.insertTag("123 ABC"), tagDTO02)
+                () -> assertEquals(mockTagService.insertByName("123_ABC"), tagDTO01),
+                () -> assertEquals(mockTagService.insertByName("123 ABC"), tagDTO02)
         );
         Mockito.doThrow(ValidationException.class).when(mockValidator).matchField("123!_*@");
-        assertThrows(ValidationException.class, () -> mockTagService.insertTag("123!_*@"));
+        assertThrows(ValidationException.class, () -> mockTagService.insertByName("123!_*@"));
     }
 
     @Test
     public void searchTagsTest() {
-        Mockito.when(mockTagDAO.findAllTags()).thenReturn(new ArrayList<>());
-        assertDoesNotThrow(() -> mockTagService.findAllTags());
+        Mockito.when(mockTagDAO.findAll()).thenReturn(new ArrayList<>());
+        assertDoesNotThrow(() -> mockTagService.findAll());
     }
 
 
     @Test
     public void tagSearchTest() {
-        Mockito.when(mockTagDAO.isTagExist(1)).thenReturn(true);
-        Mockito.when(mockTagDAO.findTag(1)).thenReturn(tagEntity01);
+        Mockito.when(mockTagDAO.isExistById(1)).thenReturn(true);
+        Mockito.when(mockTagDAO.findById(1)).thenReturn(tagEntity01);
         Assertions.assertAll(
-                () -> assertDoesNotThrow(() -> mockTagService.findTag(1)),
-                () -> assertEquals(mockTagService.findTag(1), tagDTO01)
+                () -> assertDoesNotThrow(() -> mockTagService.findById(1)),
+                () -> assertEquals(mockTagService.findById(1), tagDTO01)
         );
     }
 
     @Test
     public void deleteTagTest() {
-        Mockito.when(mockTagDAO.isTagExist(1)).thenReturn(true);
+        Mockito.when(mockTagDAO.isExistById(1)).thenReturn(true);
         Assertions.assertAll(
-                () -> assertDoesNotThrow(() -> mockTagService.deleteTag(1))
+                () -> assertDoesNotThrow(() -> mockTagService.deleteById(1))
         );
     }
 }

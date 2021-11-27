@@ -32,16 +32,16 @@ public class TagDB implements TagDAO {
    * The method can throw DuplicateKeyException
    */
   @Override
-  public TagEntity insertTag(String tagName) {
+  public TagEntity insertByName(String tagName) {
     entityManager.persist(new TagEntity(tagName));
-    return findTag(tagName);
+    return findByName(tagName);
   }
 
   /**
    * @return List of Tag
    */
   @Override
-  public List<TagEntity> findAllTags() {
+  public List<TagEntity> findAll() {
     return entityManager.createQuery(TagSQL.QL_SELECT_ALL.getSQL(), TagEntity.class).getResultList();
   }
 
@@ -52,7 +52,7 @@ public class TagDB implements TagDAO {
    * The method can throw EmptyResultDataAccessException
    */
   @Override
-  public TagEntity findTag(int id) {
+  public TagEntity findById(int id) {
     return entityManager.find(TagEntity.class, id);
   }
 
@@ -61,7 +61,7 @@ public class TagDB implements TagDAO {
    * @return Tag entity or null.
    */
   @Override
-  public TagEntity findTag(String tagName) {
+  public TagEntity findByName(String tagName) {
     return entityManager.createQuery(TagSQL.QL_SELECT_ALL_W_NAME.getSQL(), TagEntity.class)
         .setParameter("name", tagName).getResultList().stream().findFirst().orElse(null);
   }
@@ -71,8 +71,8 @@ public class TagDB implements TagDAO {
    * @return true when find name.
    */
   @Override
-  public boolean isTagExist(String tagName) {
-    return findTag(tagName) != null;
+  public boolean isExistByName(String tagName) {
+    return findByName(tagName) != null;
   }
 
   /**
@@ -80,16 +80,16 @@ public class TagDB implements TagDAO {
    * @return true when find id.
    */
   @Override
-  public boolean isTagExist(int id) {
-    return entityManager.contains(findTag(id));
+  public boolean isExistById(int id) {
+    return entityManager.contains(findById(id));
   }
 
   /**
    * @param id PK Tag field.
    */
   @Override
-  public void deleteTag(int id) {
-    TagEntity tagEntity = findTag(id);
+  public void deleteById(int id) {
+    TagEntity tagEntity = findById(id);
     tagEntity.getCerts().forEach(certificate -> certificate.getTags().remove(tagEntity));
     entityManager.remove(tagEntity);
   }

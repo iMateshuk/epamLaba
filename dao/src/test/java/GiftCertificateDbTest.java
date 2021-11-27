@@ -47,17 +47,17 @@ public class GiftCertificateDbTest {
 
   @Test
   public void createGiftCertificateTest() {
-    assertNotEquals(0, giftCertificateDAO.insertCertificate(GIFT_CERTIFICATE).getId());
+    assertNotEquals(0, giftCertificateDAO.insert(GIFT_CERTIFICATE).getId());
   }
 
   @Test
   public void getGiftCertificatesTest() {
-    Assertions.assertNotNull(giftCertificateDAO.findAllCertificates());
+    Assertions.assertNotNull(giftCertificateDAO.findAll());
   }
 
   @Test
   public void getGiftCertificateTest() {
-    Assertions.assertEquals(giftCertificateId, giftCertificateDAO.findCertificate(giftCertificateId).getId());
+    Assertions.assertEquals(giftCertificateId, giftCertificateDAO.findById(giftCertificateId).getId());
   }
 
   @Test
@@ -69,50 +69,50 @@ public class GiftCertificateDbTest {
     notExistValues.put(GiftCertificateTagSQL.SEARCH_TAG_NAME.toString(), testTagName);
 
     Assertions.assertAll(
-        () -> assertDoesNotThrow(() -> giftCertificateDAO.findAllCertificates(parameters)),
-        () -> assertNotNull(giftCertificateDAO.findAllCertificates(parameters)),
-        () -> assertFalse(giftCertificateDAO.findAllCertificates(parameters).isEmpty()),
+        () -> assertDoesNotThrow(() -> giftCertificateDAO.findAllWithParam(parameters)),
+        () -> assertNotNull(giftCertificateDAO.findAllWithParam(parameters)),
+        () -> assertFalse(giftCertificateDAO.findAllWithParam(parameters).isEmpty()),
 
-        () -> assertDoesNotThrow(() -> giftCertificateDAO.findAllCertificates(notExistValues)),
-        () -> assertNotNull(giftCertificateDAO.findAllCertificates(notExistValues)),
-        () -> assertTrue(giftCertificateDAO.findAllCertificates(notExistValues).isEmpty())
+        () -> assertDoesNotThrow(() -> giftCertificateDAO.findAllWithParam(notExistValues)),
+        () -> assertNotNull(giftCertificateDAO.findAllWithParam(notExistValues)),
+        () -> assertTrue(giftCertificateDAO.findAllWithParam(notExistValues).isEmpty())
     );
   }
 
   @Test
   public void updateGiftCertificateTest() {
     GIFT_CERTIFICATE.setId(1);
-    assertNotEquals(giftCertificateDAO.findCertificate(GIFT_CERTIFICATE.getId()),
-        giftCertificateDAO.updateCertificate(GIFT_CERTIFICATE));
+    assertNotEquals(giftCertificateDAO.findById(GIFT_CERTIFICATE.getId()),
+        giftCertificateDAO.update(GIFT_CERTIFICATE));
   }
 
   @Test
   public void delGiftCertificateAndTagBundleTest() {
     Assertions.assertAll(
-        () -> assertDoesNotThrow(() -> tagDAO.insertTag(testTagName)),
+        () -> assertDoesNotThrow(() -> tagDAO.insertByName(testTagName)),
         () -> assertThrows(EmptyResultDataAccessException.class, () -> giftCertificateDAO
-            .findCertificate(tagDAO.findTag(testTagName).getId())),
+            .findById(tagDAO.findByName(testTagName).getId())),
 
-        () -> assertDoesNotThrow(() -> tagDAO.deleteTag(tagDAO.findTag(testTagName).getId()))
+        () -> assertDoesNotThrow(() -> tagDAO.deleteById(tagDAO.findByName(testTagName).getId()))
     );
   }
 
   @Test
   public void addGiftCertificateTagTest() {
     Assertions.assertAll(
-        () -> assertDoesNotThrow(() -> tagDAO.insertTag(testTagName)),
+        () -> assertDoesNotThrow(() -> tagDAO.insertByName(testTagName)),
 
-        () -> assertDoesNotThrow(() -> tagDAO.deleteTag(tagDAO.findTag(testTagName).getId()))
+        () -> assertDoesNotThrow(() -> tagDAO.deleteById(tagDAO.findByName(testTagName).getId()))
     );
   }
 
   @Test
   public void delGiftCertificateTest() {
     Assertions.assertAll(
-        () -> assertDoesNotThrow(() -> giftCertificateDAO.deleteCertificate(giftCertificateDelId)),
+        () -> assertDoesNotThrow(() -> giftCertificateDAO.deleteById(giftCertificateDelId)),
 
         () -> assertThrows(EmptyResultDataAccessException.class,
-            () -> giftCertificateDAO.findCertificate(giftCertificateDelId))
+            () -> giftCertificateDAO.findById(giftCertificateDelId))
     );
   }
 }

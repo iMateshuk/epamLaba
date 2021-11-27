@@ -11,7 +11,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Map;
 
@@ -46,17 +48,17 @@ public class GiftCertificateDB implements GiftCertificateDAO {
    * The method can throw IncorrectResultSizeDataAccessException
    */
   @Override
-  public GiftCertificateEntity insertCertificate(GiftCertificateEntity giftCertificate) {
+  public GiftCertificateEntity insert(GiftCertificateEntity giftCertificate) {
     findAndSetTagId(giftCertificate);
     entityManager.persist(giftCertificate);
-    return findCertificate(giftCertificate.getId());
+    return findById(giftCertificate.getId());
   }
 
   /**
    * @return List of GiftCertificateEntity
    */
   @Override
-  public List<GiftCertificateEntity> findAllCertificates() {
+  public List<GiftCertificateEntity> findAll() {
     return entityManager.createQuery(GiftCertificateSQL.QL_SELECT_ALL.getSQL(), GiftCertificateEntity.class)
         .getResultList();
   }
@@ -68,7 +70,7 @@ public class GiftCertificateDB implements GiftCertificateDAO {
    * The method can throw EmptyResultDataAccessException
    */
   @Override
-  public GiftCertificateEntity findCertificate(int id) {
+  public GiftCertificateEntity findById(int id) {
     return entityManager.find(GiftCertificateEntity.class, id);
   }
 
@@ -77,7 +79,7 @@ public class GiftCertificateDB implements GiftCertificateDAO {
    * @return true when find certificateName
    */
   @Override
-  public boolean isExistCertificate(String certificateName) {
+  public boolean isExistByName(String certificateName) {
     return searchCertificate(certificateName) != null;
   }
 
@@ -86,19 +88,27 @@ public class GiftCertificateDB implements GiftCertificateDAO {
    * @return true when find certificateName
    */
   @Override
-  public boolean isExistCertificate(int id) {
-    return entityManager.contains(findCertificate(id));
+  public boolean isExistById(int id) {
+    return entityManager.contains(findById(id));
   }
 
   /**
-   * @param requestedParameters Map of parameters.
+   * @param parameters Map of parameters.
    * @return List of GiftCertificateEntity
    */
   @Override
-  public List<GiftCertificateEntity> findAllCertificates(Map<String, String> requestedParameters) {
-    final String sql = QueryCreator.buildSql(requestedParameters);
-    QueryCreator.removeKeyMatchSort(requestedParameters);
-    return jdbcTemplate.query(sql, giftCertificateMapper, requestedParameters.values().toArray());
+  public List<GiftCertificateEntity> findAllWithParam(Map<String, String> parameters) {
+    CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+    CriteriaQuery<GiftCertificateEntity> criteriaQuery = criteriaBuilder.createQuery(GiftCertificateEntity.class);
+    Root<GiftCertificateEntity> from = criteriaQuery.from(GiftCertificateEntity.class);
+    CriteriaQuery<GiftCertificateEntity> select = criteriaQuery.select(from);
+
+    criteriaQuery.orderBy(criteriaBuilder.asc(from.get("name")),
+        criteriaBuilder.desc(from.get("id")));
+
+    final String sql = QueryCreator.buildSql(parameters);
+    QueryCreator.removeKeyMatchSort(parameters);
+    return jdbcTemplate.query(sql, giftCertificateMapper, parameters.values().toArray());
   }
 
   /**
@@ -108,8 +118,8 @@ public class GiftCertificateDB implements GiftCertificateDAO {
    * The method can throw EmptyResultDataAccessException
    */
   @Override
-  public GiftCertificateEntity updateCertificate(GiftCertificateEntity giftCertificate) {
-    GiftCertificateEntity certificateEntity = findCertificate(giftCertificate.getId());
+  public GiftCertificateEntity update(GiftCertificateEntity giftCertificate) {
+    GiftCertificateEntity certificateEntity = findById(giftCertificate.getId());
 
     String name = giftCertificate.getName();
     if (name != null) {
@@ -139,8 +149,8 @@ public class GiftCertificateDB implements GiftCertificateDAO {
    * @param id PK.
    */
   @Override
-  public void deleteCertificate(int id) {
-    GiftCertificateEntity certificate = findCertificate(id);
+  public void deleteById(int id) {
+    GiftCertificateEntity certificate = findById(id);
     certificate.getTags().forEach(tagEntity -> tagEntity.getCerts().remove(certificate));
     entityManager.remove(certificate);
   }
@@ -150,20 +160,10 @@ public class GiftCertificateDB implements GiftCertificateDAO {
         .setParameter("name", certificateName).getResultList().stream().findFirst().orElse(null);
   }
 
-  private List<Object> prepareObjects(GiftCertificateEntity giftCertificate) {
-    List<Object> params = new ArrayList<>();
-
-    params.add(giftCertificate.getName());
-    params.add(giftCertificate.getDescription());
-    params.add(giftCertificate.getPrice());
-    params.add(giftCertificate.getDuration());
-    return params;
-  }
-
   private void findAndSetTagId(GiftCertificateEntity certificate) {
     certificate.getTags()
         .forEach((tagEntity) -> {
-          TagEntity entity = tagDAO.findTag(tagEntity.getName());
+          TagEntity entity = tagDAO.findByName(tagEntity.getName());
           if (entity != null) {
             tagEntity.setId(entity.getId());
           }

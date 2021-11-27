@@ -13,8 +13,8 @@ import java.util.Map;
  * RestController Gift-Certificate
  * Support CRUD operation
  *
- *  @author Ivan Matsiashuk
- *  @version 1.0
+ * @author Ivan Matsiashuk
+ * @version 1.0
  */
 @RestController
 @RequestMapping("/certificates")
@@ -28,7 +28,6 @@ public class GiftCertificateController {
   }
 
   /**
-   *
    * @param giftCertificateDTO with Tags
    * @return GiftCertificateDTO
    * <p>
@@ -36,13 +35,12 @@ public class GiftCertificateController {
    */
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public GiftCertificateDTO insertCertificate(@RequestBody GiftCertificateDTO giftCertificateDTO) {
+  public GiftCertificateDTO insert(@RequestBody GiftCertificateDTO giftCertificateDTO) {
     validator.checkCreationCertificate(giftCertificateDTO);
-    return giftCertificateService.insertCertificate(giftCertificateDTO);
+    return giftCertificateService.insert(giftCertificateDTO);
   }
 
   /**
-   *
    * @param allParameters Map of parameters
    * @return List of GiftCertificateDTO
    * <p>
@@ -50,14 +48,13 @@ public class GiftCertificateController {
    */
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  public List<GiftCertificateDTO> findAllCertificate(@RequestParam Map<String, String> allParameters) {
+  public List<GiftCertificateDTO> findAll(@RequestParam Map<String, String> allParameters) {
     return allParameters.size() > 0
-        ? giftCertificateService.findAllCertificates(allParameters)
-        : giftCertificateService.findAllCertificates();
+        ? giftCertificateService.findAllWithParam(allParameters)
+        : giftCertificateService.findAll();
   }
 
   /**
-   *
    * @param id must be positive, match RegExp {^\d+$}
    * @return GiftCertificateDTO
    * <p>
@@ -65,38 +62,36 @@ public class GiftCertificateController {
    */
   @GetMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
-  public GiftCertificateDTO findCertificate(@PathVariable int id) {
+  public GiftCertificateDTO findById(@PathVariable int id) {
     validator.checkId(id);
-    return giftCertificateService.findCertificate(id);
+    return giftCertificateService.findById(id);
   }
 
   /**
-   *
    * @param giftCertificateDTO from @RequestBody
-   * @param id positive int
+   * @param id                 positive int
    * @return GiftCertificateDTO
    * <p>
    * The method can throw ValidationException extends RuntimeException
    */
   @PatchMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
-  public GiftCertificateDTO updateCertificate(@PathVariable int id, @RequestBody GiftCertificateDTO giftCertificateDTO) {
+  public GiftCertificateDTO update(@PathVariable int id, @RequestBody GiftCertificateDTO giftCertificateDTO) {
     validator.checkId(id);
     giftCertificateDTO.setId(id);
     validator.checkUpdateCertificate(giftCertificateDTO);
-    return giftCertificateService.updateCertificate(giftCertificateDTO);
+    return giftCertificateService.update(giftCertificateDTO);
   }
 
   /**
-   *
    * @param id must be positive
-   * <p>
-   * The method can throw ValidationException extends RuntimeException
+   *           <p>
+   *           The method can throw ValidationException extends RuntimeException
    */
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteCertificate(@PathVariable int id) {
+  public void delete(@PathVariable int id) {
     validator.checkId(id);
-    giftCertificateService.deleteCertificate(id);
+    giftCertificateService.deleteById(id);
   }
 }

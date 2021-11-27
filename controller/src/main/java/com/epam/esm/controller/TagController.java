@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- *  RestController Tag
- *  Support CRD operation
+ * RestController Tag
+ * Support CRD operation
  *
- *  @author Ivan Matsiashuk
- *  @version 1.0
+ * @author Ivan Matsiashuk
+ * @version 1.0
  */
 
 @RestController
@@ -28,29 +28,27 @@ public class TagController {
   }
 
   /**
-   *
    * @param tagDTO TagDTO object from @RequestBody
    * @return TagDTO
    */
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public TagDTO insertTag(@RequestBody TagDTO tagDTO) {
-    validator.checkTagName(tagDTO.getName());
-    return tagService.insertTag(tagDTO.getName());
+  public TagDTO insert(@RequestBody TagDTO tagDTO) {
+    String tagName = tagDTO.getName();
+    validator.checkTagName(tagName);
+    return tagService.insertByName(tagName);
   }
 
   /**
-   *
    * @return List of TagDTO
    */
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  public List<TagDTO> findAllTags() {
-    return tagService.findAllTags();
+  public List<TagDTO> findAll() {
+    return tagService.findAll();
   }
 
   /**
-   *
    * @param id must be positive
    * @return TagDTO
    * <p>
@@ -58,21 +56,20 @@ public class TagController {
    */
   @GetMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
-  public TagDTO findTag(@PathVariable int id) {
+  public TagDTO findById(@PathVariable int id) {
     validator.checkId(id);
-    return tagService.findTag(id);
+    return tagService.findById(id);
   }
 
   /**
-   *
    * @param id must be positive
-   * <p>
-   * The method can throw ValidationException extends RuntimeException
+   *           <p>
+   *           The method can throw ValidationException extends RuntimeException
    */
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteTag(@PathVariable int id) {
+  public void deleteById(@PathVariable int id) {
     validator.checkId(id);
-    tagService.deleteTag(id);
+    tagService.deleteById(id);
   }
 }
