@@ -26,19 +26,11 @@ public class TagEntity implements Serializable {
   private String name;
 
   @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE}, mappedBy = "tags")
-/*  @JoinTable( name = "gc_tag", schema = "gc",
-      joinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"),
-      inverseJoinColumns = @JoinColumn(name = "gc_id", referencedColumnName = "id"))*/
   private List<GiftCertificateEntity> certs;
 
   public TagEntity(String name) {
     this.name = name;
   }
-
-/*  public void addGiftCertificateEntity(GiftCertificateEntity certificate) {
-    certs.add(certificate);
-    certificate.getTags().add(this);
-  }*/
 
   @Override
   public boolean equals(Object o) {

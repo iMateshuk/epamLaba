@@ -4,7 +4,7 @@ import com.epam.esm.dao.config.DaoConfig;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.impl.GiftCertificateDB;
 import com.epam.esm.dao.impl.TagDB;
-import com.epam.esm.dao.util.GiftCertificateTagSQL;
+import com.epam.esm.dao.util.PredicateParameter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -65,8 +65,8 @@ public class GiftCertificateDbTest {
     Map<String, String> parameters = new HashMap<>();
     Map<String, String> notExistValues = new HashMap<>();
 
-    parameters.put(GiftCertificateTagSQL.SEARCH_TAG_NAME.toString(), existTagName);
-    notExistValues.put(GiftCertificateTagSQL.SEARCH_TAG_NAME.toString(), testTagName);
+    parameters.put(PredicateParameter.JOIN_TAG_NAME.toString(), existTagName);
+    notExistValues.put(PredicateParameter.JOIN_TAG_NAME.toString(), testTagName);
 
     Assertions.assertAll(
         () -> assertDoesNotThrow(() -> giftCertificateDAO.findAllWithParam(parameters)),

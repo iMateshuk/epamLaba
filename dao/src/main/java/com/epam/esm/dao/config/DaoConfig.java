@@ -1,6 +1,5 @@
 package com.epam.esm.dao.config;
 
-import com.epam.esm.dao.util.GiftCertificateSQL;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -22,8 +21,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 @Configuration
@@ -97,38 +94,8 @@ public class DaoConfig {
   }
 
   @Bean
-  @Profile("prod")
-  public Map<GiftCertificateSQL, String> giftCertificateProd() {
-    Map<GiftCertificateSQL, String> giftCertificateSQLs = new HashMap<>();
-
-    giftCertificateSQLs.put(GiftCertificateSQL.INSERT_GIFT_CERT, GiftCertificateSQL.INSERT_GIFT_CERT.getSQL());
-    giftCertificateSQLs.put(GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY, GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY.getSQL());
-    return giftCertificateSQLs;
-  }
-
-  @Bean
-  @Profile("dev")
-  public Map<GiftCertificateSQL, String> giftCertificateDev() {
-    Map<GiftCertificateSQL, String> giftCertificateSQLs = new HashMap<>();
-
-    giftCertificateSQLs.put(GiftCertificateSQL.INSERT_GIFT_CERT, GiftCertificateSQL.INSERT_GIFT_CERT_TST.getSQL());
-    giftCertificateSQLs.put(GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY, GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY_TST.getSQL());
-    return giftCertificateSQLs;
-  }
-
-  @Bean
   public JdbcTemplate jdbcTemplate(DataSource dataSource) {
     return new JdbcTemplate(dataSource);
-  }
-
-  @Bean
-  public GiftCertificateMapper giftCertificateMapper() {
-    return new GiftCertificateMapper();
-  }
-
-  @Bean
-  public TagMapper tagMapper() {
-    return new TagMapper();
   }
 
   @Bean
@@ -159,29 +126,4 @@ public class DaoConfig {
     transactionManager.setEntityManagerFactory(entityManagerFactory(dataSource()));
     return transactionManager;
   }
-
-/*  @Bean
-  public EntityManagerFactory entityManagerFactory(DataSource dataSource) {
-    Properties properties = new Properties();
-    properties.put("hibernate.show_sql", showSql);
-
-    LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-    emf.setDataSource(dataSource);
-    emf.setPackagesToScan(packagesToScan);
-    emf.setJpaProperties(properties);
-    emf.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-    return emf.getObject();
-  }
-
-  @Bean
-  public SessionFactory sessionFactoryProvider(EntityManagerFactory entityManagerFactory) {
-    return entityManagerFactory.unwrap(SessionFactory.class);
-  }
-
-  @Bean
-  public JpaTransactionManager jpaTransactionManager(EntityManagerFactory entityManagerFactory) {
-    JpaTransactionManager transactionManager = new JpaTransactionManager();
-    transactionManager.setEntityManagerFactory(entityManagerFactory);
-    return transactionManager;
-  }*/
 }

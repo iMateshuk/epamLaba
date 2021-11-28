@@ -52,16 +52,6 @@ public class GiftCertificateEntity implements Serializable {
       inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
   private List<TagEntity> tags;
 
-/*  public void addTag(TagEntity tag) {
-    tags.add(tag);
-    tag.getCerts().add(this);
-  }
-
-  public void removeTag(TagEntity tag) {
-    tags.remove(tag);
-    tag.getCerts().remove(this);
-  }*/
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {

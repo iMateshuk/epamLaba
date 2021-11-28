@@ -127,9 +127,9 @@ public class GiftCertificateTest {
     List<GiftCertificateEntity> certificateEntities = new ArrayList<>();
     certificateEntities.add(GIFT_CERTIFICATE);
 
-    noMatchParam.put(RequestedParameter.SORT_NAME.toString(), RequestedParameter.SORT_NAME.getParameterKey());
-    allRequestParams.put(RequestedParameter.SORT_NAME.getParameterKey(), RequestedParameter.SORT_NAME.toString());
-    parameters.put(RequestedParameter.SORT_NAME.toString(), RequestedParameter.SORT_NAME.toString());
+    noMatchParam.put(RequestedParameter.SORT_CERT_NAME.toString(), RequestedParameter.SORT_CERT_NAME.getParameterKey());
+    allRequestParams.put(RequestedParameter.SORT_CERT_NAME.getParameterKey(), RequestedParameter.SORT_CERT_NAME.toString());
+    parameters.put(RequestedParameter.SORT_CERT_NAME.toString(), RequestedParameter.SORT_CERT_NAME.toString());
 
     Mockito.when(mockGiftCertificateDAO.findAllWithParam(parameters)).thenReturn(certificateEntities);
 
