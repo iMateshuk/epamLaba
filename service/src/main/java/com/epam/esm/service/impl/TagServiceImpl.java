@@ -8,6 +8,7 @@ import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.exception.ServiceConflictException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.util.Validator;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,15 +21,12 @@ import java.util.List;
  * @author Ivan Matsiashuk
  * @version 1.0
  */
+@AllArgsConstructor
 @Service
 public class TagServiceImpl implements TagService {
   private final TagDAO tagDAO;
   private final Validator validator;
-
-  public TagServiceImpl(TagDAO tagDAO, Validator validator) {
-    this.tagDAO = tagDAO;
-    this.validator = validator;
-  }
+  private final TagConverter tagConverter;
 
   /**
    * @param name of new Tag.
@@ -43,7 +41,7 @@ public class TagServiceImpl implements TagService {
     if (tagDAO.isExistByName(name)) {
       throw new ServiceConflictException(new ErrorDto("tag.create.error", name), 201);
     }
-    return TagConverter.toDto(tagDAO.insertByName(name));
+    return tagConverter.toDto(tagDAO.insertByName(name));
   }
 
   /**
@@ -52,7 +50,7 @@ public class TagServiceImpl implements TagService {
   @Transactional
   @Override
   public List<TagDTO> findAll() {
-    return TagConverter.toDto(tagDAO.findAll());
+    return tagConverter.toDto(tagDAO.findAll());
   }
 
   /**
@@ -63,11 +61,11 @@ public class TagServiceImpl implements TagService {
    */
   @Transactional
   @Override
-  public TagDTO findById(int id) {
+  public TagDTO findById(Integer id) {
     if (!tagDAO.isExistById(id)) {
       throw new ServiceException(new ErrorDto("tag.search.error", id), 203);
     }
-    return TagConverter.toDto(tagDAO.findById(id));
+    return tagConverter.toDto(tagDAO.findById(id));
   }
 
   /**
@@ -77,7 +75,7 @@ public class TagServiceImpl implements TagService {
    */
   @Transactional
   @Override
-  public void deleteById(int id) {
+  public void deleteById(Integer id) {
     if (!tagDAO.isExistById(id)) {
       throw new ServiceException(new ErrorDto("tag.delete.error", id), 204);
     }

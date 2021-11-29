@@ -3,6 +3,7 @@ package com.epam.esm.dao.impl;
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.dao.util.TagSQL;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -15,13 +16,10 @@ import java.util.List;
  * @author Ivan Matsiashuk
  * @version 1.0
  */
+@AllArgsConstructor
 @Repository
-public class TagDB implements TagDAO {
+public class TagDaoImpl implements TagDAO {
   private final EntityManager entityManager;
-
-  public TagDB(EntityManager entityManager) {
-    this.entityManager = entityManager;
-  }
 
   /**
    * Create Tag entry in the table

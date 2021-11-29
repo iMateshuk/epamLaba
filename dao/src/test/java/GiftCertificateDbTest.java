@@ -2,8 +2,8 @@ import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.config.DaoConfig;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
-import com.epam.esm.dao.impl.GiftCertificateDB;
-import com.epam.esm.dao.impl.TagDB;
+import com.epam.esm.dao.impl.GiftCertificateDaoImpl;
+import com.epam.esm.dao.impl.TagDaoImpl;
 import com.epam.esm.dao.util.PredicateParameter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -19,7 +19,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles(value = "dev")
-@SpringBootTest(classes = {GiftCertificateDB.class, DaoConfig.class, TagDB.class})
+@SpringBootTest(classes = {GiftCertificateDaoImpl.class, DaoConfig.class, TagDaoImpl.class})
 public class GiftCertificateDbTest {
 
   private static final GiftCertificateEntity GIFT_CERTIFICATE = new GiftCertificateEntity();

@@ -14,7 +14,6 @@ public enum PredicateParameter {
 
   ;
 
-
   private final String sql;
 
   PredicateParameter(String string) {

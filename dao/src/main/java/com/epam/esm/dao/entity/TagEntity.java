@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity(name = "Tag")
-@Table(name = "tag", schema = "gc")
+@Table(name = "tags", schema = "gc")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -25,7 +25,7 @@ public class TagEntity implements Serializable {
   @Column(unique = true, nullable = false)
   private String name;
 
-  @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE}, mappedBy = "tags")
+  @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE}, mappedBy = "tags")
   private List<GiftCertificateEntity> certs;
 
   public TagEntity(String name) {

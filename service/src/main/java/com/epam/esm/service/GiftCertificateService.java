@@ -10,11 +10,11 @@ public interface GiftCertificateService {
 
   List<GiftCertificateDTO> findAll();
 
-  GiftCertificateDTO findById(int id);
+  GiftCertificateDTO findById(Integer id);
 
   List<GiftCertificateDTO> findAllWithParam(Map<String, String> allParameters);
 
   GiftCertificateDTO update(GiftCertificateDTO giftCertificateDTO);
 
-  void deleteById(int id);
+  void deleteById(Integer id);
 }

@@ -6,8 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.lang.NonNull;
@@ -15,7 +13,6 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
@@ -94,16 +91,6 @@ public class DaoConfig {
   }
 
   @Bean
-  public JdbcTemplate jdbcTemplate(DataSource dataSource) {
-    return new JdbcTemplate(dataSource);
-  }
-
-  @Bean
-  public TransactionManager transactionManager(DataSource dataSource) {
-    return new DataSourceTransactionManager(dataSource);
-  }
-
-  @Bean
   public EntityManagerFactory entityManagerFactory(DataSource dataSource) {
     Properties properties = new Properties();
     properties.put("hibernate.show_sql", showSql);
@@ -121,9 +108,9 @@ public class DaoConfig {
   }
 
   @Bean
-  public PlatformTransactionManager transactionManager() {
+  public PlatformTransactionManager transactionManager(DataSource dataSource) {
     JpaTransactionManager transactionManager = new JpaTransactionManager();
-    transactionManager.setEntityManagerFactory(entityManagerFactory(dataSource()));
+    transactionManager.setEntityManagerFactory(entityManagerFactory(dataSource));
     return transactionManager;
   }
 }
