@@ -9,7 +9,7 @@ public interface TagService {
 
   List<TagDTO> findAll();
 
-  TagDTO findById(int id);
+  TagDTO findById(Integer id);
 
-  void deleteById(int id);
+  void deleteById(Integer id);
 }

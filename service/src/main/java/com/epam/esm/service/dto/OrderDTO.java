@@ -2,7 +2,7 @@ package com.epam.esm.service.dto;
 
 import lombok.*;
 
-import java.io.Serializable;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -10,7 +10,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class TagDTO implements Serializable {
+public class OrderDTO {
   private Integer id;
-  private String name;
+  private Float cost;
+  private Timestamp createDate;
 }

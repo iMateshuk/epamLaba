@@ -6,14 +6,12 @@ import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.dao.util.GiftCertificateSQL;
 import com.epam.esm.dao.util.PredicateParameter;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Repository Gift-Certificate
@@ -22,15 +20,11 @@ import java.util.Map;
  * @author Ivan Matsiashuk
  * @version 1.0
  */
+@AllArgsConstructor
 @Repository
-public class GiftCertificateDB implements GiftCertificateDAO {
+public class GiftCertificateDaoImpl implements GiftCertificateDAO {
   private final EntityManager entityManager;
   private final TagDAO tagDAO;
-
-  public GiftCertificateDB(EntityManager entityManager, TagDAO tagDAO) {
-    this.entityManager = entityManager;
-    this.tagDAO = tagDAO;
-  }
 
   /**
    * @param giftCertificate insert in table
@@ -50,7 +44,7 @@ public class GiftCertificateDB implements GiftCertificateDAO {
    */
   @Override
   public List<GiftCertificateEntity> findAll() {
-    return entityManager.createQuery(GiftCertificateSQL.QL_SELECT_ALL.getSQL(), GiftCertificateEntity.class)
+    return entityManager.createQuery(GiftCertificateSQL.SELECT_ALL.getSQL(), GiftCertificateEntity.class)
         .getResultList();
   }
 
@@ -101,15 +95,13 @@ public class GiftCertificateDB implements GiftCertificateDAO {
 
     List<Predicate> predicates = new ArrayList<>();
     Arrays.stream(PredicateParameter.class.getEnumConstants())
-        .filter(item -> item.toString().matches(SEARCH))
-        .filter(item -> parameters.get(item.toString()) != null)
+        .filter(item -> item.toString().matches(SEARCH) && parameters.get(item.toString()) != null)
         .forEach(item -> predicates.add(criteriaBuilder.like(from.get(item.getSQL()),
             SEARCH_LIKE + parameters.get(item.toString()) + SEARCH_LIKE)));
 
     Join<GiftCertificateEntity, TagEntity> join = from.join("tags", JoinType.INNER);
     Arrays.stream(PredicateParameter.class.getEnumConstants())
-        .filter(item -> item.toString().matches(JOIN))
-        .filter(item -> parameters.get(item.toString()) != null)
+        .filter(item -> item.toString().matches(JOIN) && parameters.get(item.toString()) != null)
         .forEach(item -> predicates.add(criteriaBuilder.like(join.get(item.getSQL()),
             SEARCH_LIKE + parameters.get(item.toString()) + SEARCH_LIKE)));
 
@@ -119,8 +111,7 @@ public class GiftCertificateDB implements GiftCertificateDAO {
 
     List<Order> orders = new ArrayList<>();
     Arrays.stream(PredicateParameter.class.getEnumConstants())
-        .filter(item -> item.toString().matches(SORT))
-        .filter(item -> parameters.get(item.toString()) != null)
+        .filter(item -> item.toString().matches(SORT) && parameters.get(item.toString()) != null)
         .forEach(item -> {
           if (parameters.get(item.toString()).equalsIgnoreCase(PredicateParameter.ORDER_DESC.getSQL())) {
             orders.add(criteriaBuilder.desc(from.get(item.getSQL())));
@@ -184,7 +175,7 @@ public class GiftCertificateDB implements GiftCertificateDAO {
   }
 
   private GiftCertificateEntity searchCertificate(String certificateName) {
-    return entityManager.createQuery(GiftCertificateSQL.QL_SELECT_ALL_W_NAME.getSQL(), GiftCertificateEntity.class)
+    return entityManager.createQuery(GiftCertificateSQL.SELECT_ALL_BY_NAME.getSQL(), GiftCertificateEntity.class)
         .setParameter("name", certificateName).getResultList().stream().findFirst().orElse(null);
   }
 

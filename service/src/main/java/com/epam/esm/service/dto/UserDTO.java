@@ -2,7 +2,7 @@ package com.epam.esm.service.dto;
 
 import lombok.*;
 
-import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
@@ -10,7 +10,10 @@ import java.io.Serializable;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class TagDTO implements Serializable {
+public class UserDTO {
   private Integer id;
-  private String name;
+  private String nickName;
+  private String firstName;
+  private String lastName;
+  private List<OrderDTO> orders;
 }

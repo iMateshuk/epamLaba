@@ -10,9 +10,11 @@ import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.exception.ServiceValidationException;
 import com.epam.esm.service.util.RequestedParameter;
 import com.epam.esm.service.util.Validator;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -25,32 +27,32 @@ import java.util.stream.Collectors;
  * @author Ivan Matsiashuk
  * @version 1.0
  */
+@AllArgsConstructor
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
   private final GiftCertificateDAO giftCertificateDAO;
   private final Validator validator;
-
-  public GiftCertificateServiceImpl(GiftCertificateDAO giftCertificateDAO, Validator validator) {
-    this.giftCertificateDAO = giftCertificateDAO;
-    this.validator = validator;
-  }
+  private final GiftCertificateConverter certificateConverter;
 
   /**
-   * @param requestGiftCertificateDTO DTO object
+   * @param certificateDTO DTO object
    * @return GiftCertificateDTO
    * <p>
    * The method can throw ServiceConflictException extends RuntimeException<p>
    */
   @Transactional
   @Override
-  public GiftCertificateDTO insert(GiftCertificateDTO requestGiftCertificateDTO) {
-    String certificateName = requestGiftCertificateDTO.getName();
-    validator.matchField(certificateName, requestGiftCertificateDTO.getDescription());
+  public GiftCertificateDTO insert(GiftCertificateDTO certificateDTO) {
+    String certificateName = certificateDTO.getName();
+    validator.matchField(certificateName, certificateDTO.getDescription());
     if (giftCertificateDAO.isExistByName(certificateName)) {
       throw new ServiceConflictException(new ErrorDto("certificate.name.create.error", certificateName), 101);
     }
-    return GiftCertificateConverter
-        .toDto(giftCertificateDAO.insert(GiftCertificateConverter.toEntity(requestGiftCertificateDTO)));
+    if (certificateDTO.getTags() == null) {
+      certificateDTO.setTags(new ArrayList<>());
+    }
+    return certificateConverter
+        .toDto(giftCertificateDAO.insert(certificateConverter.toEntity(certificateDTO)));
   }
 
   /**
@@ -59,7 +61,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
   @Transactional
   @Override
   public List<GiftCertificateDTO> findAll() {
-    return GiftCertificateConverter
+    return certificateConverter
         .toDto(giftCertificateDAO.findAll());
   }
 
@@ -71,11 +73,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
    */
   @Transactional
   @Override
-  public GiftCertificateDTO findById(int id) {
+  public GiftCertificateDTO findById(Integer id) {
     if (!giftCertificateDAO.isExistById(id)) {
       throw new ServiceException(new ErrorDto("certificate.search.error", id), 103);
     }
-    return GiftCertificateConverter
+    return certificateConverter
         .toDto(giftCertificateDAO.findById(id));
   }
 
@@ -93,7 +95,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
       throw new ServiceValidationException(new ErrorDto("certificate.parameters.error"), 105);
     }
 
-    List<GiftCertificateDTO> createdGiftCertificateDTOs = GiftCertificateConverter
+    List<GiftCertificateDTO> createdGiftCertificateDTOs = certificateConverter
         .toDto(giftCertificateDAO.findAllWithParam(parameters));
     if (createdGiftCertificateDTOs.isEmpty()) {
       throw new ServiceException(new ErrorDto("dao.empty.result.error"), 115);
@@ -127,18 +129,18 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
       validator.matchField(certificateDescription);
     }
 
-    return GiftCertificateConverter.toDto(giftCertificateDAO
-        .update(GiftCertificateConverter.toEntity(requestGiftCertificateDTO)));
+    return certificateConverter.toDto(giftCertificateDAO
+        .update(certificateConverter.toEntity(requestGiftCertificateDTO)));
   }
 
   /**
    * @param id positive int
-   * <p>
-   * The method can throw ServiceException extends RuntimeException
+   *           <p>
+   *           The method can throw ServiceException extends RuntimeException
    */
   @Transactional
   @Override
-  public void deleteById(int id) {
+  public void deleteById(Integer id) {
     if (!giftCertificateDAO.isExistById(id)) {
       throw new ServiceException(new ErrorDto("certificate.delete.error", id), 104);
     }

@@ -1,9 +1,6 @@
 package com.epam.esm.dao.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -13,12 +10,12 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 
-@Entity(name = "Certificate")
-@Table(name = "gift_certificate", schema = "gc")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity(name = "Certificate")
+@Table(name = "gift_certificate", schema = "gc")
 public class GiftCertificateEntity implements Serializable {
 
   @Id
@@ -46,7 +43,7 @@ public class GiftCertificateEntity implements Serializable {
   @Column(name = "last_update_date", nullable = false)
   private Timestamp lastUpdateDate;
 
-  @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+  @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
   @JoinTable(name = "gc_tag", schema = "gc",
       joinColumns = @JoinColumn(name = "gc_id", referencedColumnName = "id"),
       inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))

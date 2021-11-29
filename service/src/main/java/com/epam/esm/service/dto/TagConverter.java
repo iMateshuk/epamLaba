@@ -1,36 +1,30 @@
 package com.epam.esm.service.dto;
 
 import com.epam.esm.dao.entity.TagEntity;
+import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 public class TagConverter {
+  private final ModelMapper modelMapper;
 
-  public static TagDTO toDto(TagEntity tagEntity) {
-    TagDTO tagDTO = new TagDTO();
-
-    tagDTO.setId(tagEntity.getId());
-    tagDTO.setName(tagEntity.getName());
-    return tagDTO;
+  public TagDTO toDto(TagEntity tagEntity) {
+    return Objects.isNull(tagEntity) ? null : modelMapper.map(tagEntity, TagDTO.class);
   }
 
-  public static TagEntity toEntity(TagDTO tagDTO) {
-    TagEntity tagEntity = new TagEntity();
-
-    tagEntity.setId(tagDTO.getId());
-    tagEntity.setName(tagDTO.getName());
-    return tagEntity;
+  public TagEntity toEntity(TagDTO tagDTO) {
+    return Objects.isNull(tagDTO) ? null : modelMapper.map(tagDTO, TagEntity.class);
   }
 
-  public static List<TagDTO> toDto(List<TagEntity> tagEntities) {
-    return tagEntities.stream()
-        .map(TagConverter::toDto)
-        .collect(Collectors.toList());
+  public List<TagDTO> toDto(List<TagEntity> tagEntities) {
+    return tagEntities.stream().map(this::toDto).collect(Collectors.toList());
   }
 
-  public static List<TagEntity> toEntity(List<TagDTO> tagDTOS) {
-    return tagDTOS.stream().map(TagConverter::toEntity)
-        .collect(Collectors.toList());
+  public List<TagEntity> toEntity(List<TagDTO> tags) {
+    return tags.stream().map(this::toEntity).collect(Collectors.toList());
   }
 }

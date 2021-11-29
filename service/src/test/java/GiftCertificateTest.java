@@ -92,12 +92,15 @@ public class GiftCertificateTest {
   @Mock
   private Validator mockValidator;
 
+  @Mock
+  private GiftCertificateConverter certificateConverter;
+
   @Test
   public void createGiftCertificateTest() {
-    GiftCertificateEntity requestedGiftCertificate = GiftCertificateConverter.toEntity(requestGiftCertificateDTO);
+    GiftCertificateEntity requestedGiftCertificate = certificateConverter.toEntity(requestGiftCertificateDTO);
     Mockito.when(mockGiftCertificateDAO.insert(requestedGiftCertificate))
         .thenReturn(GIFT_CERTIFICATE);
-    GiftCertificateDTO createdGiftCertificateDTO = GiftCertificateConverter
+    GiftCertificateDTO createdGiftCertificateDTO = certificateConverter
         .toDto(mockGiftCertificateDAO.insert(requestedGiftCertificate));
 
     GiftCertificateDTO returnGiftCertificateDTO = mockGiftCertificate.insert(requestGiftCertificateDTO);
@@ -169,10 +172,10 @@ public class GiftCertificateTest {
 
     Mockito.when(mockGiftCertificateDAO.isExistById(requestGiftCertificateDTO.getId()))
         .thenReturn(true);
-    GiftCertificateEntity requestedGiftCertificate = GiftCertificateConverter.toEntity(requestGiftCertificateDTO);
+    GiftCertificateEntity requestedGiftCertificate = certificateConverter.toEntity(requestGiftCertificateDTO);
     Mockito.when(mockGiftCertificateDAO.update(requestedGiftCertificate))
         .thenReturn(GIFT_CERTIFICATE);
-    GiftCertificateDTO updatedGiftCertificateDTO = GiftCertificateConverter
+    GiftCertificateDTO updatedGiftCertificateDTO = certificateConverter
         .toDto(mockGiftCertificateDAO.update(requestedGiftCertificate));
 
     GiftCertificateDTO returnGiftCertificateDTO = mockGiftCertificate.update(requestGiftCertificateDTO);
