@@ -9,6 +9,6 @@ import java.util.List;
 @Getter
 public class ValidationException extends RuntimeException{
     private final List<ErrorDto> validationErrors;
-    private final int errorCod;
+    private final int errorCode;
 }
 
