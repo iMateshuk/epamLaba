@@ -87,11 +87,13 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
     final String SEARCH = "^SEARCH_.*";
     final String SORT = "^SORT_.*";
     final String JOIN = "^JOIN.*";
+    final String JOIN_ATTRIBUTE_NAME = "tags";
+    final String SPLIT = ",";
 
     CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
     CriteriaQuery<GiftCertificateEntity> criteriaQuery = criteriaBuilder.createQuery(GiftCertificateEntity.class);
     Root<GiftCertificateEntity> from = criteriaQuery.from(GiftCertificateEntity.class);
-    CriteriaQuery<GiftCertificateEntity> select = criteriaQuery.select(from);
+    /*CriteriaQuery<GiftCertificateEntity> select = criteriaQuery.select(from);*/
 
     List<Predicate> predicates = new ArrayList<>();
     Arrays.stream(PredicateParameter.class.getEnumConstants())
@@ -99,11 +101,13 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
         .forEach(item -> predicates.add(criteriaBuilder.like(from.get(item.getSQL()),
             SEARCH_LIKE + parameters.get(item.toString()) + SEARCH_LIKE)));
 
-    Join<GiftCertificateEntity, TagEntity> join = from.join("tags", JoinType.INNER);
+    Join<GiftCertificateEntity, TagEntity> join = from.join(JOIN_ATTRIBUTE_NAME, JoinType.INNER);
     Arrays.stream(PredicateParameter.class.getEnumConstants())
         .filter(item -> item.toString().matches(JOIN) && parameters.get(item.toString()) != null)
-        .forEach(item -> predicates.add(criteriaBuilder.like(join.get(item.getSQL()),
-            SEARCH_LIKE + parameters.get(item.toString()) + SEARCH_LIKE)));
+        .forEach(item -> Arrays.stream(parameters.get(item.toString())
+            .split(SPLIT))
+            .forEach(element -> predicates.add(criteriaBuilder.like(join.get(item.getSQL()),
+            SEARCH_LIKE + element + SEARCH_LIKE))));
 
     if (!predicates.isEmpty()) {
       criteriaQuery.where(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
@@ -175,8 +179,9 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
   }
 
   private GiftCertificateEntity searchCertificate(String certificateName) {
+    final String NAME = "name";
     return entityManager.createQuery(GiftCertificateSQL.SELECT_ALL_BY_NAME.getSQL(), GiftCertificateEntity.class)
-        .setParameter("name", certificateName).getResultList().stream().findFirst().orElse(null);
+        .setParameter(NAME, certificateName).getResultList().stream().findFirst().orElse(null);
   }
 
   private void findAndSetTagId(GiftCertificateEntity certificate) {

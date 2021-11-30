@@ -4,7 +4,7 @@ public enum RequestedParameter {
   JOIN_TAG_NAME("tagName"),
 
   SEARCH_CERT_NAME("certName"),
-  SEARCH_CERT_DESC("certDes"),
+  SEARCH_CERT_DESC("certDesc"),
 
   SORT_CERT_NAME("sortName"),
   SORT_CERT_DATE("sortDate"),

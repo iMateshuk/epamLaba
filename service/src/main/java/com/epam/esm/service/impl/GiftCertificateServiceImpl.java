@@ -51,8 +51,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     if (certificateDTO.getTags() == null) {
       certificateDTO.setTags(new ArrayList<>());
     }
-    return certificateConverter
-        .toDto(giftCertificateDAO.insert(certificateConverter.toEntity(certificateDTO)));
+    return certificateConverter.toDto(giftCertificateDAO.insert(certificateConverter.toEntity(certificateDTO)));
   }
 
   /**
@@ -61,8 +60,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
   @Transactional
   @Override
   public List<GiftCertificateDTO> findAll() {
-    return certificateConverter
-        .toDto(giftCertificateDAO.findAll());
+    return certificateConverter.toDto(giftCertificateDAO.findAll());
   }
 
   /**
@@ -77,8 +75,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     if (!giftCertificateDAO.isExistById(id)) {
       throw new ServiceException(new ErrorDto("certificate.search.error", id), 103);
     }
-    return certificateConverter
-        .toDto(giftCertificateDAO.findById(id));
+    return certificateConverter.toDto(giftCertificateDAO.findById(id));
   }
 
   /**
@@ -98,9 +95,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     List<GiftCertificateDTO> createdGiftCertificateDTOs = certificateConverter
         .toDto(giftCertificateDAO.findAllWithParam(parameters));
     if (createdGiftCertificateDTOs.isEmpty()) {
-      throw new ServiceException(new ErrorDto("dao.empty.result.error"), 115);
+      throw new ServiceException(new ErrorDto("certificate.empty.result.error"), 115);
     }
-
     return createdGiftCertificateDTOs;
   }
 
@@ -128,15 +124,15 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     if (certificateDescription != null) {
       validator.matchField(certificateDescription);
     }
-
-    return certificateConverter.toDto(giftCertificateDAO
-        .update(certificateConverter.toEntity(requestGiftCertificateDTO)));
+    return certificateConverter.toDto(
+        giftCertificateDAO.update(certificateConverter.toEntity(requestGiftCertificateDTO))
+    );
   }
 
   /**
    * @param id positive int
-   *           <p>
-   *           The method can throw ServiceException extends RuntimeException
+   * <p>
+   * The method can throw ServiceException extends RuntimeException
    */
   @Transactional
   @Override
@@ -150,6 +146,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
   private Map<String, String> createMapParameter(Map<String, String> allRequestParams) {
     return Arrays.stream(RequestedParameter.class.getEnumConstants())
         .filter((parameter) -> allRequestParams.get(parameter.getParameterKey()) != null)
-        .collect(Collectors.toMap(RequestedParameter::toString, (parameter) -> (allRequestParams.get(parameter.getParameterKey()))));
+        .collect(Collectors.toMap(RequestedParameter::toString,
+            (parameter) -> (allRequestParams.get(parameter.getParameterKey()))));
   }
 }
