@@ -14,4 +14,5 @@ public class OrderDTO {
   private Integer id;
   private Float cost;
   private Timestamp createDate;
+  private UserDTO userDTO;
 }

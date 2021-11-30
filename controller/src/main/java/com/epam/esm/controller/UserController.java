@@ -4,22 +4,18 @@ import com.epam.esm.service.UserService;
 import com.epam.esm.service.dto.OrderDTO;
 import com.epam.esm.service.dto.UserDTO;
 import com.epam.esm.service.util.Validator;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/users")
 public class UserController {
-
   private final UserService userService;
   private final Validator validator;
-
-  public UserController(UserService userService, Validator validator) {
-    this.userService = userService;
-    this.validator = validator;
-  }
 
   @GetMapping
   @ResponseStatus(HttpStatus.OK)

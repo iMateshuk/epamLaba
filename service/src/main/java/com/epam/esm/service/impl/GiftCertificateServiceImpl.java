@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
-  private final GiftCertificateDAO giftCertificateDAO;
+  private final GiftCertificateDAO certificateDAO;
   private final Validator validator;
   private final GiftCertificateConverter certificateConverter;
 
@@ -45,13 +45,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
   public GiftCertificateDTO insert(GiftCertificateDTO certificateDTO) {
     String certificateName = certificateDTO.getName();
     validator.matchField(certificateName, certificateDTO.getDescription());
-    if (giftCertificateDAO.isExistByName(certificateName)) {
+    if (certificateDAO.isExistByName(certificateName)) {
       throw new ServiceConflictException(new ErrorDto("certificate.name.create.error", certificateName), 101);
     }
     if (certificateDTO.getTags() == null) {
       certificateDTO.setTags(new ArrayList<>());
     }
-    return certificateConverter.toDto(giftCertificateDAO.insert(certificateConverter.toEntity(certificateDTO)));
+    return certificateConverter.toDto(certificateDAO.insert(certificateConverter.toEntity(certificateDTO)));
   }
 
   /**
@@ -60,7 +60,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
   @Transactional
   @Override
   public List<GiftCertificateDTO> findAll() {
-    return certificateConverter.toDto(giftCertificateDAO.findAll());
+    return certificateConverter.toDto(certificateDAO.findAll());
   }
 
   /**
@@ -72,10 +72,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
   @Transactional
   @Override
   public GiftCertificateDTO findById(Integer id) {
-    if (!giftCertificateDAO.isExistById(id)) {
+    if (!certificateDAO.isExistById(id)) {
       throw new ServiceException(new ErrorDto("certificate.search.error", id), 103);
     }
-    return certificateConverter.toDto(giftCertificateDAO.findById(id));
+    return certificateConverter.toDto(certificateDAO.findById(id));
   }
 
   /**
@@ -91,13 +91,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     if (parameters.isEmpty()) {
       throw new ServiceValidationException(new ErrorDto("certificate.parameters.error"), 105);
     }
-
-    List<GiftCertificateDTO> createdGiftCertificateDTOs = certificateConverter
-        .toDto(giftCertificateDAO.findAllWithParam(parameters));
-    if (createdGiftCertificateDTOs.isEmpty()) {
-      throw new ServiceException(new ErrorDto("certificate.empty.result.error"), 115);
-    }
-    return createdGiftCertificateDTOs;
+    return certificateConverter.toDto(certificateDAO.findAllWithParam(parameters));
   }
 
   /**
@@ -111,7 +105,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
   @Override
   public GiftCertificateDTO update(GiftCertificateDTO requestGiftCertificateDTO) {
     int id = requestGiftCertificateDTO.getId();
-    if (!giftCertificateDAO.isExistById(id)) {
+    if (!certificateDAO.isExistById(id)) {
       throw new ServiceException(new ErrorDto("certificate.search.error", id), 106);
     }
 
@@ -124,27 +118,25 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     if (certificateDescription != null) {
       validator.matchField(certificateDescription);
     }
-    return certificateConverter.toDto(
-        giftCertificateDAO.update(certificateConverter.toEntity(requestGiftCertificateDTO))
-    );
+    return certificateConverter.toDto(certificateDAO.update(certificateConverter.toEntity(requestGiftCertificateDTO)));
   }
 
   /**
    * @param id positive int
-   * <p>
-   * The method can throw ServiceException extends RuntimeException
+   *           <p>
+   *           The method can throw ServiceException extends RuntimeException
    */
   @Transactional
   @Override
   public void deleteById(Integer id) {
-    if (!giftCertificateDAO.isExistById(id)) {
+    if (!certificateDAO.isExistById(id)) {
       throw new ServiceException(new ErrorDto("certificate.delete.error", id), 104);
     }
-    giftCertificateDAO.deleteById(id);
+    certificateDAO.deleteById(id);
   }
 
   private Map<String, String> createMapParameter(Map<String, String> allRequestParams) {
-    return Arrays.stream(RequestedParameter.class.getEnumConstants())
+    return Arrays.stream(RequestedParameter.values())
         .filter((parameter) -> allRequestParams.get(parameter.getParameterKey()) != null)
         .collect(Collectors.toMap(RequestedParameter::toString,
             (parameter) -> (allRequestParams.get(parameter.getParameterKey()))));

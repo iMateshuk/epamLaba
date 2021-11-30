@@ -3,6 +3,7 @@ package com.epam.esm.controller;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.GiftCertificateDTO;
 import com.epam.esm.service.util.Validator;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,16 +17,12 @@ import java.util.Map;
  * @author Ivan Matsiashuk
  * @version 1.0
  */
+@AllArgsConstructor
 @RestController
 @RequestMapping("/certificates")
 public class GiftCertificateController {
   private final GiftCertificateService giftCertificateService;
   private final Validator validator;
-
-  public GiftCertificateController(GiftCertificateService giftCertificateService, Validator validator) {
-    this.giftCertificateService = giftCertificateService;
-    this.validator = validator;
-  }
 
   /**
    * @param giftCertificateDTO with Tags

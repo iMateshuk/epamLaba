@@ -1,9 +1,6 @@
 package com.epam.esm.dao.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -22,23 +19,14 @@ public class UserEntity implements Serializable {
   @Column(name = "id")
   private Integer id;
 
-  @Column(name = "nick_name", unique = true, nullable = false)
-  private String nickName;
+  @Column(name = "user_name", unique = true, nullable = false)
+  private String userName;
 
-  @Column(name = "first_name", nullable = false)
-  private String firstName;
-
-  @Column(name = "last_name", nullable = false)
-  private String lastName;
+  @Column(name = "password", nullable = false)
+  private String password;
 
   @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<OrderEntity> orders;
-
-  public UserEntity addOrder(OrderEntity order) {
-    orders.add(order);
-    order.setUserEntity(this);
-    return this;
-  }
 
   @Override
   public boolean equals(Object o) {
@@ -49,24 +37,12 @@ public class UserEntity implements Serializable {
       return false;
     }
     UserEntity that = (UserEntity) o;
-    return Objects.equals(id, that.id) && Objects.equals(firstName, that.firstName)
-        && Objects.equals(lastName, that.lastName) && Objects.equals(nickName, that.nickName)
-        && Objects.equals(orders, that.orders);
+    return Objects.equals(id, that.id) && Objects.equals(userName, that.userName)
+        && Objects.equals(password, that.password) && Objects.equals(orders, that.orders);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, firstName, lastName, nickName, orders);
-  }
-
-  @Override
-  public String toString() {
-    return getClass().getName() +
-        "id=" + id +
-        ", firstName='" + firstName + '\'' +
-        ", lastName='" + lastName + '\'' +
-        ", nickname='" + nickName + '\'' +
-        ", orders=" + orders +
-        '}';
+    return Objects.hash(id, userName, password, orders);
   }
 }

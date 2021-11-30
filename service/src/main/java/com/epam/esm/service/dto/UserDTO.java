@@ -12,8 +12,6 @@ import java.util.List;
 @ToString
 public class UserDTO {
   private Integer id;
-  private String nickName;
-  private String firstName;
-  private String lastName;
+  private String userName;
   private List<OrderDTO> orders;
 }

@@ -3,6 +3,7 @@ package com.epam.esm.controller;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.util.Validator;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,16 +17,12 @@ import java.util.List;
  * @version 1.0
  */
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/tags")
 public class TagController {
   private final TagService tagService;
   private final Validator validator;
-
-  public TagController(TagService tagService, Validator validator) {
-    this.tagService = tagService;
-    this.validator = validator;
-  }
 
   /**
    * @param tagDTO TagDTO object from @RequestBody
