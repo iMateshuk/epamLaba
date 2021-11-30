@@ -5,13 +5,13 @@ import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.dao.util.GiftCertificateSQL;
-import com.epam.esm.dao.util.PredicateParameter;
+import com.epam.esm.dao.util.QueryCreator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.*;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Repository Gift-Certificate
@@ -25,6 +25,7 @@ import java.util.*;
 public class GiftCertificateDaoImpl implements GiftCertificateDAO {
   private final EntityManager entityManager;
   private final TagDAO tagDAO;
+  private final QueryCreator queryCreator;
 
   /**
    * @param giftCertificate insert in table
@@ -35,8 +36,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
   @Override
   public GiftCertificateEntity insert(GiftCertificateEntity giftCertificate) {
     findAndSetTagId(giftCertificate);
-    entityManager.persist(giftCertificate);
-    return findById(giftCertificate.getId());
+    return entityManager.merge(giftCertificate);
   }
 
   /**
@@ -83,55 +83,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
    */
   @Override
   public List<GiftCertificateEntity> findAllWithParam(Map<String, String> parameters) {
-    final String SEARCH_LIKE = "%";
-    final String SEARCH = "^SEARCH_.*";
-    final String SORT = "^SORT_.*";
-    final String JOIN = "^JOIN.*";
-    final String JOIN_ATTRIBUTE_NAME = "tags";
-    final String SPLIT = ",";
-
-    CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-    CriteriaQuery<GiftCertificateEntity> criteriaQuery = criteriaBuilder.createQuery(GiftCertificateEntity.class);
-    Root<GiftCertificateEntity> from = criteriaQuery.from(GiftCertificateEntity.class);
-    /*CriteriaQuery<GiftCertificateEntity> select = criteriaQuery.select(from);*/
-
-    List<Predicate> predicates = new ArrayList<>();
-    Arrays.stream(PredicateParameter.class.getEnumConstants())
-        .filter(item -> item.toString().matches(SEARCH) && parameters.get(item.toString()) != null)
-        .forEach(item -> predicates.add(criteriaBuilder.like(from.get(item.getSQL()),
-            SEARCH_LIKE + parameters.get(item.toString()) + SEARCH_LIKE)));
-
-    Join<GiftCertificateEntity, TagEntity> join = from.join(JOIN_ATTRIBUTE_NAME, JoinType.INNER);
-    Arrays.stream(PredicateParameter.class.getEnumConstants())
-        .filter(item -> item.toString().matches(JOIN) && parameters.get(item.toString()) != null)
-        .forEach(item -> Arrays.stream(parameters.get(item.toString())
-            .split(SPLIT))
-            .forEach(element -> predicates.add(criteriaBuilder.like(join.get(item.getSQL()),
-            SEARCH_LIKE + element + SEARCH_LIKE))));
-
-    if (!predicates.isEmpty()) {
-      criteriaQuery.where(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
-    }
-
-    List<Order> orders = new ArrayList<>();
-    Arrays.stream(PredicateParameter.class.getEnumConstants())
-        .filter(item -> item.toString().matches(SORT) && parameters.get(item.toString()) != null)
-        .forEach(item -> {
-          if (parameters.get(item.toString()).equalsIgnoreCase(PredicateParameter.ORDER_DESC.getSQL())) {
-            orders.add(criteriaBuilder.desc(from.get(item.getSQL())));
-          }
-          if (parameters.get(item.toString()).equalsIgnoreCase(PredicateParameter.ORDER_ASC.getSQL())) {
-            orders.add(criteriaBuilder.asc(from.get(item.getSQL())));
-          }
-        });
-
-    List<GiftCertificateEntity> entities;
-    if (!orders.isEmpty()) {
-      entities = entityManager.createQuery(criteriaQuery.orderBy(orders)).getResultList();
-    } else {
-      entities = entityManager.createQuery(criteriaQuery).getResultList();
-    }
-    return entities;
+    return entityManager.createQuery(queryCreator.buildWithParameters(parameters)).getResultList();
   }
 
   /**

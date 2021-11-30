@@ -1,5 +1,6 @@
 package com.epam.esm.dao.config;
 
+import com.epam.esm.dao.util.QueryCreator;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
@@ -112,5 +114,10 @@ public class DaoConfig {
     JpaTransactionManager transactionManager = new JpaTransactionManager();
     transactionManager.setEntityManagerFactory(entityManagerFactory(dataSource));
     return transactionManager;
+  }
+
+  @Bean
+  public QueryCreator queryCreator(EntityManager entityManager) {
+    return new QueryCreator(entityManager);
   }
 }
