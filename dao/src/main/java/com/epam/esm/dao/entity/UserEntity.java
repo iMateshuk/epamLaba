@@ -25,7 +25,7 @@ public class UserEntity implements Serializable {
   @Column(name = "password", nullable = false)
   private String password;
 
-  @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<OrderEntity> orders;
 
   @Override

@@ -1,10 +1,7 @@
 package com.epam.esm.exception;
 
 import com.epam.esm.service.dto.ErrorDto;
-import com.epam.esm.service.exception.ServiceConflictException;
-import com.epam.esm.service.exception.ServiceException;
-import com.epam.esm.service.exception.ServiceValidationException;
-import com.epam.esm.service.exception.ValidationException;
+import com.epam.esm.service.exception.*;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -46,6 +43,12 @@ public class GlobalControllerExceptionHandler {
   @ResponseStatus(HttpStatus.CONFLICT)
   public GlobalExceptionDTO handle(ServiceConflictException exception) {
     return exceptionUtil.createDto(exception.getErrorCode(), HttpStatus.CONFLICT, exception.getErrorDto());
+  }
+  @ExceptionHandler(value = {ServiceListException.class})
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public GlobalExceptionDTO handle(ServiceListException exception) {
+    return exceptionUtil.createDto(exception.getErrorCode(), HttpStatus.NOT_FOUND,
+        exception.getErrorDto().toArray(new ErrorDto[0]));
   }
 
   @ExceptionHandler(value = {EmptyResultDataAccessException.class})

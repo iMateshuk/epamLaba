@@ -8,8 +8,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter
-public class ValidationException extends RuntimeException {
-  private final List<ErrorDto> validationErrors;
+public class ServiceListException extends RuntimeException {
+  private final List<ErrorDto> errorDto;
   private final int errorCode;
 }
-

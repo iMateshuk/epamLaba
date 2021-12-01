@@ -7,6 +7,7 @@ import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.util.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,11 +19,13 @@ public class UserServiceImpl implements UserService {
   private final OrderConvertor orderConvertor;
   private final Validator validator;
 
+  @Transactional
   @Override
   public List<UserDTO> findAll() {
     return userConverter.toDto(userDAO.findAll());
   }
 
+  @Transactional
   @Override
   public UserDTO findById(Integer id) {
     if(!userDAO.isUserExist(id)){
@@ -31,6 +34,7 @@ public class UserServiceImpl implements UserService {
     return userConverter.toDto(userDAO.findById(id));
   }
 
+  @Transactional
   @Override
   public List<OrderDTO> findByIdOrders(Integer id) {
     if(!userDAO.isUserExist(id)){
@@ -43,6 +47,7 @@ public class UserServiceImpl implements UserService {
     return orders;
   }
 
+  @Transactional
   @Override
   public OrderDTO findByIdOrder(Integer userId, Integer orderId) {
     if(!userDAO.isUserExist(userId)){

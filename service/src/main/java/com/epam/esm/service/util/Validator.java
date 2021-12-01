@@ -2,6 +2,7 @@ package com.epam.esm.service.util;
 
 import com.epam.esm.service.dto.ErrorDto;
 import com.epam.esm.service.dto.GiftCertificateDTO;
+import com.epam.esm.service.dto.PurchaseDTO;
 import com.epam.esm.service.exception.ValidationException;
 
 import java.util.ArrayList;
@@ -97,6 +98,22 @@ public class Validator {
     }
     if (!errors.isEmpty()) {
       throw new ValidationException(errors, 3);
+    }
+  }
+
+  public void checkPurchaseDTO(PurchaseDTO purchaseDTO){
+    List<ErrorDto> errors = new ArrayList<>();
+
+    Integer userId = purchaseDTO.getUserId();
+    if (userId == null || userId <= MIN_VALUE){
+      errors.add(new ErrorDto("purchase.userid.error", userId));
+    }
+    Integer certId = purchaseDTO.getCertId();
+    if (certId == null || certId <= MIN_VALUE){
+      errors.add(new ErrorDto("purchase.certid.error", certId));
+    }
+    if (!errors.isEmpty()) {
+      throw new ValidationException(errors, 4);
     }
   }
 }

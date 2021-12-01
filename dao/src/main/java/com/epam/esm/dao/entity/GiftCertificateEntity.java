@@ -49,6 +49,9 @@ public class GiftCertificateEntity implements Serializable {
       inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
   private List<TagEntity> tags;
 
+  @OneToMany(mappedBy = "certificate", cascade = CascadeType.MERGE)
+  private List<OrderEntity> orders;
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

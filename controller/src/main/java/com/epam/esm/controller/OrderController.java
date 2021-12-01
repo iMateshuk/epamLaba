@@ -2,6 +2,7 @@ package com.epam.esm.controller;
 
 import com.epam.esm.service.OrderService;
 import com.epam.esm.service.dto.OrderDTO;
+import com.epam.esm.service.dto.PurchaseDTO;
 import com.epam.esm.service.util.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,8 +17,8 @@ public class OrderController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public OrderDTO insert(@RequestBody OrderDTO orderDTO) {
-    //validator
-    return orderService.insert(orderDTO);
+  public OrderDTO insert(@RequestBody PurchaseDTO purchaseDTO) {
+    validator.checkPurchaseDTO(purchaseDTO);
+    return orderService.insert(purchaseDTO);
   }
 }

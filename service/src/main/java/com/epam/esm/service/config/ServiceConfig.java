@@ -30,8 +30,8 @@ public class ServiceConfig {
   }
 
   @Bean
-  public GiftCertificateConverter certificateConverter(ModelMapper modelMapper, TagConverter tagConverter) {
-    return new GiftCertificateConverter(modelMapper, tagConverter);
+  public GiftCertificateConverter certificateConverter(ModelMapper modelMapper) {
+    return new GiftCertificateConverter(modelMapper);
   }
 
   @Bean
@@ -40,7 +40,7 @@ public class ServiceConfig {
   }
 
   @Bean
-  public ModelMapper modelMapper(){
+  public ModelMapper modelMapper() {
     ModelMapper modelMapper = new ModelMapper();
 
     modelMapper.getConfiguration()

@@ -19,9 +19,7 @@ public class GiftCertificateConverter {
   static {
     df.setTimeZone(tz);
   }
-
   private final ModelMapper modelMapper;
-  private final TagConverter tagConverter;
 
   public List<GiftCertificateDTO> toDto(List<GiftCertificateEntity> giftCertificates) {
     return giftCertificates.stream().map(this::toDto).collect(Collectors.toList());

@@ -32,7 +32,11 @@ public class OrderEntity implements Serializable {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
-  private UserEntity userEntity;
+  private UserEntity user;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "cert_id", nullable = false)
+  private GiftCertificateEntity certificate;
 
   @Override
   public boolean equals(Object o) {
@@ -44,12 +48,13 @@ public class OrderEntity implements Serializable {
     }
     OrderEntity that = (OrderEntity) o;
     return Objects.equals(id, that.id) && Objects.equals(cost, that.cost)
-        && Objects.equals(createDate, that.createDate) && Objects.equals(userEntity, that.userEntity);
+        && Objects.equals(createDate, that.createDate) && Objects.equals(user, that.user)
+        && Objects.equals(certificate, that.certificate);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, cost, createDate, userEntity);
+    return Objects.hash(id, cost, createDate, user, certificate);
   }
 
   @Override
@@ -58,7 +63,8 @@ public class OrderEntity implements Serializable {
         "id=" + id +
         ", cost=" + cost +
         ", createDate=" + createDate +
-        ", userEntity=" + userEntity +
+        ", userEntity=" + user +
+        ", certificateEntity=" + certificate +
         '}';
   }
 }
