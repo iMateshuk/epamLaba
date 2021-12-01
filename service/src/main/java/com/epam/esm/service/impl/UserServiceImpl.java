@@ -4,7 +4,6 @@ import com.epam.esm.dao.UserDAO;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.dto.*;
 import com.epam.esm.service.exception.ServiceException;
-import com.epam.esm.service.util.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +16,7 @@ public class UserServiceImpl implements UserService {
   private final UserDAO userDAO;
   private final UserConverter userConverter;
   private final OrderConvertor orderConvertor;
-  private final Validator validator;
+  private final TagConverter tagConverter;
 
   @Transactional
   @Override
@@ -58,5 +57,13 @@ public class UserServiceImpl implements UserService {
       throw new ServiceException(new ErrorDto("user.search.order", userId, orderId), 334);
     }
     return orderDTO;
+  }
+
+  @Override
+  public List<TagDTO> findTagWithCost(Integer id) {
+    if(!userDAO.isUserExist(id)){
+      throw new ServiceException(new ErrorDto("user.search.error", id), 341);
+    }
+    return tagConverter.toDto(userDAO.findTagWithCost(id));
   }
 }

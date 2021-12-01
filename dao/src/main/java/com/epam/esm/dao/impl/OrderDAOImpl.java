@@ -22,8 +22,6 @@ public class OrderDAOImpl implements OrderDAO {
     parentCert.getOrders().add(orderEntity);
     orderEntity.setUser(parentUser);
     orderEntity.setCertificate(parentCert);
-/*    entityManager.merge(parentCert);
-    entityManager.merge(parentUser);*/
     entityManager.persist(orderEntity);
     return findById(orderEntity.getId());
   }

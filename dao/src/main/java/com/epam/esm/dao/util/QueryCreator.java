@@ -18,9 +18,9 @@ public class QueryCreator {
 
   public CriteriaQuery<GiftCertificateEntity> buildWithParameters(Map<String, String> parameters) {
     final String SEARCH_LIKE = "%";
-    final String SEARCH = "^SEARCH_.*";
-    final String SORT = "^SORT_.*";
-    final String JOIN = "^JOIN.*";
+    final String SEARCH_REG_EX = "^SEARCH_.*";
+    final String SORT_REG_EX = "^SORT_.*";
+    final String JOIN_REG_EX = "^JOIN.*";
     final String TAGS_ATTRIBUTE_NAME = "tags";
     final String NAME = "name";
     final String ID = "id";
@@ -33,17 +33,17 @@ public class QueryCreator {
     List<Predicate> predicates = new ArrayList<>();
 
     Arrays.stream(PredicateParameter.values())
-        .filter(param -> param.toString().matches(SEARCH) && parameters.get(param.toString()) != null)
+        .filter(param -> param.toString().matches(SEARCH_REG_EX) && parameters.get(param.toString()) != null)
         .forEach(param -> predicates.add(criteriaBuilder.like(certRoot.get(param.getSQL()),
             SEARCH_LIKE + parameters.get(param.toString()) + SEARCH_LIKE)));
 
     Join<GiftCertificateEntity, TagEntity> join = certRoot.join(TAGS_ATTRIBUTE_NAME, JoinType.LEFT);
     Stream.of(PredicateParameter.values())
-        .filter(item -> item.toString().matches(JOIN) && parameters.get(item.toString()) != null)
+        .filter(item -> item.toString().matches(JOIN_REG_EX) && parameters.get(item.toString()) != null)
         .forEach(item -> {
-          String[] tagNames = parameters.get(item.toString()).split(SPLIT);
+          List<String> tagNames = List.of(parameters.get(item.toString()).split(SPLIT));
           predicates.add(join.get(NAME).in(tagNames));
-          criteriaQuery.having(criteriaBuilder.count(certRoot).in(tagNames.length));
+          criteriaQuery.having(criteriaBuilder.count(certRoot).in(tagNames.size()));
         });
     if (!predicates.isEmpty()) {
       criteriaQuery.where(predicates.toArray(new Predicate[0]));
@@ -52,7 +52,7 @@ public class QueryCreator {
 
     List<Order> orders = new ArrayList<>();
     Arrays.stream(PredicateParameter.class.getEnumConstants())
-        .filter(item -> item.toString().matches(SORT) && parameters.get(item.toString()) != null)
+        .filter(item -> item.toString().matches(SORT_REG_EX) && parameters.get(item.toString()) != null)
         .forEach(item -> {
           if (parameters.get(item.toString()).equalsIgnoreCase(PredicateParameter.ORDER_DESC.getSQL())) {
             orders.add(criteriaBuilder.desc(certRoot.get(item.getSQL())));

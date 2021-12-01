@@ -2,7 +2,9 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.UserDAO;
 import com.epam.esm.dao.entity.OrderEntity;
+import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.dao.entity.UserEntity;
+import com.epam.esm.dao.util.QueryCreator;
 import com.epam.esm.dao.util.UserSQL;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -15,6 +17,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class UserDaoImpl implements UserDAO {
   private final EntityManager entityManager;
+  private final QueryCreator queryCreator;
 
   @Override
   public List<UserEntity> findAll() {
@@ -41,5 +44,11 @@ public class UserDaoImpl implements UserDAO {
     return findById(userId).getOrders().stream()
         .filter(order -> Objects.equals(order.getId(), orderId))
         .findFirst().orElse(null);
+  }
+
+  @Override
+  public List<TagEntity> findTagWithCost(Integer id) {
+    return entityManager.createNativeQuery(UserSQL.SELECT_USED_TAGS.getSQL(), TagEntity.class)
+        .setParameter("id",id).getResultList();
   }
 }

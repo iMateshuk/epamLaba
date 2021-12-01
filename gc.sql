@@ -90,17 +90,15 @@ CREATE TABLE IF NOT EXISTS `gc`.`orders` (
   `cert_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_order_user1_idx` (`user_id` ASC) VISIBLE,
-  INDEX `fk_orders_gift_certificate1_idx` (`cert_id` ASC) VISIBLE,
+  INDEX `cert_id_idx` (`cert_id` ASC) VISIBLE,
+  CONSTRAINT `fk_cert_id`
+    FOREIGN KEY (`cert_id`)
+    REFERENCES `gc`.`gift_certificate` (`id`),
   CONSTRAINT `fk_order_user1`
     FOREIGN KEY (`user_id`)
-    REFERENCES `gc`.`users` (`id`),
-  CONSTRAINT `fk_orders_gift_certificate1`
-    FOREIGN KEY (`cert_id`)
-    REFERENCES `gc`.`gift_certificate` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `gc`.`users` (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 6
+AUTO_INCREMENT = 31
 DEFAULT CHARACTER SET = utf8mb3;
 
 
