@@ -12,7 +12,7 @@ public enum UserSQL {
       "having max(o.cost) = (SELECT MAX(o.cost) FROM gc.orders o inner join gc.users u on u.id=o.user_id where u.id=:id) " +
       "and " +
       "count = (SELECT MAX(counts) from " +
-      "(SELECT COUNT(ts.name) as counts FROM gc.tags ts " +
+      "(SELECT COUNT(*) as counts FROM gc.tags ts " +
       "inner join gc.gc_tag gts on ts.id=gts.tag_id " +
       "inner join gc.gift_certificate cs on gts.gc_id=cs.id " +
       "inner join gc.orders os on cs.id=os.cert_id " +

@@ -82,11 +82,11 @@ public class GlobalControllerExceptionHandler {
   }
 
   @ExceptionHandler(Exception.class)
-  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
   public GlobalExceptionDTO handleException(Exception e) {
     Arrays.stream(e.getStackTrace()).forEach(System.out::println);
     System.out.println();
     System.out.println(e.getMessage());
-    return exceptionUtil.createDto(HttpStatus.NOT_FOUND.value(), e.getClass().getSimpleName());
+    return exceptionUtil.createDto(HttpStatus.SERVICE_UNAVAILABLE.value(), e.getClass().getSimpleName());
   }
 }

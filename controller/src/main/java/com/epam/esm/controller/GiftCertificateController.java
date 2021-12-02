@@ -1,14 +1,22 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.hateoas.GiftCertificateAssembler;
+import com.epam.esm.hateoas.GiftCertificateModel;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.GiftCertificateDTO;
 import com.epam.esm.service.util.Validator;
 import lombok.AllArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 /**
  * RestController Gift-Certificate
@@ -21,8 +29,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/certificates")
 public class GiftCertificateController {
-  private final GiftCertificateService giftCertificateService;
+  private final GiftCertificateService certificateService;
   private final Validator validator;
+  private final GiftCertificateAssembler certificateAssembler;
 
   /**
    * @param giftCertificateDTO with Tags
@@ -31,24 +40,29 @@ public class GiftCertificateController {
    * The method can throw ValidationException extends RuntimeException
    */
   @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  public GiftCertificateDTO insert(@RequestBody GiftCertificateDTO giftCertificateDTO) {
+  public ResponseEntity<GiftCertificateModel> insert(@RequestBody GiftCertificateDTO giftCertificateDTO) {
     validator.checkCreationCertificate(giftCertificateDTO);
-    return giftCertificateService.insert(giftCertificateDTO);
+    GiftCertificateModel certificateModel = certificateAssembler.toModel(certificateService.insert(giftCertificateDTO));
+    certificateModel.add(linkTo(methodOn(GiftCertificateController.class).insert(giftCertificateDTO)).withSelfRel());
+    return new ResponseEntity<>(certificateModel, HttpStatus.CREATED);
   }
 
   /**
-   * @param allParameters Map of parameters
+   * @param parameters Map of parameters
    * @return List of GiftCertificateDTO
    * <p>
    * The method can throw ServiceException extends RuntimeException
    */
   @GetMapping
-  @ResponseStatus(HttpStatus.OK)
-  public List<GiftCertificateDTO> findAll(@RequestParam Map<String, String> allParameters) {
-    return allParameters.size() > 0
-        ? giftCertificateService.findAllWithParam(allParameters)
-        : giftCertificateService.findAll();
+  public ResponseEntity<CollectionModel<GiftCertificateModel>> findAll(@RequestParam Map<String, String> parameters) {
+    List<GiftCertificateDTO> dtos = parameters.size() > 0
+        ? certificateService.findAllWithParam(parameters)
+        : certificateService.findAll();
+    List<GiftCertificateModel> models = dtos.stream().map(certificateAssembler::toModel).collect(Collectors.toList());
+    return new ResponseEntity<>(
+        CollectionModel.of(models, linkTo(methodOn(GiftCertificateController.class).findAll(parameters)).withSelfRel()),
+        HttpStatus.OK
+    );
   }
 
   /**
@@ -58,10 +72,10 @@ public class GiftCertificateController {
    * The method can throw ValidationException extends RuntimeException
    */
   @GetMapping("/{id}")
-  @ResponseStatus(HttpStatus.OK)
-  public GiftCertificateDTO findById(@PathVariable int id) {
+  public ResponseEntity<GiftCertificateModel> findById(@PathVariable int id) {
     validator.checkId(id);
-    return giftCertificateService.findById(id);
+    GiftCertificateModel certificateModel = certificateAssembler.toModel(certificateService.findById(id));
+    return new ResponseEntity<>(certificateModel, HttpStatus.OK);
   }
 
   /**
@@ -72,12 +86,15 @@ public class GiftCertificateController {
    * The method can throw ValidationException extends RuntimeException
    */
   @PatchMapping("/{id}")
-  @ResponseStatus(HttpStatus.OK)
-  public GiftCertificateDTO update(@PathVariable int id, @RequestBody GiftCertificateDTO giftCertificateDTO) {
+  @ResponseStatus()
+  public ResponseEntity<GiftCertificateModel> update(@PathVariable int id,
+                                                     @RequestBody GiftCertificateDTO giftCertificateDTO) {
     validator.checkId(id);
     giftCertificateDTO.setId(id);
     validator.checkUpdateCertificate(giftCertificateDTO);
-    return giftCertificateService.update(giftCertificateDTO);
+    GiftCertificateModel certificateModel = certificateAssembler.toModel(certificateService.update(giftCertificateDTO));
+    certificateModel.add(linkTo(methodOn(GiftCertificateController.class).update(id, giftCertificateDTO)).withSelfRel());
+    return new ResponseEntity<>(certificateModel, HttpStatus.OK);
   }
 
   /**
@@ -86,9 +103,9 @@ public class GiftCertificateController {
    *           The method can throw ValidationException extends RuntimeException
    */
   @DeleteMapping("/{id}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void delete(@PathVariable int id) {
+  public ResponseEntity<HttpStatus> delete(@PathVariable int id) {
     validator.checkId(id);
-    giftCertificateService.deleteById(id);
+    certificateService.deleteById(id);
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 }

@@ -1,15 +1,20 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.hateoas.*;
 import com.epam.esm.service.UserService;
-import com.epam.esm.service.dto.OrderDTO;
-import com.epam.esm.service.dto.TagDTO;
-import com.epam.esm.service.dto.UserDTO;
 import com.epam.esm.service.util.Validator;
 import lombok.AllArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 
 @AllArgsConstructor
 @RestController
@@ -17,39 +22,59 @@ import java.util.List;
 public class UserController {
   private final UserService userService;
   private final Validator validator;
+  private final UserAssembler userAssembler;
+  private final OrderAssembler orderAssembler;
+  private final TagAssembler tagAssembler;
 
   @GetMapping
-  @ResponseStatus(HttpStatus.OK)
-  public List<UserDTO> findAll(){
-    return userService.findAll();
+  public ResponseEntity<CollectionModel<UserModel>> findAll() {
+    List<UserModel> users = userService.findAll().stream()
+        .map(userAssembler::toModel)
+        .collect(Collectors.toList());
+    return new ResponseEntity<>(
+        CollectionModel.of(users, linkTo(methodOn(UserController.class).findAll()).withSelfRel()),
+        HttpStatus.OK
+    );
   }
 
   @GetMapping("/{userId}")
-  @ResponseStatus(HttpStatus.OK)
-  public UserDTO findById(@PathVariable int userId){
+  public ResponseEntity<UserModel> findById(@PathVariable int userId) {
     validator.checkId(userId);
-    return userService.findById(userId);
+    UserModel userModel = userAssembler.toModel(userService.findById(userId));
+    userModel.add(linkTo(methodOn(UserController.class).findById(userId)).withSelfRel());
+    return new ResponseEntity<>(userModel, HttpStatus.OK);
   }
 
   @GetMapping("/{userId}/orders")
-  @ResponseStatus(HttpStatus.OK)
-  public List<OrderDTO> findByIdOrders(@PathVariable int userId){
+  public ResponseEntity<CollectionModel<OrderModel>> findByIdOrders(@PathVariable int userId) {
     validator.checkId(userId);
-    return userService.findByIdOrders(userId);
+    List<OrderModel> orders = userService.findByIdOrders(userId).stream()
+        .map(orderAssembler::toModel)
+        .collect(Collectors.toList());
+    return new ResponseEntity<>(
+        CollectionModel.of(orders, linkTo(methodOn(UserController.class).findByIdOrders(userId)).withSelfRel()),
+        HttpStatus.OK
+    );
   }
 
   @GetMapping("/{userId}/orders/{orderId}")
-  @ResponseStatus(HttpStatus.OK)
-  public OrderDTO findByIdOrder(@PathVariable int userId, @PathVariable int orderId){
+  public ResponseEntity<OrderModel> findByIdOrder(@PathVariable int userId, @PathVariable int orderId) {
     validator.checkId(userId);
     validator.checkId(orderId);
-    return userService.findByIdOrder(userId, orderId);
+    OrderModel orderModel = orderAssembler.toModel(userService.findByIdOrder(userId, orderId));
+    orderModel.add(linkTo(methodOn(UserController.class).findByIdOrder(userId, orderId)).withSelfRel());
+    return new ResponseEntity<>(orderModel, HttpStatus.OK);
   }
 
-  @GetMapping("/{id}/orders/tags/costs")
-  @ResponseStatus(HttpStatus.OK)
-  public List<TagDTO> findMostUsedTagWithCost(@PathVariable int id){
+  @GetMapping("/{id}/orders/tags")
+  public ResponseEntity<CollectionModel<TagModel>> findMostUsedTagWithCost(@PathVariable int id) {
     validator.checkId(id);
-    return userService.findTagWithCost(id);
+    List<TagModel> tags = userService.findTagWithCost(id).stream()
+        .map(tagAssembler::toModel)
+        .collect(Collectors.toList());
+    return new ResponseEntity<>(
+        CollectionModel.of(tags, linkTo(methodOn(UserController.class).findMostUsedTagWithCost(id)).withSelfRel()),
+        HttpStatus.OK
+    );
   }
 }

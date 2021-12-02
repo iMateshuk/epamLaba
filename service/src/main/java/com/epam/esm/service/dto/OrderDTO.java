@@ -4,12 +4,10 @@ import lombok.*;
 
 import java.sql.Timestamp;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
+@Builder
 @NoArgsConstructor
-@EqualsAndHashCode
-@ToString
+@AllArgsConstructor
 public class OrderDTO {
   private Integer id;
   private Float cost;

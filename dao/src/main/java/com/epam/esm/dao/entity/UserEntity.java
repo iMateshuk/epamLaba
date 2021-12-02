@@ -45,4 +45,14 @@ public class UserEntity implements Serializable {
   public int hashCode() {
     return Objects.hash(id, userName, password, orders);
   }
+
+  @Override
+  public String toString() {
+    return getClass().getName() +
+        "id=" + id +
+        ", userName='" + userName + '\'' +
+        ", password='" + password + '\'' +
+        ", orders=" + orders +
+        '}';
+  }
 }
