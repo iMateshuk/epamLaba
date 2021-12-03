@@ -4,6 +4,8 @@ import com.epam.esm.dao.UserDAO;
 import com.epam.esm.dao.entity.OrderEntity;
 import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.dao.entity.UserEntity;
+import com.epam.esm.dao.util.PageEntity;
+import com.epam.esm.dao.util.PageDAO;
 import com.epam.esm.dao.util.UserSQL;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -18,8 +20,19 @@ public class UserDaoImpl implements UserDAO {
   private final EntityManager entityManager;
 
   @Override
-  public List<UserEntity> findAll() {
-    return entityManager.createQuery(UserSQL.SELECT_ALL.getSQL(), UserEntity.class).getResultList();
+  public PageDAO<UserEntity> findAll(PageEntity pageEntity) {
+    int pageNumber = pageEntity.getNumber();
+    int pageSize = pageEntity.getSize();
+    List<UserEntity> users = entityManager.createQuery(UserSQL.SELECT_ALL.getSQL(), UserEntity.class)
+        .setFirstResult(pageNumber * pageSize)
+        .setMaxResults(pageSize)
+        .getResultList();
+
+    Long count = entityManager.createQuery(UserSQL.COUNT_ALL.getSQL(), Long.class).getSingleResult();
+    pageEntity.setTotalElements(count);
+    pageEntity.setTotalPages(count / pageSize);
+
+    return new PageDAO<UserEntity>(users, pageEntity);
   }
 
   @Override
@@ -47,6 +60,6 @@ public class UserDaoImpl implements UserDAO {
   @Override
   public List<TagEntity> findTagWithCost(Integer id) {
     return entityManager.createNativeQuery(UserSQL.SELECT_USED_TAGS.getSQL(), TagEntity.class)
-        .setParameter("id",id).getResultList();
+        .setParameter("id", id).getResultList();
   }
 }

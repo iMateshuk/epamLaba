@@ -7,15 +7,15 @@ import lombok.ToString;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class ErrorDto {
+public class ErrorDTO {
   private final String errorMsgKey;
   private Object[] params;
 
-  public ErrorDto(String errorMsgKey) {
+  public ErrorDTO(String errorMsgKey) {
     this.errorMsgKey = errorMsgKey;
   }
 
-  public ErrorDto(String errorMsgKey, Object... params) {
+  public ErrorDTO(String errorMsgKey, Object... params) {
     this.errorMsgKey = errorMsgKey;
     this.params = params;
   }

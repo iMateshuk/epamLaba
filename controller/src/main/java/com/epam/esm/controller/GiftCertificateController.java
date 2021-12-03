@@ -2,8 +2,10 @@ package com.epam.esm.controller;
 
 import com.epam.esm.hateoas.GiftCertificateAssembler;
 import com.epam.esm.hateoas.GiftCertificateModel;
+import com.epam.esm.page.PageDtoCreator;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.GiftCertificateDTO;
+import com.epam.esm.service.dto.PageDTO;
 import com.epam.esm.service.util.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
@@ -31,6 +33,7 @@ public class GiftCertificateController {
   private final GiftCertificateService certificateService;
   private final Validator validator;
   private final GiftCertificateAssembler certificateAssembler;
+  private final PageDtoCreator pageCreator;
 
   /**
    * @param giftCertificateDTO with Tags
@@ -54,6 +57,8 @@ public class GiftCertificateController {
    */
   @GetMapping
   public ResponseEntity<CollectionModel<GiftCertificateModel>> findAll(@RequestParam Map<String, String> parameters) {
+    PageDTO pageDTO = pageCreator.buildPageDTO(parameters);
+
     List<GiftCertificateDTO> certificates = parameters.size() > 0
         ? certificateService.findAllWithParam(parameters)
         : certificateService.findAll();

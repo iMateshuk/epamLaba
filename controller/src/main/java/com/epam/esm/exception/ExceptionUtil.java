@@ -1,6 +1,6 @@
 package com.epam.esm.exception;
 
-import com.epam.esm.service.dto.ErrorDto;
+import com.epam.esm.service.dto.ErrorDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -15,7 +15,7 @@ public class ExceptionUtil {
   private static final int MULTIPLIER = 1000;
   private final MessageSource messageSource;
 
-  public GlobalExceptionDTO createDto(Integer errorCode, HttpStatus status, ErrorDto... errorDto) {
+  public GlobalExceptionDTO createDto(Integer errorCode, HttpStatus status, ErrorDTO... errorDto) {
     List<String> validationErrors = Arrays.stream(errorDto)
         .map(error -> {
           Object[] params = error.getParams() == null ? null : error.getParams();

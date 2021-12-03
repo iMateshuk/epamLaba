@@ -1,18 +1,21 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.hateoas.*;
+import com.epam.esm.page.PageDtoCreator;
+import com.epam.esm.page.PageModelLink;
 import com.epam.esm.service.UserService;
+import com.epam.esm.service.dto.PageDTO;
+import com.epam.esm.service.dto.UserDTO;
+import com.epam.esm.service.util.PageService;
 import com.epam.esm.service.util.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -27,14 +30,20 @@ public class UserController {
   private final UserAssembler userAssembler;
   private final OrderAssembler orderAssembler;
   private final TagAssembler tagAssembler;
+  private final PageDtoCreator pageCreator;
+  private final PageAssembler pageAssembler;
+  private final PageModelLink pagelLink;
 
   @GetMapping
-  public ResponseEntity<CollectionModel<UserModel>> findAll() {
-    List<UserModel> users = userAssembler.toModels(userService.findAll());
-    return new ResponseEntity<>(
-        CollectionModel.of(users, linkTo(methodOn(UserController.class).findAll()).withSelfRel()),
-        HttpStatus.OK
-    );
+  public ResponseEntity<?> findAll(@RequestParam Map<String, String> parameters) {
+    PageDTO pageDTO = pageCreator.buildPageDTO(parameters);
+    PageService<UserDTO> pageService = userService.findAll(pageDTO);
+
+    PageControllerModel<UserModel> pageModel = new PageControllerModel<>();
+    pageModel.setList(userAssembler.toModels(pageService.getList()));
+    pageModel.setPage(pageAssembler.toModel(pageService.getPage()));
+    pagelLink.addLinks(pageModel);
+    return new ResponseEntity<>(pageModel, HttpStatus.OK);
   }
 
   @GetMapping("/{userId}")
