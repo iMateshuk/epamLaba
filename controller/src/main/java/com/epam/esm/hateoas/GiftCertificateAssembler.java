@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -27,6 +28,10 @@ public class GiftCertificateAssembler implements RepresentationModelAssembler<Gi
         certificateModel.getTags().stream().map(tagAssembler::addLinkToModel).collect(Collectors.toList())
     );
     return addLinkToModel(certificateModel);
+  }
+
+  public List<GiftCertificateModel> toModels(List<GiftCertificateDTO> certificates) {
+    return certificates.stream().map(this::toModel).collect(Collectors.toList());
   }
 
   public GiftCertificateModel addLinkToModel(GiftCertificateModel certificateModel) {

@@ -36,6 +36,10 @@ public class UserAssembler implements RepresentationModelAssembler<UserDTO, User
     return addLinkToModel(userModel);
   }
 
+  public List<UserModel> toModels(List<UserDTO> users) {
+    return users.stream().map(this::toModel).collect(Collectors.toList());
+  }
+
   private List<OrderModel> toOrderModel(List<OrderDTO> orders, UserModel userModel) {
     return orders.stream()
         .map(order -> {

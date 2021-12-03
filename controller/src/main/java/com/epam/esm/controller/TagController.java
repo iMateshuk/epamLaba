@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -51,7 +50,7 @@ public class TagController {
    */
   @GetMapping
   public ResponseEntity<CollectionModel<TagModel>> findAll() {
-    List<TagModel> tags = tagService.findAll().stream().map(tagAssembler::toModel).collect(Collectors.toList());
+    List<TagModel> tags = tagAssembler.toModels(tagService.findAll());
     return new ResponseEntity<>(
         CollectionModel.of(tags, linkTo(methodOn(TagController.class).findAll()).withSelfRel()),
         HttpStatus.OK

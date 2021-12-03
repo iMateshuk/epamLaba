@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -55,10 +54,10 @@ public class GiftCertificateController {
    */
   @GetMapping
   public ResponseEntity<CollectionModel<GiftCertificateModel>> findAll(@RequestParam Map<String, String> parameters) {
-    List<GiftCertificateDTO> dtos = parameters.size() > 0
+    List<GiftCertificateDTO> certificates = parameters.size() > 0
         ? certificateService.findAllWithParam(parameters)
         : certificateService.findAll();
-    List<GiftCertificateModel> models = dtos.stream().map(certificateAssembler::toModel).collect(Collectors.toList());
+    List<GiftCertificateModel> models = certificateAssembler.toModels(certificates);
     return new ResponseEntity<>(
         CollectionModel.of(models, linkTo(methodOn(GiftCertificateController.class).findAll(parameters)).withSelfRel()),
         HttpStatus.OK

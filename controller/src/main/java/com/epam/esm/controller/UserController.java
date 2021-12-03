@@ -7,10 +7,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -28,9 +30,7 @@ public class UserController {
 
   @GetMapping
   public ResponseEntity<CollectionModel<UserModel>> findAll() {
-    List<UserModel> users = userService.findAll().stream()
-        .map(userAssembler::toModel)
-        .collect(Collectors.toList());
+    List<UserModel> users = userAssembler.toModels(userService.findAll());
     return new ResponseEntity<>(
         CollectionModel.of(users, linkTo(methodOn(UserController.class).findAll()).withSelfRel()),
         HttpStatus.OK
@@ -48,9 +48,7 @@ public class UserController {
   @GetMapping("/{userId}/orders")
   public ResponseEntity<CollectionModel<OrderModel>> findByIdOrders(@PathVariable int userId) {
     validator.checkId(userId);
-    List<OrderModel> orders = userService.findByIdOrders(userId).stream()
-        .map(orderAssembler::toModel)
-        .collect(Collectors.toList());
+    List<OrderModel> orders = orderAssembler.toModels(userService.findByIdOrders(userId));
     return new ResponseEntity<>(
         CollectionModel.of(orders, linkTo(methodOn(UserController.class).findByIdOrders(userId)).withSelfRel()),
         HttpStatus.OK
@@ -69,9 +67,7 @@ public class UserController {
   @GetMapping("/{id}/orders/tags")
   public ResponseEntity<CollectionModel<TagModel>> findMostUsedTagWithCost(@PathVariable int id) {
     validator.checkId(id);
-    List<TagModel> tags = userService.findTagWithCost(id).stream()
-        .map(tagAssembler::toModel)
-        .collect(Collectors.toList());
+    List<TagModel> tags = tagAssembler.toModels(userService.findTagWithCost(id));
     return new ResponseEntity<>(
         CollectionModel.of(tags, linkTo(methodOn(UserController.class).findMostUsedTagWithCost(id)).withSelfRel()),
         HttpStatus.OK

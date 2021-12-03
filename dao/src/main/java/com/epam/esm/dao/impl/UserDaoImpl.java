@@ -4,7 +4,6 @@ import com.epam.esm.dao.UserDAO;
 import com.epam.esm.dao.entity.OrderEntity;
 import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.dao.entity.UserEntity;
-import com.epam.esm.dao.util.QueryCreator;
 import com.epam.esm.dao.util.UserSQL;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -17,7 +16,6 @@ import java.util.Objects;
 @AllArgsConstructor
 public class UserDaoImpl implements UserDAO {
   private final EntityManager entityManager;
-  private final QueryCreator queryCreator;
 
   @Override
   public List<UserEntity> findAll() {

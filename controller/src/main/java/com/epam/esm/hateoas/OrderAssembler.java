@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -24,5 +25,9 @@ public class OrderAssembler implements RepresentationModelAssembler<OrderDTO, Or
         certificateModel.getTags().stream().map(tagAssembler::addLinkToModel).collect(Collectors.toList())
     );
     return orderModel;
+  }
+
+  public List<OrderModel> toModels(List<OrderDTO> orders) {
+    return orders.stream().map(this::toModel).collect(Collectors.toList());
   }
 }
