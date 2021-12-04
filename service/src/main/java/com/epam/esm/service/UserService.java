@@ -11,7 +11,7 @@ import java.util.List;
 public interface UserService {
 
   PageDTO<UserDTO> findAll(PageParamDTO pageDTO);
-  UserDTO findById(Integer id);
+  PageDTO<UserDTO> findById(Integer id, PageParamDTO pageParamDTO);
   List<OrderDTO> findByIdOrders(Integer id);
   OrderDTO findByIdOrder(Integer userId, Integer orderId);
   List<TagDTO> findTagWithCost(Integer id);

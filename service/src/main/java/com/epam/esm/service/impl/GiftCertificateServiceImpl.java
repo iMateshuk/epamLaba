@@ -79,11 +79,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
    */
   @Transactional
   @Override
-  public GiftCertificateDTO findById(Integer id) {
+  public PageDTO<GiftCertificateDTO> findById(Integer id, PageParamDTO pageParamDTO) {
     if (!certificateDAO.isExistById(id)) {
       throw new ServiceException(new ErrorDTO("certificate.search.error", id), 103);
     }
-    return convertor.toTarget(certificateDAO.findById(id), GiftCertificateDTO.class);
+    PageDAO<GiftCertificateEntity> pageDAO =
+        certificateDAO.findById(id, convertor.toTarget(pageParamDTO, PageParamDAO.class));
+    return convertorDTO.toDto(pageDAO, GiftCertificateDTO.class);
   }
 
   /**
@@ -99,7 +101,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     if (parameters.isEmpty()) {
       throw new ServiceValidationException(new ErrorDTO("certificate.parameters.error"), 105);
     }
-    PageDAO<GiftCertificateEntity> pageDAO = 
+    PageDAO<GiftCertificateEntity> pageDAO =
         certificateDAO.findAllWithParam(parameters, convertor.toTarget(pageParamDTO, PageParamDAO.class));
     return convertorDTO.toDto(pageDAO, GiftCertificateDTO.class);
   }

@@ -32,11 +32,12 @@ public class UserServiceImpl implements UserService {
 
   @Transactional
   @Override
-  public UserDTO findById(Integer id) {
+  public PageDTO<UserDTO> findById(Integer id, PageParamDTO pageDTO) {
     if (!userDAO.isUserExist(id)) {
       throw new ServiceException(new ErrorDTO("user.search.error", id), 311);
     }
-    return convertor.toTarget(userDAO.findById(id), UserDTO.class);
+    PageDAO<UserEntity> pageDAO = userDAO.findById(id, convertor.toTarget(pageDTO, PageParamDAO.class));
+    return convertorDTO.toDto(pageDAO, UserDTO.class);
   }
 
   @Transactional

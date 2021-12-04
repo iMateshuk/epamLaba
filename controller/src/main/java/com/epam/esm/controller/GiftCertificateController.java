@@ -74,10 +74,11 @@ public class GiftCertificateController {
    * The method can throw ValidationException extends RuntimeException
    */
   @GetMapping("/{id}")
-  public ResponseEntity<GiftCertificateModel> findById(@PathVariable int id) {
+  public ResponseEntity<?> findById(@PathVariable int id, @RequestParam Map<String, String> parameters) {
     validator.checkId(id);
-    GiftCertificateModel certificateModel = certificateAssembler.toModel(certificateService.findById(id));
-    return new ResponseEntity<>(certificateModel, HttpStatus.OK);
+    PageParamDTO pageParamDTO = pageCreator.buildPageDTO(parameters);
+    PageDTO<GiftCertificateDTO> certificates = certificateService.findById(id, pageParamDTO);
+    return new ResponseEntity<>(modelCreator.createModel(certificates, certificateAssembler), HttpStatus.OK);
   }
 
   /**

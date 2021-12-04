@@ -9,7 +9,7 @@ public interface TagDAO {
 
   PageDAO<TagEntity> findAll(PageParamDAO pageParamDAO);
 
-  TagEntity findById(int id);
+  PageDAO<TagEntity> findById(int id, PageParamDAO pageParamDAO);
 
   TagEntity findByName(String tagName);
 

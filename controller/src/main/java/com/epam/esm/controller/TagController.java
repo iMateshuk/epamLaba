@@ -56,8 +56,8 @@ public class TagController {
   @GetMapping
   public ResponseEntity<?> findAll(@RequestParam Map<String, String> parameters) {
     PageParamDTO pageParamDTO = pageCreator.buildPageDTO(parameters);
-    PageDTO<TagDTO> pageService = tagService.findAll(pageParamDTO);
-    return new ResponseEntity<>(modelCreator.createModel(pageService, tagAssembler), HttpStatus.OK);
+    PageDTO<TagDTO> page = tagService.findAll(pageParamDTO);
+    return new ResponseEntity<>(modelCreator.createModel(page, tagAssembler), HttpStatus.OK);
   }
 
   /**
@@ -67,10 +67,11 @@ public class TagController {
    * The method can throw ValidationException extends RuntimeException
    */
   @GetMapping("/{id}")
-  public ResponseEntity<TagModel> findById(@PathVariable int id) {
+  public ResponseEntity<?> findById(@PathVariable int id, @RequestParam Map<String, String> parameters) {
     validator.checkId(id);
-    TagModel tagModel = tagAssembler.toModel(tagService.findById(id));
-    return new ResponseEntity<>(tagModel, HttpStatus.OK);
+    PageParamDTO pageParamDTO = pageCreator.buildPageDTO(parameters);
+    PageDTO<TagDTO> page = tagService.findById(id, pageParamDTO);
+    return new ResponseEntity<>(modelCreator.createModel(page, tagAssembler), HttpStatus.OK);
   }
 
   /**

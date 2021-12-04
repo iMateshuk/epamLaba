@@ -5,8 +5,8 @@ import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.dao.page.PageDAO;
-import com.epam.esm.dao.page.PageFill;
 import com.epam.esm.dao.page.PageParamDAO;
+import com.epam.esm.dao.page.PageParamFill;
 import com.epam.esm.dao.util.GiftCertificateSQL;
 import com.epam.esm.dao.util.QueryWork;
 import lombok.AllArgsConstructor;
@@ -29,7 +29,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
   private final EntityManager entityManager;
   private final TagDAO tagDAO;
   private final QueryWork queryWork;
-  private final PageFill pageFill;
+  private final PageParamFill pageFill;
 
   /**
    * @param giftCertificate insert in table
@@ -51,6 +51,13 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
     List<GiftCertificateEntity> certificates =
         queryWork.executeQuery(pageParamDAO, GiftCertificateSQL.SELECT_ALL.getSQL(), GiftCertificateEntity.class);
     pageFill.fillingPage(pageParamDAO, GiftCertificateSQL.COUNT_ALL.getSQL());
+    return new PageDAO<>(certificates, pageParamDAO);
+  }
+
+  @Override
+  public PageDAO<GiftCertificateEntity> findById(int id, PageParamDAO pageParamDAO) {
+    List<GiftCertificateEntity> certificates = List.of(entityManager.find(GiftCertificateEntity.class, id));
+    pageFill.fillingPage(pageParamDAO, GiftCertificateSQL.COUNT_ID.getSQL(), id);
     return new PageDAO<>(certificates, pageParamDAO);
   }
 

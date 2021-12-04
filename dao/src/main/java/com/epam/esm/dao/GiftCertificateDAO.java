@@ -11,6 +11,8 @@ public interface GiftCertificateDAO {
 
   PageDAO<GiftCertificateEntity> findAll(PageParamDAO pageParamDAO);
 
+  PageDAO<GiftCertificateEntity> findById(int id, PageParamDAO pageParamDAO);
+
   GiftCertificateEntity findById(int id);
 
   boolean isExistByName(String certificateName);

@@ -5,8 +5,8 @@ import com.epam.esm.dao.entity.OrderEntity;
 import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.dao.entity.UserEntity;
 import com.epam.esm.dao.page.PageDAO;
-import com.epam.esm.dao.page.PageFill;
 import com.epam.esm.dao.page.PageParamDAO;
+import com.epam.esm.dao.page.PageParamFill;
 import com.epam.esm.dao.util.QueryWork;
 import com.epam.esm.dao.util.UserSQL;
 import lombok.AllArgsConstructor;
@@ -21,12 +21,19 @@ import java.util.Objects;
 public class UserDaoImpl implements UserDAO {
   private final EntityManager entityManager;
   private final QueryWork queryWork;
-  private final PageFill pageFill;
+  private final PageParamFill pageFill;
 
   @Override
   public PageDAO<UserEntity> findAll(PageParamDAO pageParamDAO) {
     List<UserEntity> users = queryWork.executeQuery(pageParamDAO, UserSQL.SELECT_ALL.getSQL(), UserEntity.class);
-    pageFill.fillingPage(pageParamDAO, UserSQL.COUNT_ALL.getSQL());
+    pageFill.fillingPage(pageParamDAO, UserSQL.COUNT_ID.getSQL());
+    return new PageDAO<>(users, pageParamDAO);
+  }
+
+  @Override
+  public PageDAO<UserEntity> findById(Integer id, PageParamDAO pageParamDAO) {
+    List<UserEntity> users = List.of(entityManager.find(UserEntity.class, id));
+    pageFill.fillingPage(pageParamDAO, UserSQL.COUNT_ID.getSQL(), id);
     return new PageDAO<>(users, pageParamDAO);
   }
 

@@ -11,7 +11,7 @@ public interface GiftCertificateService {
 
   PageDTO<GiftCertificateDTO> findAll(PageParamDTO pageParamDTO);
 
-  GiftCertificateDTO findById(Integer id);
+  PageDTO<GiftCertificateDTO> findById(Integer id, PageParamDTO pageParamDTO);
 
   PageDTO<GiftCertificateDTO> findAllWithParam(Map<String, String> allParameters, PageParamDTO pageParamDTO);
 

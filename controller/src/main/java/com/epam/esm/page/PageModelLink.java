@@ -32,18 +32,22 @@ public class PageModelLink {
       put(NUMBER, first);
       put(SIZE, size);
     }})).withRel("first"));
-    pageModel.add(linkTo(methodOn(UserController.class).findAll(new HashMap<>() {{
-      put(NUMBER, prev);
-      put(SIZE, size);
-    }})).withRel("prev"));
+    if (!first.equals(prev)) {
+      pageModel.add(linkTo(methodOn(UserController.class).findAll(new HashMap<>() {{
+        put(NUMBER, prev);
+        put(SIZE, size);
+      }})).withRel("prev"));
+    }
     pageModel.add(linkTo(methodOn(UserController.class).findAll(new HashMap<>() {{
       put(NUMBER, String.valueOf(number));
       put(SIZE, size);
     }})).withSelfRel());
-    pageModel.add(linkTo(methodOn(UserController.class).findAll(new HashMap<>() {{
-      put(NUMBER, next);
-      put(SIZE, size);
-    }})).withRel("next"));
+    if (!last.equals(next)) {
+      pageModel.add(linkTo(methodOn(UserController.class).findAll(new HashMap<>() {{
+        put(NUMBER, next);
+        put(SIZE, size);
+      }})).withRel("next"));
+    }
     pageModel.add(linkTo(methodOn(UserController.class).findAll(new HashMap<>() {{
       put(NUMBER, last);
       put(SIZE, size);

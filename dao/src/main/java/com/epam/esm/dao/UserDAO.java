@@ -11,6 +11,7 @@ import java.util.List;
 public interface UserDAO {
 
   PageDAO<UserEntity> findAll(PageParamDAO pageDAO);
+  PageDAO<UserEntity> findById(Integer id, PageParamDAO pageParamDAO);
   UserEntity findById(Integer id);
   boolean isUserExist(Integer id);
   List<OrderEntity> findByIdOrders(Integer id);

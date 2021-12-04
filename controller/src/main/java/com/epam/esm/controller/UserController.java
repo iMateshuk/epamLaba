@@ -35,17 +35,17 @@ public class UserController {
 
   @GetMapping
   public ResponseEntity<?> findAll(@RequestParam Map<String, String> parameters) {
-    PageParamDTO pageDTO = pageParamCreator.buildPageDTO(parameters);
-    PageDTO<UserDTO> pageService = userService.findAll(pageDTO);
-    return new ResponseEntity<>(modelCreator.createModel(pageService, userAssembler), HttpStatus.OK);
+    PageParamDTO pageParamDTO = pageParamCreator.buildPageDTO(parameters);
+    PageDTO<UserDTO> page = userService.findAll(pageParamDTO);
+    return new ResponseEntity<>(modelCreator.createModel(page, userAssembler), HttpStatus.OK);
   }
 
   @GetMapping("/{userId}")
-  public ResponseEntity<UserModel> findById(@PathVariable int userId) {
+  public ResponseEntity<?> findById(@PathVariable int userId, @RequestParam Map<String, String> parameters) {
     validator.checkId(userId);
-    UserModel userModel = userAssembler.toModel(userService.findById(userId));
-    userModel.add(linkTo(methodOn(UserController.class).findById(userId)).withSelfRel());
-    return new ResponseEntity<>(userModel, HttpStatus.OK);
+    PageParamDTO pageParamDTO = pageParamCreator.buildPageDTO(parameters);
+    PageDTO<UserDTO> page = userService.findById(userId, pageParamDTO);
+    return new ResponseEntity<>(modelCreator.createModel(page, userAssembler), HttpStatus.OK);
   }
 
   @GetMapping("/{userId}/orders")

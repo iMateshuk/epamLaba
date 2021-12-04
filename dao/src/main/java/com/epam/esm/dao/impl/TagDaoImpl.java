@@ -3,7 +3,7 @@ package com.epam.esm.dao.impl;
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.dao.page.PageDAO;
-import com.epam.esm.dao.page.PageFill;
+import com.epam.esm.dao.page.PageParamFill;
 import com.epam.esm.dao.page.PageParamDAO;
 import com.epam.esm.dao.util.QueryWork;
 import com.epam.esm.dao.util.TagSQL;
@@ -25,7 +25,7 @@ import java.util.List;
 public class TagDaoImpl implements TagDAO {
   private final EntityManager entityManager;
   private final QueryWork queryWork;
-  private final PageFill pageFill;
+  private final PageParamFill pageFill;
 
   /**
    * Create Tag entry in the table
@@ -58,8 +58,10 @@ public class TagDaoImpl implements TagDAO {
    * The method can throw EmptyResultDataAccessException
    */
   @Override
-  public TagEntity findById(int id) {
-    return entityManager.find(TagEntity.class, id);
+  public PageDAO<TagEntity> findById(int id, PageParamDAO pageParamDAO) {
+    List<TagEntity> tags = List.of(entityManager.find(TagEntity.class, id));
+    pageFill.fillingPage(pageParamDAO, TagSQL.COUNT_ID.getSQL(), id);
+    return new PageDAO<>(tags, pageParamDAO);
   }
 
   /**
@@ -98,5 +100,9 @@ public class TagDaoImpl implements TagDAO {
     TagEntity tagEntity = findById(id);
     tagEntity.getCerts().forEach(certificate -> certificate.getTags().remove(tagEntity));
     entityManager.remove(tagEntity);
+  }
+
+  private TagEntity findById(int id) {
+    return entityManager.find(TagEntity.class, id);
   }
 }

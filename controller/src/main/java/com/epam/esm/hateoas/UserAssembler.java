@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,7 +52,7 @@ public class UserAssembler implements RepresentationModelAssembler<UserDTO, User
   }
 
   public UserModel addLinkToModel(UserModel userModel) {
-    userModel.add(linkTo(methodOn(UserController.class).findById(userModel.getId())).withSelfRel());
+    userModel.add(linkTo(methodOn(UserController.class).findById(userModel.getId(), new HashMap<>())).withSelfRel());
     userModel.add(linkTo(methodOn(UserController.class).findByIdOrders(userModel.getId())).withRel("orders"));
     return userModel;
   }

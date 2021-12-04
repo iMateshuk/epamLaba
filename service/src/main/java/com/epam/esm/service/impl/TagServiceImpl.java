@@ -67,11 +67,12 @@ public class TagServiceImpl implements TagService {
    */
   @Transactional
   @Override
-  public TagDTO findById(Integer id) {
+  public PageDTO<TagDTO> findById(Integer id, PageParamDTO pageParamDTO) {
     if (!tagDAO.isExistById(id)) {
       throw new ServiceException(new ErrorDTO("tag.search.error", id), 203);
     }
-    return convertor.toTarget(tagDAO.findById(id), TagDTO.class);
+    PageDAO<TagEntity> pageDAO = tagDAO.findById(id, convertor.toTarget(pageParamDTO, PageParamDAO.class));
+    return convertorDTO.toDto(pageDAO, TagDTO.class);
   }
 
   /**

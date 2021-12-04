@@ -3,6 +3,7 @@ package com.epam.esm.dao.util;
 public enum TagSQL {
     SELECT_ALL("SELECT tag FROM Tag tag"),
     COUNT_ALL("SELECT count(id) FROM Tag tag"),
+    COUNT_ID("SELECT count(id) FROM Tag tag WHERE id=:id"),
     SELECT_ALL_BY_NAME("SELECT tag FROM Tag tag WHERE tag.name = :name"),
 
     ;
