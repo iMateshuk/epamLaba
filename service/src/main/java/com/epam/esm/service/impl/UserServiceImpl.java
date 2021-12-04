@@ -2,13 +2,14 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.UserDAO;
 import com.epam.esm.dao.entity.UserEntity;
-import com.epam.esm.dao.util.PageDAO;
-import com.epam.esm.dao.util.PageEntity;
+import com.epam.esm.dao.page.PageDAO;
+import com.epam.esm.dao.page.PageParamDAO;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.dto.*;
 import com.epam.esm.service.exception.ServiceException;
+import com.epam.esm.service.page.PageConvertorDTO;
 import com.epam.esm.service.util.ServiceConvertor;
-import com.epam.esm.service.util.PageService;
+import com.epam.esm.service.dto.PageDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,15 +21,13 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
   private final UserDAO userDAO;
   private final ServiceConvertor convertor;
+  private final PageConvertorDTO convertorDTO;
 
   @Transactional
   @Override
-  public PageService<UserDTO> findAll(PageDTO pageDTO) {
-    PageDAO<UserEntity> pageDAO = userDAO.findAll(convertor.toTarget(pageDTO, PageEntity.class));
-    PageService<UserDTO> pageService = new PageService<>();
-    pageService.setPage(convertor.toTarget(pageDAO.getPage(), PageDTO.class));
-    pageService.setList(convertor.toTarget(pageDAO.getList(), UserDTO.class));
-    return pageService;
+  public PageDTO<UserDTO> findAll(PageParamDTO pageDTO) {
+    PageDAO<UserEntity> pageDAO = userDAO.findAll(convertor.toTarget(pageDTO, PageParamDAO.class));
+    return convertorDTO.toDto(pageDAO, UserDTO.class);
   }
 
   @Transactional

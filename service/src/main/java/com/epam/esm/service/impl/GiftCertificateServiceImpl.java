@@ -2,12 +2,17 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
+import com.epam.esm.dao.page.PageDAO;
+import com.epam.esm.dao.page.PageParamDAO;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.ErrorDTO;
 import com.epam.esm.service.dto.GiftCertificateDTO;
+import com.epam.esm.service.dto.PageDTO;
+import com.epam.esm.service.dto.PageParamDTO;
 import com.epam.esm.service.exception.ServiceConflictException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.exception.ServiceValidationException;
+import com.epam.esm.service.page.PageConvertorDTO;
 import com.epam.esm.service.util.RequestedParameter;
 import com.epam.esm.service.util.ServiceConvertor;
 import com.epam.esm.service.util.Validator;
@@ -17,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -34,6 +38,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
   private final GiftCertificateDAO certificateDAO;
   private final Validator validator;
   private final ServiceConvertor convertor;
+  private final PageConvertorDTO convertorDTO;
 
   /**
    * @param certificateDTO DTO object
@@ -61,8 +66,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
    */
   @Transactional
   @Override
-  public List<GiftCertificateDTO> findAll() {
-    return convertor.toTarget(certificateDAO.findAll(), GiftCertificateDTO.class);
+  public PageDTO<GiftCertificateDTO> findAll(PageParamDTO pageParamDTO) {
+    PageDAO<GiftCertificateEntity> pageDAO = certificateDAO.findAll(convertor.toTarget(pageParamDTO, PageParamDAO.class));
+    return convertorDTO.toDto(pageDAO, GiftCertificateDTO.class);
   }
 
   /**
@@ -88,12 +94,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
    */
   @Transactional
   @Override
-  public List<GiftCertificateDTO> findAllWithParam(Map<String, String> allParameters) {
+  public PageDTO<GiftCertificateDTO> findAllWithParam(Map<String, String> allParameters, PageParamDTO pageParamDTO) {
     Map<String, String> parameters = createMapParameter(allParameters);
     if (parameters.isEmpty()) {
       throw new ServiceValidationException(new ErrorDTO("certificate.parameters.error"), 105);
     }
-    return convertor.toTarget(certificateDAO.findAllWithParam(parameters), GiftCertificateDTO.class);
+    PageDAO<GiftCertificateEntity> pageDAO = 
+        certificateDAO.findAllWithParam(parameters, convertor.toTarget(pageParamDTO, PageParamDAO.class));
+    return convertorDTO.toDto(pageDAO, GiftCertificateDTO.class);
   }
 
   /**

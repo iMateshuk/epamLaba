@@ -1,17 +1,18 @@
 package com.epam.esm.service.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Data
+import java.util.List;
+
 @Builder
-@RequiredArgsConstructor
-@NoArgsConstructor
 @AllArgsConstructor
-public class PageDTO {
-  @NonNull
-  private Integer size;
-  private Long totalElements;
-  private Long totalPages;
-  @NonNull
-  private Integer number;
+@Data
+@NoArgsConstructor
+public class PageDTO<T> {
+  public List<T> list;
+  public PageParamDTO page;
+  Integer count;
 }

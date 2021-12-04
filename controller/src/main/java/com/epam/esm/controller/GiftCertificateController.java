@@ -2,18 +2,18 @@ package com.epam.esm.controller;
 
 import com.epam.esm.hateoas.GiftCertificateAssembler;
 import com.epam.esm.hateoas.GiftCertificateModel;
-import com.epam.esm.page.PageDtoCreator;
+import com.epam.esm.page.PageModelCreator;
+import com.epam.esm.page.PageParamCreator;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.GiftCertificateDTO;
 import com.epam.esm.service.dto.PageDTO;
+import com.epam.esm.service.dto.PageParamDTO;
 import com.epam.esm.service.util.Validator;
 import lombok.AllArgsConstructor;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -33,7 +33,8 @@ public class GiftCertificateController {
   private final GiftCertificateService certificateService;
   private final Validator validator;
   private final GiftCertificateAssembler certificateAssembler;
-  private final PageDtoCreator pageCreator;
+  private final PageParamCreator pageCreator;
+  private final PageModelCreator modelCreator;
 
   /**
    * @param giftCertificateDTO with Tags
@@ -56,17 +57,14 @@ public class GiftCertificateController {
    * The method can throw ServiceException extends RuntimeException
    */
   @GetMapping
-  public ResponseEntity<CollectionModel<GiftCertificateModel>> findAll(@RequestParam Map<String, String> parameters) {
-    PageDTO pageDTO = pageCreator.buildPageDTO(parameters);
+  public ResponseEntity<?> findAll(@RequestParam Map<String, String> parameters) {
+    PageParamDTO pageParamDTO = pageCreator.buildPageDTO(parameters);
 
-    List<GiftCertificateDTO> certificates = parameters.size() > 0
-        ? certificateService.findAllWithParam(parameters)
-        : certificateService.findAll();
-    List<GiftCertificateModel> models = certificateAssembler.toModels(certificates);
-    return new ResponseEntity<>(
-        CollectionModel.of(models, linkTo(methodOn(GiftCertificateController.class).findAll(parameters)).withSelfRel()),
-        HttpStatus.OK
-    );
+    PageDTO<GiftCertificateDTO> certificates = parameters.size() > 0
+        ? certificateService.findAllWithParam(parameters, pageParamDTO)
+        : certificateService.findAll(pageParamDTO);
+
+    return new ResponseEntity<>(modelCreator.createModel(certificates, certificateAssembler), HttpStatus.OK);
   }
 
   /**

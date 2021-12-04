@@ -2,7 +2,7 @@ package com.epam.esm.hateoas;
 
 import com.epam.esm.controller.TagController;
 import com.epam.esm.service.dto.TagDTO;
-import com.epam.esm.util.ControllerConvertor;
+import com.epam.esm.service.util.ServiceConvertor;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @AllArgsConstructor
 @Component
 public class TagAssembler implements RepresentationModelAssembler<TagDTO, TagModel> {
-  private final ControllerConvertor convertor;
+  private final ServiceConvertor convertor;
 
   @Override
   public TagModel toModel(TagDTO tagDTO) {
@@ -24,7 +24,7 @@ public class TagAssembler implements RepresentationModelAssembler<TagDTO, TagMod
     return addLinkToModel(tagModel);
   }
 
-  public List<TagModel> toModels(List<TagDTO> tags) {
+  public List<TagModel> toModel(List<TagDTO> tags) {
     return tags.stream().map(this::toModel).collect(Collectors.toList());
   }
 

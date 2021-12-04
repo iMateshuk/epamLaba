@@ -1,18 +1,22 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.TagDAO;
+import com.epam.esm.dao.entity.TagEntity;
+import com.epam.esm.dao.page.PageDAO;
+import com.epam.esm.dao.page.PageParamDAO;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.ErrorDTO;
+import com.epam.esm.service.dto.PageDTO;
+import com.epam.esm.service.dto.PageParamDTO;
 import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.exception.ServiceConflictException;
 import com.epam.esm.service.exception.ServiceException;
+import com.epam.esm.service.page.PageConvertorDTO;
 import com.epam.esm.service.util.ServiceConvertor;
 import com.epam.esm.service.util.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * Service Tag
@@ -27,6 +31,7 @@ public class TagServiceImpl implements TagService {
   private final TagDAO tagDAO;
   private final Validator validator;
   private final ServiceConvertor convertor;
+  private final PageConvertorDTO convertorDTO;
 
   /**
    * @param name of new Tag.
@@ -49,8 +54,9 @@ public class TagServiceImpl implements TagService {
    */
   @Transactional
   @Override
-  public List<TagDTO> findAll() {
-    return convertor.toTarget(tagDAO.findAll(), TagDTO.class);
+  public PageDTO<TagDTO> findAll(PageParamDTO pageParamDTO) {
+    PageDAO<TagEntity> pageDAO = tagDAO.findAll(convertor.toTarget(pageParamDTO, PageParamDAO.class));
+    return convertorDTO.toDto(pageDAO, TagDTO.class);
   }
 
   /**

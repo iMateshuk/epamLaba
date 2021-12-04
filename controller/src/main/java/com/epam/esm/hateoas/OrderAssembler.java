@@ -1,7 +1,7 @@
 package com.epam.esm.hateoas;
 
 import com.epam.esm.service.dto.OrderDTO;
-import com.epam.esm.util.ControllerConvertor;
+import com.epam.esm.service.util.ServiceConvertor;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Component
 public class OrderAssembler implements RepresentationModelAssembler<OrderDTO, OrderModel> {
-  private final ControllerConvertor convertor;
+  private final ServiceConvertor convertor;
   private final GiftCertificateAssembler certificateAssembler;
   private final TagAssembler tagAssembler;
 
@@ -27,7 +27,7 @@ public class OrderAssembler implements RepresentationModelAssembler<OrderDTO, Or
     return orderModel;
   }
 
-  public List<OrderModel> toModels(List<OrderDTO> orders) {
+  public List<OrderModel> toModel(List<OrderDTO> orders) {
     return orders.stream().map(this::toModel).collect(Collectors.toList());
   }
 }

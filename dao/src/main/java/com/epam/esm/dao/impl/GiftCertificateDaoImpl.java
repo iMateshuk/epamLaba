@@ -4,8 +4,11 @@ import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.entity.TagEntity;
+import com.epam.esm.dao.page.PageDAO;
+import com.epam.esm.dao.page.PageFill;
+import com.epam.esm.dao.page.PageParamDAO;
 import com.epam.esm.dao.util.GiftCertificateSQL;
-import com.epam.esm.dao.util.QueryCreator;
+import com.epam.esm.dao.util.QueryWork;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -25,7 +28,8 @@ import java.util.Map;
 public class GiftCertificateDaoImpl implements GiftCertificateDAO {
   private final EntityManager entityManager;
   private final TagDAO tagDAO;
-  private final QueryCreator queryCreator;
+  private final QueryWork queryWork;
+  private final PageFill pageFill;
 
   /**
    * @param giftCertificate insert in table
@@ -43,9 +47,11 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
    * @return List of GiftCertificateEntity
    */
   @Override
-  public List<GiftCertificateEntity> findAll() {
-    return entityManager.createQuery(GiftCertificateSQL.SELECT_ALL.getSQL(), GiftCertificateEntity.class)
-        .getResultList();
+  public PageDAO<GiftCertificateEntity> findAll(PageParamDAO pageParamDAO) {
+    List<GiftCertificateEntity> certificates =
+        queryWork.executeQuery(pageParamDAO, GiftCertificateSQL.SELECT_ALL.getSQL(), GiftCertificateEntity.class);
+    pageFill.fillingPage(pageParamDAO, GiftCertificateSQL.COUNT_ALL.getSQL());
+    return new PageDAO<>(certificates, pageParamDAO);
   }
 
   /**
@@ -82,8 +88,10 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
    * @return List of GiftCertificateEntity
    */
   @Override
-  public List<GiftCertificateEntity> findAllWithParam(Map<String, String> parameters) {
-    return entityManager.createQuery(queryCreator.buildWithParameters(parameters)).getResultList();
+  public PageDAO<GiftCertificateEntity> findAllWithParam(Map<String, String> parameters, PageParamDAO pageParamDAO) {
+    List<GiftCertificateEntity> certificates = queryWork.executeQuery(pageParamDAO, queryWork.buildQuery(parameters));
+    pageFill.fillingPage(pageParamDAO, GiftCertificateSQL.COUNT_ALL.getSQL());
+    return new PageDAO<>(certificates, pageParamDAO);
   }
 
   /**

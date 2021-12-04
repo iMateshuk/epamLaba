@@ -1,19 +1,15 @@
-package com.epam.esm.service.util;
+package com.epam.esm.dao.page;
 
-import com.epam.esm.service.dto.PageDTO;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Builder
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class PageService<T> {
+public class PageDAO<T> {
   public List<T> list;
-  public PageDTO page;
-  Integer count;
+  public PageParamDAO page;
 }

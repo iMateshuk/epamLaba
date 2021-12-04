@@ -1,6 +1,6 @@
 package com.epam.esm.page;
 
-import com.epam.esm.service.dto.PageDTO;
+import com.epam.esm.service.dto.PageParamDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -8,7 +8,7 @@ import java.util.Map;
 
 @Component
 @AllArgsConstructor
-public class PageDtoCreator {
+public class PageParamCreator {
   private static final int MIN_PAGE = 0;
   private static final int MIN_SIZE = 2;
   private static final int MAX_SIZE = 100;
@@ -16,7 +16,7 @@ public class PageDtoCreator {
   private static final String SIZE = "size";
   private static final String NUMBER = "number";
 
-  public PageDTO buildPageDTO(Map<String, String> parameters) {
+  public PageParamDTO buildPageDTO(Map<String, String> parameters) {
 
     int size;
     try {
@@ -32,7 +32,7 @@ public class PageDtoCreator {
       number = MIN_PAGE;
     }
 
-    return new PageDTO(
+    return new PageParamDTO(
         (size < MIN_SIZE || size > MAX_SIZE) ? MIN_SIZE : size,
         Math.max(number, MIN_PAGE)
     );

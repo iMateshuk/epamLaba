@@ -3,7 +3,7 @@ package com.epam.esm.hateoas;
 import com.epam.esm.controller.UserController;
 import com.epam.esm.service.dto.OrderDTO;
 import com.epam.esm.service.dto.UserDTO;
-import com.epam.esm.util.ControllerConvertor;
+import com.epam.esm.service.util.ServiceConvertor;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @AllArgsConstructor
 @Component
 public class UserAssembler implements RepresentationModelAssembler<UserDTO, UserModel> {
-  private final ControllerConvertor convertor;
+  private final ServiceConvertor convertor;
   private final GiftCertificateAssembler certificateAssembler;
   private final TagAssembler tagAssembler;
 
@@ -36,7 +36,7 @@ public class UserAssembler implements RepresentationModelAssembler<UserDTO, User
     return addLinkToModel(userModel);
   }
 
-  public List<UserModel> toModels(List<UserDTO> users) {
+  public List<UserModel> toModel(List<UserDTO> users) {
     return users.stream().map(this::toModel).collect(Collectors.toList());
   }
 

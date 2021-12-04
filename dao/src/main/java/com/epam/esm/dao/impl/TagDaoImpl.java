@@ -2,6 +2,10 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.TagEntity;
+import com.epam.esm.dao.page.PageDAO;
+import com.epam.esm.dao.page.PageFill;
+import com.epam.esm.dao.page.PageParamDAO;
+import com.epam.esm.dao.util.QueryWork;
 import com.epam.esm.dao.util.TagSQL;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -20,6 +24,8 @@ import java.util.List;
 @Repository
 public class TagDaoImpl implements TagDAO {
   private final EntityManager entityManager;
+  private final QueryWork queryWork;
+  private final PageFill pageFill;
 
   /**
    * Create Tag entry in the table
@@ -39,8 +45,10 @@ public class TagDaoImpl implements TagDAO {
    * @return List of Tag
    */
   @Override
-  public List<TagEntity> findAll() {
-    return entityManager.createQuery(TagSQL.SELECT_ALL.getSQL(), TagEntity.class).getResultList();
+  public PageDAO<TagEntity> findAll(PageParamDAO pageParamDAO) {
+    List<TagEntity> tags = queryWork.executeQuery(pageParamDAO, TagSQL.SELECT_ALL.getSQL(), TagEntity.class);
+    pageFill.fillingPage(pageParamDAO, TagSQL.COUNT_ALL.getSQL());
+    return new PageDAO<>(tags, pageParamDAO);
   }
 
   /**

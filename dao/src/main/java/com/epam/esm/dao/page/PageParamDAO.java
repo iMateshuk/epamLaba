@@ -1,4 +1,4 @@
-package com.epam.esm.dao.util;
+package com.epam.esm.dao.page;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @RequiredArgsConstructor
 @NoArgsConstructor
 @AllArgsConstructor
-public class PageEntity {
+public class PageParamDAO {
   @NonNull
   private Integer size;
   private Long totalElements;

@@ -2,6 +2,7 @@ package com.epam.esm.dao.util;
 
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.entity.TagEntity;
+import com.epam.esm.dao.page.PageParamDAO;
 import lombok.AllArgsConstructor;
 
 import javax.persistence.EntityManager;
@@ -13,10 +14,10 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 @AllArgsConstructor
-public class QueryCreator {
+public class QueryWork {
   private final EntityManager entityManager;
 
-  public CriteriaQuery<GiftCertificateEntity> buildWithParameters(Map<String, String> parameters) {
+  public CriteriaQuery<GiftCertificateEntity> buildQuery(Map<String, String> parameters) {
     final String SEARCH_LIKE = "%";
     final String SEARCH_REG_EX = "^SEARCH_.*";
     final String SORT_REG_EX = "^SORT_.*";
@@ -65,5 +66,23 @@ public class QueryCreator {
       criteriaQuery.orderBy(orders);
     }
     return criteriaQuery;
+  }
+
+  public <T> List<T> executeQuery(PageParamDAO pageParamDAO, String sql, Class<T> type) {
+    int pageNumber = pageParamDAO.getNumber();
+    int pageSize = pageParamDAO.getSize();
+    return entityManager.createQuery(sql, type)
+        .setFirstResult(pageNumber * pageSize)
+        .setMaxResults(pageSize)
+        .getResultList();
+  }
+
+  public <T> List<T> executeQuery(PageParamDAO pageParamDAO, CriteriaQuery<T> query) {
+    int pageNumber = pageParamDAO.getNumber();
+    int pageSize = pageParamDAO.getSize();
+    return entityManager.createQuery(query)
+        .setFirstResult(pageNumber * pageSize)
+        .setMaxResults(pageSize)
+        .getResultList();
   }
 }

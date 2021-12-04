@@ -2,6 +2,7 @@ package com.epam.esm.dao.util;
 
 public enum GiftCertificateSQL {
   SELECT_ALL("SELECT certificate FROM Certificate certificate"),
+  COUNT_ALL("SELECT count(id) FROM Certificate certificate"),
   SELECT_ALL_BY_NAME("SELECT certificate FROM Certificate certificate WHERE certificate.name = :name"),
 
   ;

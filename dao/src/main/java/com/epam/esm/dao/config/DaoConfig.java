@@ -1,6 +1,6 @@
 package com.epam.esm.dao.config;
 
-import com.epam.esm.dao.util.QueryCreator;
+import com.epam.esm.dao.util.QueryWork;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -117,7 +117,7 @@ public class DaoConfig {
   }
 
   @Bean
-  public QueryCreator queryCreator(EntityManager entityManager) {
-    return new QueryCreator(entityManager);
+  public QueryWork queryCreator(EntityManager entityManager) {
+    return new QueryWork(entityManager);
   }
 }

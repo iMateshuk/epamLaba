@@ -4,7 +4,7 @@ import com.epam.esm.controller.GiftCertificateController;
 import com.epam.esm.controller.OrderController;
 import com.epam.esm.service.dto.GiftCertificateDTO;
 import com.epam.esm.service.dto.PurchaseDTO;
-import com.epam.esm.util.ControllerConvertor;
+import com.epam.esm.service.util.ServiceConvertor;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @AllArgsConstructor
 @Component
 public class GiftCertificateAssembler implements RepresentationModelAssembler<GiftCertificateDTO, GiftCertificateModel> {
-  private final ControllerConvertor convertor;
+  private final ServiceConvertor convertor;
   private final TagAssembler tagAssembler;
 
   @Override
@@ -30,7 +30,7 @@ public class GiftCertificateAssembler implements RepresentationModelAssembler<Gi
     return addLinkToModel(certificateModel);
   }
 
-  public List<GiftCertificateModel> toModels(List<GiftCertificateDTO> certificates) {
+  public List<GiftCertificateModel> toModel(List<GiftCertificateDTO> certificates) {
     return certificates.stream().map(this::toModel).collect(Collectors.toList());
   }
 
