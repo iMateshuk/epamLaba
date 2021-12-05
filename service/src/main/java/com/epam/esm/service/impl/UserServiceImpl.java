@@ -1,6 +1,8 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.UserDAO;
+import com.epam.esm.dao.entity.OrderEntity;
+import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.dao.entity.UserEntity;
 import com.epam.esm.dao.page.PageDAO;
 import com.epam.esm.dao.page.PageParamDAO;
@@ -9,12 +11,9 @@ import com.epam.esm.service.dto.*;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.page.PageConvertorDTO;
 import com.epam.esm.service.util.ServiceConvertor;
-import com.epam.esm.service.dto.PageDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -42,35 +41,37 @@ public class UserServiceImpl implements UserService {
 
   @Transactional
   @Override
-  public List<OrderDTO> findByIdOrders(Integer id) {
+  public PageDTO<OrderDTO> findByIdOrders(Integer id, PageParamDTO pageDTO) {
     if (!userDAO.isUserExist(id)) {
       throw new ServiceException(new ErrorDTO("user.search.error", id), 322);
     }
-    List<OrderDTO> orders = convertor.toTarget(userDAO.findByIdOrders(id), OrderDTO.class);
-    if (orders.isEmpty()) {
+    PageDAO<OrderEntity> pageDAO = userDAO.findByIdOrders(id, convertor.toTarget(pageDTO, PageParamDAO.class));
+    if (pageDAO.getList().isEmpty()) {
       throw new ServiceException(new ErrorDTO("user.search.orders", id), 323);
     }
-    return orders;
+    return convertorDTO.toDto(pageDAO, OrderDTO.class);
   }
 
   @Transactional
   @Override
-  public OrderDTO findByIdOrder(Integer userId, Integer orderId) {
+  public PageDTO<OrderDTO> findByIdOrder(Integer userId, Integer orderId, PageParamDTO pageDTO) {
     if (!userDAO.isUserExist(userId)) {
       throw new ServiceException(new ErrorDTO("user.search.error", userId), 334);
     }
-    OrderDTO orderDTO = convertor.toTarget(userDAO.findByIdOrderById(userId, orderId), OrderDTO.class);
-    if (orderDTO == null) {
+    PageDAO<OrderEntity> pageDAO =
+        userDAO.findByIdOrderById(userId, orderId, convertor.toTarget(pageDTO, PageParamDAO.class));
+    if (pageDAO.getList().isEmpty()) {
       throw new ServiceException(new ErrorDTO("user.search.order", userId, orderId), 334);
     }
-    return orderDTO;
+    return convertorDTO.toDto(pageDAO, OrderDTO.class);
   }
 
   @Override
-  public List<TagDTO> findTagWithCost(Integer id) {
+  public PageDTO<TagDTO> findTagWithCost(Integer id, PageParamDTO pageDTO) {
     if (!userDAO.isUserExist(id)) {
       throw new ServiceException(new ErrorDTO("user.search.error", id), 341);
     }
-    return convertor.toTarget(userDAO.findTagWithCost(id), TagDTO.class);
+    PageDAO<TagEntity> pageDAO = userDAO.findTagWithCost(id, convertor.toTarget(pageDTO, PageParamDAO.class));
+    return convertorDTO.toDto(pageDAO, TagDTO.class);
   }
 }

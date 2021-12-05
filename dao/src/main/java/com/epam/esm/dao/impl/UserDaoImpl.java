@@ -7,6 +7,7 @@ import com.epam.esm.dao.entity.UserEntity;
 import com.epam.esm.dao.page.PageDAO;
 import com.epam.esm.dao.page.PageParamDAO;
 import com.epam.esm.dao.page.PageParamFill;
+import com.epam.esm.dao.util.OrderSQL;
 import com.epam.esm.dao.util.QueryWork;
 import com.epam.esm.dao.util.UserSQL;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Objects;
 
 @Repository
 @AllArgsConstructor
@@ -48,20 +48,35 @@ public class UserDaoImpl implements UserDAO {
   }
 
   @Override
-  public List<OrderEntity> findByIdOrders(Integer id) {
-    return findById(id).getOrders();
+  public PageDAO<OrderEntity> findByIdOrders(Integer id, PageParamDAO pageParamDAO) {
+    List<OrderEntity> orders =
+        queryWork.executeQuery(pageParamDAO, OrderSQL.ORDERS_USER_ID.getSQL(), OrderEntity.class, id);
+    pageFill.fillingPage(pageParamDAO, OrderSQL.ORDERS_COUNT_USER_ID.getSQL(), id);
+    return new PageDAO<>(orders, pageParamDAO);
   }
 
   @Override
-  public OrderEntity findByIdOrderById(Integer userId, Integer orderId) {
-    return findById(userId).getOrders().stream()
-        .filter(order -> Objects.equals(order.getId(), orderId))
-        .findFirst().orElse(null);
+  public PageDAO<OrderEntity> findByIdOrderById(Integer userId, Integer orderId, PageParamDAO pageParamDAO) {
+    List<OrderEntity> orders =
+        queryWork.executeQuery(pageParamDAO, OrderSQL.ORDERS_ID_USER_ID.getSQL(), OrderEntity.class, userId, orderId);
+    pageFill.fillingPage(pageParamDAO, OrderSQL.COUNT_ID.getSQL(), orderId);
+    return new PageDAO<>(orders, pageParamDAO);
   }
 
   @Override
-  public List<TagEntity> findTagWithCost(Integer id) {
-    return entityManager.createNativeQuery(UserSQL.SELECT_USED_TAGS.getSQL(), TagEntity.class)
-        .setParameter("id", id).getResultList();
+  public PageDAO<TagEntity> findTagWithCost(Integer id, PageParamDAO pageParamDAO) {
+    List<TagEntity> entities =
+        queryWork.executeNativeQuery(pageParamDAO, UserSQL.SELECT_USED_TAGS.getSQL(), TagEntity.class, id);
+
+    String result = String.valueOf(
+        entityManager.createNativeQuery(UserSQL.COUNT_USED_TAGS.getSQL()).setParameter("id", id).getSingleResult());
+    long count;
+    try {
+      count = Long.parseLong(result);
+    } catch (NumberFormatException | NullPointerException ignore) {
+      count = 1L;
+    }
+    pageFill.fillingPage(pageParamDAO, count);
+    return new PageDAO<>(entities, pageParamDAO);
   }
 }

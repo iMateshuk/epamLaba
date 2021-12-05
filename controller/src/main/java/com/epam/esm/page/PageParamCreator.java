@@ -16,7 +16,7 @@ public class PageParamCreator {
   private static final String SIZE = "size";
   private static final String NUMBER = "number";
 
-  public PageParamDTO buildPageDTO(Map<String, String> parameters) {
+  public PageParamDTO buildPageDTOAndRemoveKey(Map<String, String> parameters) {
 
     int size;
     try {
@@ -31,6 +31,8 @@ public class PageParamCreator {
     } catch (NumberFormatException ignore) {
       number = MIN_PAGE;
     }
+
+   parameters.entrySet().removeIf(entry -> entry.getKey().equals(SIZE) || entry.getKey().equals(NUMBER));
 
     return new PageParamDTO(
         (size < MIN_SIZE || size > MAX_SIZE) ? MIN_SIZE : size,

@@ -6,15 +6,13 @@ import com.epam.esm.dao.entity.UserEntity;
 import com.epam.esm.dao.page.PageDAO;
 import com.epam.esm.dao.page.PageParamDAO;
 
-import java.util.List;
-
 public interface UserDAO {
 
   PageDAO<UserEntity> findAll(PageParamDAO pageDAO);
   PageDAO<UserEntity> findById(Integer id, PageParamDAO pageParamDAO);
   UserEntity findById(Integer id);
   boolean isUserExist(Integer id);
-  List<OrderEntity> findByIdOrders(Integer id);
-  OrderEntity findByIdOrderById(Integer userId, Integer orderId);
-  List<TagEntity> findTagWithCost(Integer id);
+  PageDAO<OrderEntity> findByIdOrders(Integer id, PageParamDAO pageParamDAO);
+  PageDAO<OrderEntity> findByIdOrderById(Integer userId, Integer orderId, PageParamDAO pageParamDAO);
+  PageDAO<TagEntity> findTagWithCost(Integer id, PageParamDAO pageParamDAO);
 }

@@ -96,8 +96,10 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
    */
   @Override
   public PageDAO<GiftCertificateEntity> findAllWithParam(Map<String, String> parameters, PageParamDAO pageParamDAO) {
-    List<GiftCertificateEntity> certificates = queryWork.executeQuery(pageParamDAO, queryWork.buildQuery(parameters));
-    pageFill.fillingPage(pageParamDAO, GiftCertificateSQL.COUNT_ALL.getSQL());
+    List<GiftCertificateEntity> certificates =
+        queryWork.executeQuery(pageParamDAO, queryWork.buildQuery(parameters, GiftCertificateEntity.class, TagEntity.class));
+    /*Long count = queryWork.executeQuery(pageParamDAO, parameters, GiftCertificateEntity.class);*/
+    pageFill.fillingPage(pageParamDAO, 5l);
     return new PageDAO<>(certificates, pageParamDAO);
   }
 

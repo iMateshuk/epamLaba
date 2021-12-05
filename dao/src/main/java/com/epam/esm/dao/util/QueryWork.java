@@ -1,7 +1,5 @@
 package com.epam.esm.dao.util;
 
-import com.epam.esm.dao.entity.GiftCertificateEntity;
-import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.dao.page.PageParamDAO;
 import lombok.AllArgsConstructor;
 
@@ -17,69 +15,115 @@ import java.util.stream.Stream;
 public class QueryWork {
   private final EntityManager entityManager;
 
-  public CriteriaQuery<GiftCertificateEntity> buildQuery(Map<String, String> parameters) {
-    final String SEARCH_LIKE = "%";
-    final String SEARCH_REG_EX = "^SEARCH_.*";
-    final String SORT_REG_EX = "^SORT_.*";
-    final String JOIN_REG_EX = "^JOIN.*";
-    final String TAGS_ATTRIBUTE_NAME = "tags";
-    final String NAME = "name";
-    final String ID = "id";
-    final String SPLIT = ",";
+  private static final String SEARCH_LIKE = "%";
+  private static final String SEARCH_REG_EX = "^SEARCH_.*";
+  private static final String SORT_REG_EX = "^SORT_.*";
+  private static final String JOIN_REG_EX = "^JOIN.*";
+  private static final String TAGS_ATTRIBUTE_NAME = "tags";
+  private static final String NAME = "name";
+  private static final String ID = "id";
+  private static final String SPLIT = ",";
 
-    CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-    CriteriaQuery<GiftCertificateEntity> criteriaQuery = criteriaBuilder.createQuery(GiftCertificateEntity.class);
-    Root<GiftCertificateEntity> certRoot = criteriaQuery.from(GiftCertificateEntity.class);
+  public <P, C> CriteriaQuery<P> buildQuery(Map<String, String> parameters, Class<P> parent, Class<C> child) {
+    CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+    CriteriaQuery<P> query = builder.createQuery(parent);
+    Root<P> entityRoot = query.from(parent);
+
+    CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
+    Root<P> countRoot = countQuery.from(parent);
+    countQuery.select(builder.count(entityRoot));
+
+    /*System.out.println(entityManager.createQuery(countQuery).getSingleResult() + " :1: !!!!!!!!!!!!!!!!!!!!!!!!!!!!");*/
 
     List<Predicate> predicates = new ArrayList<>();
 
     Arrays.stream(PredicateParameter.values())
         .filter(param -> param.toString().matches(SEARCH_REG_EX) && parameters.get(param.toString()) != null)
-        .forEach(param -> predicates.add(criteriaBuilder.like(certRoot.get(param.getSQL()),
+        .forEach(param -> predicates.add(builder.like(entityRoot.get(param.getSQL()),
             SEARCH_LIKE + parameters.get(param.toString()) + SEARCH_LIKE)));
 
-    Join<GiftCertificateEntity, TagEntity> join = certRoot.join(TAGS_ATTRIBUTE_NAME, JoinType.LEFT);
+    Join<P, C> join = entityRoot.join(TAGS_ATTRIBUTE_NAME, JoinType.LEFT);
     Stream.of(PredicateParameter.values())
         .filter(item -> item.toString().matches(JOIN_REG_EX) && parameters.get(item.toString()) != null)
         .forEach(item -> {
           List<String> tagNames = List.of(parameters.get(item.toString()).split(SPLIT));
           predicates.add(join.get(NAME).in(tagNames));
-          criteriaQuery.having(criteriaBuilder.count(certRoot).in(tagNames.size()));
+          query.having(builder.count(entityRoot).in(tagNames.size()));
         });
+
+    /*entityRoot.getJoins().forEach(gJoin -> countRoot.join(gJoin.getAttribute().getName()));
+    countQuery.select(builder.count(countRoot));*/
+
     if (!predicates.isEmpty()) {
-      criteriaQuery.where(predicates.toArray(new Predicate[0]));
+      query.where(predicates.toArray(new Predicate[0]));
+      countQuery.where(predicates.toArray(new Predicate[0]));
     }
-    criteriaQuery.groupBy(certRoot.get(ID));
+    query.groupBy(entityRoot.get(ID));
+    /*countQuery.groupBy(root.get(ID));*/
+
+    /*System.out.println(entityManager.createQuery(countQuery).getSingleResult() + " :: !!!!!!!!!!!!!!!!!!!!!!!!!!!!");*/
 
     List<Order> orders = new ArrayList<>();
     Arrays.stream(PredicateParameter.class.getEnumConstants())
         .filter(item -> item.toString().matches(SORT_REG_EX) && parameters.get(item.toString()) != null)
         .forEach(item -> {
           if (parameters.get(item.toString()).equalsIgnoreCase(PredicateParameter.ORDER_DESC.getSQL())) {
-            orders.add(criteriaBuilder.desc(certRoot.get(item.getSQL())));
+            orders.add(builder.desc(entityRoot.get(item.getSQL())));
           }
           if (parameters.get(item.toString()).equalsIgnoreCase(PredicateParameter.ORDER_ASC.getSQL())) {
-            orders.add(criteriaBuilder.asc(certRoot.get(item.getSQL())));
+            orders.add(builder.asc(entityRoot.get(item.getSQL())));
           }
         });
     if (!orders.isEmpty()) {
-      criteriaQuery.orderBy(orders);
+      query.orderBy(orders);
     }
-    return criteriaQuery;
+
+    return query;
   }
 
-  public <T> List<T> executeQuery(PageParamDAO pageParamDAO, String sql, Class<T> type) {
-    int pageNumber = pageParamDAO.getNumber();
-    int pageSize = pageParamDAO.getSize();
+  public <T> List<T> executeNativeQuery(PageParamDAO pageDAO, String sql, Class<T> type, Integer id) {
+    int pageNumber = pageDAO.getNumber();
+    int pageSize = pageDAO.getSize();
+    return entityManager.createNativeQuery(sql, type)
+        .setParameter("id", id)
+        .setFirstResult(pageNumber * pageSize)
+        .setMaxResults(pageSize)
+        .getResultList();
+  }
+
+  public <T> List<T> executeQuery(PageParamDAO pageDAO, String sql, Class<T> type) {
+    int pageNumber = pageDAO.getNumber();
+    int pageSize = pageDAO.getSize();
     return entityManager.createQuery(sql, type)
         .setFirstResult(pageNumber * pageSize)
         .setMaxResults(pageSize)
         .getResultList();
   }
 
-  public <T> List<T> executeQuery(PageParamDAO pageParamDAO, CriteriaQuery<T> query) {
-    int pageNumber = pageParamDAO.getNumber();
-    int pageSize = pageParamDAO.getSize();
+  public <T> List<T> executeQuery(PageParamDAO pageDAO, String sql, Class<T> type, Integer id) {
+    int pageNumber = pageDAO.getNumber();
+    int pageSize = pageDAO.getSize();
+    return entityManager.createQuery(sql, type)
+        .setParameter("id", id)
+        .setFirstResult(pageNumber * pageSize)
+        .setMaxResults(pageSize)
+        .getResultList();
+  }
+
+  public <T> List<T> executeQuery(PageParamDAO pageDAO, String sql, Class<T> type, Integer firstId, Integer secondId) {
+    int pageNumber = pageDAO.getNumber();
+    int pageSize = pageDAO.getSize();
+    return entityManager.createQuery(sql, type)
+        .setParameter("fid", firstId)
+        .setParameter("sid", secondId)
+        .setFirstResult(pageNumber * pageSize)
+        .setMaxResults(pageSize)
+        .getResultList();
+  }
+
+  public <T> List<T> executeQuery(PageParamDAO pageDAO, CriteriaQuery<T> query) {
+    int pageNumber = pageDAO.getNumber();
+    int pageSize = pageDAO.getSize();
     return entityManager.createQuery(query)
         .setFirstResult(pageNumber * pageSize)
         .setMaxResults(pageSize)

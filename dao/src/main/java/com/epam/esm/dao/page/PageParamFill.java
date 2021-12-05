@@ -12,13 +12,15 @@ public class PageParamFill {
 
   public PageParamDAO fillingPage(PageParamDAO pageParamDAO, String sql) {
     Long count = entityManager.createQuery(sql, Long.class).getSingleResult();
-    pageParamDAO.setTotalElements(count);
-    pageParamDAO.setTotalPages(count / pageParamDAO.getSize());
-    return pageParamDAO;
+    return fillingPage(pageParamDAO, count);
   }
 
   public PageParamDAO fillingPage(PageParamDAO pageParamDAO, String sql, Integer id) {
     Long count = entityManager.createQuery(sql, Long.class).setParameter("id", id).getSingleResult();
+    return fillingPage(pageParamDAO, count);
+  }
+
+  public PageParamDAO fillingPage(PageParamDAO pageParamDAO, Long count) {
     pageParamDAO.setTotalElements(count);
     pageParamDAO.setTotalPages(count / pageParamDAO.getSize());
     return pageParamDAO;

@@ -2,7 +2,9 @@ package com.epam.esm.controller;
 
 import com.epam.esm.hateoas.GiftCertificateAssembler;
 import com.epam.esm.hateoas.GiftCertificateModel;
+import com.epam.esm.hateoas.PageModel;
 import com.epam.esm.page.PageModelCreator;
+import com.epam.esm.page.PageModelLink;
 import com.epam.esm.page.PageParamCreator;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.GiftCertificateDTO;
@@ -35,6 +37,7 @@ public class GiftCertificateController {
   private final GiftCertificateAssembler certificateAssembler;
   private final PageParamCreator pageCreator;
   private final PageModelCreator modelCreator;
+  private final PageModelLink modelLink;
 
   /**
    * @param giftCertificateDTO with Tags
@@ -58,13 +61,18 @@ public class GiftCertificateController {
    */
   @GetMapping
   public ResponseEntity<?> findAll(@RequestParam Map<String, String> parameters) {
-    PageParamDTO pageParamDTO = pageCreator.buildPageDTO(parameters);
+    PageParamDTO pageParamDTO = pageCreator.buildPageDTOAndRemoveKey(parameters);
 
-    PageDTO<GiftCertificateDTO> certificates = parameters.size() > 0
-        ? certificateService.findAllWithParam(parameters, pageParamDTO)
-        : certificateService.findAll(pageParamDTO);
-
-    return new ResponseEntity<>(modelCreator.createModel(certificates, certificateAssembler), HttpStatus.OK);
+    PageModel<GiftCertificateModel> model;
+    if (parameters.size() > 0) {
+      PageDTO<GiftCertificateDTO> certificates = certificateService.findAllWithParam(parameters, pageParamDTO);
+      model = modelCreator.createModel(certificates, certificateAssembler);
+      modelLink.addLinks(model, linkTo(GiftCertificateController.class), parameters);
+    } else {
+      PageDTO<GiftCertificateDTO> certificates = certificateService.findAll(pageParamDTO);
+      model = modelCreator.createModel(certificates, certificateAssembler, linkTo(GiftCertificateController.class));
+    }
+    return new ResponseEntity<>(model, HttpStatus.OK);
   }
 
   /**
@@ -76,9 +84,11 @@ public class GiftCertificateController {
   @GetMapping("/{id}")
   public ResponseEntity<?> findById(@PathVariable int id, @RequestParam Map<String, String> parameters) {
     validator.checkId(id);
-    PageParamDTO pageParamDTO = pageCreator.buildPageDTO(parameters);
+    PageParamDTO pageParamDTO = pageCreator.buildPageDTOAndRemoveKey(parameters);
     PageDTO<GiftCertificateDTO> certificates = certificateService.findById(id, pageParamDTO);
-    return new ResponseEntity<>(modelCreator.createModel(certificates, certificateAssembler), HttpStatus.OK);
+    return new ResponseEntity<>(
+        modelCreator.createModel(certificates, certificateAssembler, linkTo(GiftCertificateController.class).slash(id)),
+        HttpStatus.OK);
   }
 
   /**

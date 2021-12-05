@@ -45,7 +45,8 @@ public class UserAssembler implements RepresentationModelAssembler<UserDTO, User
     return orders.stream()
         .map(order -> {
           OrderModel orderModel = convertor.toTarget(order, OrderModel.class);
-          orderModel.add(linkTo(methodOn(UserController.class).findByIdOrder(userModel.getId(), order.getId())).withSelfRel());
+          orderModel.add(linkTo(methodOn(UserController.class)
+              .findByIdOrder(userModel.getId(), order.getId(), new HashMap<>())).withSelfRel());
           return orderModel;
         })
         .collect(Collectors.toList());
@@ -53,7 +54,8 @@ public class UserAssembler implements RepresentationModelAssembler<UserDTO, User
 
   public UserModel addLinkToModel(UserModel userModel) {
     userModel.add(linkTo(methodOn(UserController.class).findById(userModel.getId(), new HashMap<>())).withSelfRel());
-    userModel.add(linkTo(methodOn(UserController.class).findByIdOrders(userModel.getId())).withRel("orders"));
+    userModel.add(linkTo(methodOn(UserController.class)
+        .findByIdOrders(userModel.getId(), new HashMap<>())).withRel("orders"));
     return userModel;
   }
 }

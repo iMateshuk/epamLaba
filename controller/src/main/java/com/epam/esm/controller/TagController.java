@@ -55,9 +55,11 @@ public class TagController {
    */
   @GetMapping
   public ResponseEntity<?> findAll(@RequestParam Map<String, String> parameters) {
-    PageParamDTO pageParamDTO = pageCreator.buildPageDTO(parameters);
+    PageParamDTO pageParamDTO = pageCreator.buildPageDTOAndRemoveKey(parameters);
     PageDTO<TagDTO> page = tagService.findAll(pageParamDTO);
-    return new ResponseEntity<>(modelCreator.createModel(page, tagAssembler), HttpStatus.OK);
+    return new ResponseEntity<>(
+        modelCreator.createModel(page, tagAssembler, linkTo(TagController.class)),
+        HttpStatus.OK);
   }
 
   /**
@@ -69,9 +71,11 @@ public class TagController {
   @GetMapping("/{id}")
   public ResponseEntity<?> findById(@PathVariable int id, @RequestParam Map<String, String> parameters) {
     validator.checkId(id);
-    PageParamDTO pageParamDTO = pageCreator.buildPageDTO(parameters);
+    PageParamDTO pageParamDTO = pageCreator.buildPageDTOAndRemoveKey(parameters);
     PageDTO<TagDTO> page = tagService.findById(id, pageParamDTO);
-    return new ResponseEntity<>(modelCreator.createModel(page, tagAssembler), HttpStatus.OK);
+    return new ResponseEntity<>(
+        modelCreator.createModel(page, tagAssembler, linkTo(TagController.class).slash(id)),
+        HttpStatus.OK);
   }
 
   /**
