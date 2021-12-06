@@ -2,8 +2,8 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
-import com.epam.esm.dao.page.PageDAO;
-import com.epam.esm.dao.page.PageParamDAO;
+import com.epam.esm.dao.page.Page;
+import com.epam.esm.dao.page.PageParam;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.ErrorDTO;
 import com.epam.esm.service.dto.GiftCertificateDTO;
@@ -11,7 +11,6 @@ import com.epam.esm.service.dto.PageDTO;
 import com.epam.esm.service.dto.PageParamDTO;
 import com.epam.esm.service.exception.ServiceConflictException;
 import com.epam.esm.service.exception.ServiceException;
-import com.epam.esm.service.exception.ServiceValidationException;
 import com.epam.esm.service.page.PageConvertorDTO;
 import com.epam.esm.service.util.RequestedParameter;
 import com.epam.esm.service.util.ServiceConvertor;
@@ -40,12 +39,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
   private final ServiceConvertor convertor;
   private final PageConvertorDTO convertorDTO;
 
-  /**
-   * @param certificateDTO DTO object
-   * @return GiftCertificateDTO
-   * <p>
-   * The method can throw ServiceConflictException extends RuntimeException<p>
-   */
   @Transactional
   @Override
   public GiftCertificateDTO insert(GiftCertificateDTO certificateDTO) {
@@ -61,49 +54,24 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         .insert(convertor.toTarget(certificateDTO, GiftCertificateEntity.class)), GiftCertificateDTO.class);
   }
 
-  /**
-   * @return List of GiftCertificateDTO
-   */
-  @Transactional
-  @Override
-  public PageDTO<GiftCertificateDTO> findAll(PageParamDTO pageParamDTO) {
-    PageDAO<GiftCertificateEntity> pageDAO = certificateDAO.findAll(convertor.toTarget(pageParamDTO, PageParamDAO.class));
-    return convertorDTO.toDto(pageDAO, GiftCertificateDTO.class);
-  }
-
-  /**
-   * @param id positive int
-   * @return GiftCertificateDTO
-   * <p>
-   * The method can throw ServiceException extends RuntimeException
-   */
   @Transactional
   @Override
   public PageDTO<GiftCertificateDTO> findById(Integer id, PageParamDTO pageParamDTO) {
     if (!certificateDAO.isExistById(id)) {
       throw new ServiceException(new ErrorDTO("certificate.search.error", id), 103);
     }
-    PageDAO<GiftCertificateEntity> pageDAO =
-        certificateDAO.findById(id, convertor.toTarget(pageParamDTO, PageParamDAO.class));
-    return convertorDTO.toDto(pageDAO, GiftCertificateDTO.class);
+    Page<GiftCertificateEntity> page =
+        certificateDAO.findById(id, convertor.toTarget(pageParamDTO, PageParam.class));
+    return convertorDTO.toDto(page, GiftCertificateDTO.class);
   }
 
-  /**
-   * @param allParameters Map of parameters
-   * @return List of GiftCertificateDTO
-   * <p>
-   * The method can throw ServiceValidationException or ServiceException extends RuntimeException
-   */
   @Transactional
   @Override
-  public PageDTO<GiftCertificateDTO> findAllWithParam(Map<String, String> allParameters, PageParamDTO pageParamDTO) {
+  public PageDTO<GiftCertificateDTO> findAll(Map<String, String> allParameters, PageParamDTO pageParamDTO) {
     Map<String, String> parameters = createMapParameter(allParameters);
-    if (parameters.isEmpty()) {
-      throw new ServiceValidationException(new ErrorDTO("certificate.parameters.error"), 105);
-    }
-    PageDAO<GiftCertificateEntity> pageDAO =
-        certificateDAO.findAllWithParam(parameters, convertor.toTarget(pageParamDTO, PageParamDAO.class));
-    return convertorDTO.toDto(pageDAO, GiftCertificateDTO.class);
+    Page<GiftCertificateEntity> page =
+        certificateDAO.findAll(parameters, convertor.toTarget(pageParamDTO, PageParam.class));
+    return convertorDTO.toDto(page, GiftCertificateDTO.class);
   }
 
   /**

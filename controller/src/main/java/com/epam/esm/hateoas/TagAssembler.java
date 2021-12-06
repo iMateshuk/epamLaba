@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +29,7 @@ public class TagAssembler implements RepresentationModelAssembler<TagDTO, TagMod
   }
 
   public TagModel addLinkToModel(TagModel tagModel) {
-    tagModel.add(linkTo(methodOn(TagController.class).findById(tagModel.getId(), new HashMap<>())).withSelfRel());
+    tagModel.add(linkTo(methodOn(TagController.class).findById(tagModel.getId(), 0, 20)).withSelfRel());
     tagModel.add(linkTo(methodOn(TagController.class).deleteById(tagModel.getId())).withRel("delete"));
     return tagModel;
   }

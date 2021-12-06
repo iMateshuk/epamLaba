@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,16 +45,16 @@ public class UserAssembler implements RepresentationModelAssembler<UserDTO, User
         .map(order -> {
           OrderModel orderModel = convertor.toTarget(order, OrderModel.class);
           orderModel.add(linkTo(methodOn(UserController.class)
-              .findByIdOrder(userModel.getId(), order.getId(), new HashMap<>())).withSelfRel());
+              .findByIdOrder(userModel.getId(), order.getId(), 0, 20)).withSelfRel());
           return orderModel;
         })
         .collect(Collectors.toList());
   }
 
   public UserModel addLinkToModel(UserModel userModel) {
-    userModel.add(linkTo(methodOn(UserController.class).findById(userModel.getId(), new HashMap<>())).withSelfRel());
+    userModel.add(linkTo(methodOn(UserController.class).findById(userModel.getId(), 0, 20)).withSelfRel());
     userModel.add(linkTo(methodOn(UserController.class)
-        .findByIdOrders(userModel.getId(), new HashMap<>())).withRel("orders"));
+        .findByIdOrders(userModel.getId(), 0, 20)).withRel("orders"));
     return userModel;
   }
 }

@@ -5,10 +5,8 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "User")
@@ -25,34 +23,6 @@ public class UserEntity implements Serializable {
   @Column(name = "password", nullable = false)
   private String password;
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<OrderEntity> orders;
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    UserEntity that = (UserEntity) o;
-    return Objects.equals(id, that.id) && Objects.equals(userName, that.userName)
-        && Objects.equals(password, that.password) && Objects.equals(orders, that.orders);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, userName, password, orders);
-  }
-
-  @Override
-  public String toString() {
-    return getClass().getName() +
-        "id=" + id +
-        ", userName='" + userName + '\'' +
-        ", password='" + password + '\'' +
-        ", orders=" + orders +
-        '}';
-  }
 }

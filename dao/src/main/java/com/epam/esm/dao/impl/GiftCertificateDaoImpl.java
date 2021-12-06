@@ -4,11 +4,10 @@ import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.entity.TagEntity;
-import com.epam.esm.dao.page.PageDAO;
-import com.epam.esm.dao.page.PageParamDAO;
-import com.epam.esm.dao.page.PageParamFill;
+import com.epam.esm.dao.page.Page;
+import com.epam.esm.dao.page.PageParam;
 import com.epam.esm.dao.util.GiftCertificateSQL;
-import com.epam.esm.dao.util.QueryWork;
+import com.epam.esm.dao.util.QueryBuilder;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -16,98 +15,59 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Repository Gift-Certificate
- * DAO to MySQL
- *
- * @author Ivan Matsiashuk
- * @version 1.0
- */
 @AllArgsConstructor
 @Repository
 public class GiftCertificateDaoImpl implements GiftCertificateDAO {
   private final EntityManager entityManager;
   private final TagDAO tagDAO;
-  private final QueryWork queryWork;
-  private final PageParamFill pageFill;
+  private final QueryBuilder queryBuilder;
 
-  /**
-   * @param giftCertificate insert in table
-   * @return GiftCertificateEntity
-   * <p>
-   * The method can throw IncorrectResultSizeDataAccessException
-   */
   @Override
   public GiftCertificateEntity insert(GiftCertificateEntity giftCertificate) {
     findAndSetTagId(giftCertificate);
     return entityManager.merge(giftCertificate);
   }
 
-  /**
-   * @return List of GiftCertificateEntity
-   */
   @Override
-  public PageDAO<GiftCertificateEntity> findAll(PageParamDAO pageParamDAO) {
-    List<GiftCertificateEntity> certificates =
-        queryWork.executeQuery(pageParamDAO, GiftCertificateSQL.SELECT_ALL.getSQL(), GiftCertificateEntity.class);
-    pageFill.fillingPage(pageParamDAO, GiftCertificateSQL.COUNT_ALL.getSQL());
-    return new PageDAO<>(certificates, pageParamDAO);
-  }
-
-  @Override
-  public PageDAO<GiftCertificateEntity> findById(int id, PageParamDAO pageParamDAO) {
+  public Page<GiftCertificateEntity> findById(int id, PageParam pageParam) {
+    final String ID = "id";
     List<GiftCertificateEntity> certificates = List.of(entityManager.find(GiftCertificateEntity.class, id));
-    pageFill.fillingPage(pageParamDAO, GiftCertificateSQL.COUNT_ID.getSQL(), id);
-    return new PageDAO<>(certificates, pageParamDAO);
+    Long count = entityManager.createQuery(GiftCertificateSQL.COUNT_ID.getSQL(), Long.class)
+        .setParameter(ID, id)
+        .getSingleResult();
+    fillPage(pageParam, count);
+    return new Page<>(certificates, pageParam);
   }
 
-  /**
-   * @param id PK.
-   * @return GiftCertificateEntity
-   * <p>
-   * The method can throw EmptyResultDataAccessException
-   */
   @Override
   public GiftCertificateEntity findById(int id) {
     return entityManager.find(GiftCertificateEntity.class, id);
   }
 
-  /**
-   * @param certificateName uniq name
-   * @return true when find certificateName
-   */
   @Override
   public boolean isExistByName(String certificateName) {
     return searchCertificate(certificateName) != null;
   }
 
-  /**
-   * @param id table PK
-   * @return true when find certificateName
-   */
   @Override
   public boolean isExistById(int id) {
     return entityManager.contains(findById(id));
   }
 
-  /**
-   * @param parameters Map of parameters.
-   * @return List of GiftCertificateEntity
-   */
   @Override
-  public PageDAO<GiftCertificateEntity> findAllWithParam(Map<String, String> parameters, PageParamDAO pageParamDAO) {
-    List<GiftCertificateEntity> certificates =
-        queryWork.executeQuery(pageParamDAO, queryWork.buildQuery(parameters, GiftCertificateEntity.class, TagEntity.class));
-    pageFill.fillingPageNativeQuery(pageParamDAO, GiftCertificateSQL.SELECT_MAIN_SEARCH.getSQL(), parameters);
-    return new PageDAO<>(certificates, pageParamDAO);
+  public Page<GiftCertificateEntity> findAll(Map<String, String> parameters, PageParam pageParam) {
+    int pageNumber = pageParam.getNumber();
+    int pageSize = pageParam.getSize();
+    List<GiftCertificateEntity> certificates = entityManager.createQuery(queryBuilder.buildQuery(parameters))
+        .setFirstResult(pageNumber * pageSize)
+        .setMaxResults(pageSize)
+        .getResultList();
+    String query = queryBuilder.buildNativeQuery(GiftCertificateSQL.SELECT_MAIN_SEARCH.getSQL(), parameters);
+    Long count = checkQueryResult(entityManager.createNativeQuery(query).getSingleResult());
+    fillPage(pageParam, count);
+    return new Page<>(certificates, pageParam);
   }
 
-  /**
-   * @param giftCertificate update some collum in table.
-   * @return GiftCertificateEntity
-   * <p>
-   * The method can throw EmptyResultDataAccessException
-   */
   @Override
   public GiftCertificateEntity update(GiftCertificateEntity giftCertificate) {
     GiftCertificateEntity certificateEntity = findById(giftCertificate.getId());
@@ -136,9 +96,6 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
     return entityManager.merge(certificateEntity);
   }
 
-  /**
-   * @param id PK.
-   */
   @Override
   public void deleteById(int id) {
     GiftCertificateEntity certificate = findById(id);
@@ -149,7 +106,11 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
   private GiftCertificateEntity searchCertificate(String certificateName) {
     final String NAME = "name";
     return entityManager.createQuery(GiftCertificateSQL.SELECT_ALL_BY_NAME.getSQL(), GiftCertificateEntity.class)
-        .setParameter(NAME, certificateName).getResultList().stream().findFirst().orElse(null);
+        .setParameter(NAME, certificateName)
+        .getResultList()
+        .stream()
+        .findFirst()
+        .orElse(null);
   }
 
   private void findAndSetTagId(GiftCertificateEntity certificate) {
@@ -160,5 +121,20 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
             tagEntity.setId(entity.getId());
           }
         });
+  }
+
+  private void fillPage(PageParam pageParam, Long count) {
+    pageParam.setTotalElements(count);
+    pageParam.setTotalPages(count / pageParam.getSize());
+  }
+
+  private Long checkQueryResult(Object result) {
+    long count;
+    try {
+      count = Long.parseLong(String.valueOf(result));
+    } catch (NumberFormatException | NullPointerException ignore) {
+      count = 1L;
+    }
+    return count;
   }
 }

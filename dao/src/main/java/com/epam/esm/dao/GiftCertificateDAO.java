@@ -1,17 +1,15 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.dao.entity.GiftCertificateEntity;
-import com.epam.esm.dao.page.PageDAO;
-import com.epam.esm.dao.page.PageParamDAO;
+import com.epam.esm.dao.page.Page;
+import com.epam.esm.dao.page.PageParam;
 
 import java.util.Map;
 
 public interface GiftCertificateDAO {
   GiftCertificateEntity insert(GiftCertificateEntity giftCertificate);
 
-  PageDAO<GiftCertificateEntity> findAll(PageParamDAO pageParamDAO);
-
-  PageDAO<GiftCertificateEntity> findById(int id, PageParamDAO pageParamDAO);
+  Page<GiftCertificateEntity> findById(int id, PageParam pageParam);
 
   GiftCertificateEntity findById(int id);
 
@@ -19,7 +17,7 @@ public interface GiftCertificateDAO {
 
   boolean isExistById(int id);
 
-  PageDAO<GiftCertificateEntity> findAllWithParam(Map<String, String> parameters, PageParamDAO pageParamDAO);
+  Page<GiftCertificateEntity> findAll(Map<String, String> parameters, PageParam pageParam);
 
   GiftCertificateEntity update(GiftCertificateEntity giftCertificate);
 

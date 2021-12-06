@@ -1,18 +1,13 @@
 package com.epam.esm.dao.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Objects;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "Order")
@@ -37,34 +32,4 @@ public class OrderEntity implements Serializable {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "cert_id", nullable = false)
   private GiftCertificateEntity certificate;
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    OrderEntity that = (OrderEntity) o;
-    return Objects.equals(id, that.id) && Objects.equals(cost, that.cost)
-        && Objects.equals(createDate, that.createDate) && Objects.equals(user, that.user)
-        && Objects.equals(certificate, that.certificate);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, cost, createDate, user, certificate);
-  }
-
-  @Override
-  public String toString() {
-    return getClass().getName() +
-        "id=" + id +
-        ", cost=" + cost +
-        ", createDate=" + createDate +
-        ", userEntity=" + user +
-        ", certificateEntity=" + certificate +
-        '}';
-  }
 }

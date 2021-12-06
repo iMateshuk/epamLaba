@@ -7,7 +7,7 @@ import lombok.*;
 @RequiredArgsConstructor
 @NoArgsConstructor
 @AllArgsConstructor
-public class PageParamDAO {
+public class PageParam {
   @NonNull
   private Integer size;
   private Long totalElements;

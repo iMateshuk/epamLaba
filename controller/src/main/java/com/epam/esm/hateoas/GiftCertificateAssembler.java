@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +36,7 @@ public class GiftCertificateAssembler implements RepresentationModelAssembler<Gi
 
   public GiftCertificateModel addLinkToModel(GiftCertificateModel certificateModel) {
     certificateModel.add(linkTo(methodOn(GiftCertificateController.class)
-        .findById(certificateModel.getId(), new HashMap<>())).withSelfRel());
+        .findById(certificateModel.getId(), 0, 20)).withSelfRel());
     certificateModel.add(linkTo(methodOn(GiftCertificateController.class)
         .delete(certificateModel.getId())).withRel("delete"));
     certificateModel.add(linkTo(methodOn(OrderController.class)

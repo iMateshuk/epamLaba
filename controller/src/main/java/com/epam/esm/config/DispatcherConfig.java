@@ -1,6 +1,5 @@
 package com.epam.esm.config;
 
-import com.epam.esm.exception.ExceptionUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
@@ -29,11 +28,6 @@ public class DispatcherConfig {
   @NonNull
   @Value("${dispatcher.server.port}")
   private Integer serverPort;
-
-  @Bean
-  public ExceptionUtil exceptionUtil(MessageSource messageSource){
-    return new ExceptionUtil(messageSource);
-  }
 
   @Bean
   public MessageSource messageSource() {

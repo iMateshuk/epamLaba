@@ -2,8 +2,8 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.TagEntity;
-import com.epam.esm.dao.page.PageDAO;
-import com.epam.esm.dao.page.PageParamDAO;
+import com.epam.esm.dao.page.Page;
+import com.epam.esm.dao.page.PageParam;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.ErrorDTO;
 import com.epam.esm.service.dto.PageDTO;
@@ -55,8 +55,8 @@ public class TagServiceImpl implements TagService {
   @Transactional
   @Override
   public PageDTO<TagDTO> findAll(PageParamDTO pageParamDTO) {
-    PageDAO<TagEntity> pageDAO = tagDAO.findAll(convertor.toTarget(pageParamDTO, PageParamDAO.class));
-    return convertorDTO.toDto(pageDAO, TagDTO.class);
+    Page<TagEntity> page = tagDAO.findAll(convertor.toTarget(pageParamDTO, PageParam.class));
+    return convertorDTO.toDto(page, TagDTO.class);
   }
 
   /**
@@ -71,8 +71,8 @@ public class TagServiceImpl implements TagService {
     if (!tagDAO.isExistById(id)) {
       throw new ServiceException(new ErrorDTO("tag.search.error", id), 203);
     }
-    PageDAO<TagEntity> pageDAO = tagDAO.findById(id, convertor.toTarget(pageParamDTO, PageParamDAO.class));
-    return convertorDTO.toDto(pageDAO, TagDTO.class);
+    Page<TagEntity> page = tagDAO.findById(id, convertor.toTarget(pageParamDTO, PageParam.class));
+    return convertorDTO.toDto(page, TagDTO.class);
   }
 
   /**

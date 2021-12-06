@@ -5,7 +5,6 @@ import com.epam.esm.hateoas.GiftCertificateModel;
 import com.epam.esm.hateoas.PageModel;
 import com.epam.esm.page.PageModelCreator;
 import com.epam.esm.page.PageModelLink;
-import com.epam.esm.page.PageParamCreator;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.GiftCertificateDTO;
 import com.epam.esm.service.dto.PageDTO;
@@ -16,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.Map;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -35,7 +36,6 @@ public class GiftCertificateController {
   private final GiftCertificateService certificateService;
   private final Validator validator;
   private final GiftCertificateAssembler certificateAssembler;
-  private final PageParamCreator pageCreator;
   private final PageModelCreator modelCreator;
   private final PageModelLink modelLink;
 
@@ -60,18 +60,15 @@ public class GiftCertificateController {
    * The method can throw ServiceException extends RuntimeException
    */
   @GetMapping
-  public ResponseEntity<?> findAll(@RequestParam Map<String, String> parameters) {
-    PageParamDTO pageParamDTO = pageCreator.buildPageDTOAndRemoveKey(parameters);
+  public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int number,
+                                   @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int size,
+                                   @RequestParam Map<String, String> parameters) {
+    PageParamDTO pageParamDTO = PageParamDTO.builder().size(size).number(number).build();
 
-    PageModel<GiftCertificateModel> model;
-    if (parameters.size() > 0) {
-      PageDTO<GiftCertificateDTO> certificates = certificateService.findAllWithParam(parameters, pageParamDTO);
-      model = modelCreator.createModel(certificates, certificateAssembler);
-      modelLink.addLinks(model, linkTo(GiftCertificateController.class), parameters);
-    } else {
-      PageDTO<GiftCertificateDTO> certificates = certificateService.findAll(pageParamDTO);
-      model = modelCreator.createModel(certificates, certificateAssembler, linkTo(GiftCertificateController.class));
-    }
+    PageDTO<GiftCertificateDTO> certificates = certificateService.findAll(parameters, pageParamDTO);
+
+    PageModel<GiftCertificateModel> model = modelCreator.createModel(certificates, certificateAssembler);
+    modelLink.addLinks(model, linkTo(GiftCertificateController.class), parameters);
     return new ResponseEntity<>(model, HttpStatus.OK);
   }
 
@@ -82,9 +79,10 @@ public class GiftCertificateController {
    * The method can throw ValidationException extends RuntimeException
    */
   @GetMapping("/{id}")
-  public ResponseEntity<?> findById(@PathVariable int id, @RequestParam Map<String, String> parameters) {
-    validator.checkId(id);
-    PageParamDTO pageParamDTO = pageCreator.buildPageDTOAndRemoveKey(parameters);
+  public ResponseEntity<?> findById(@PathVariable  @Min(1) @Max(Integer.MAX_VALUE) int id,
+                                    @RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int number,
+                                    @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int size) {
+    PageParamDTO pageParamDTO = PageParamDTO.builder().size(size).number(number).build();
     PageDTO<GiftCertificateDTO> certificates = certificateService.findById(id, pageParamDTO);
     return new ResponseEntity<>(
         modelCreator.createModel(certificates, certificateAssembler, linkTo(GiftCertificateController.class).slash(id)),
@@ -100,9 +98,8 @@ public class GiftCertificateController {
    */
   @PatchMapping("/{id}")
   @ResponseStatus()
-  public ResponseEntity<GiftCertificateModel> update(@PathVariable int id,
+  public ResponseEntity<GiftCertificateModel> update(@PathVariable  @Min(1) @Max(Integer.MAX_VALUE) int id,
                                                      @RequestBody GiftCertificateDTO giftCertificateDTO) {
-    validator.checkId(id);
     giftCertificateDTO.setId(id);
     validator.checkUpdateCertificate(giftCertificateDTO);
     GiftCertificateModel certificateModel = certificateAssembler.toModel(certificateService.update(giftCertificateDTO));
@@ -116,8 +113,7 @@ public class GiftCertificateController {
    *           The method can throw ValidationException extends RuntimeException
    */
   @DeleteMapping("/{id}")
-  public ResponseEntity<HttpStatus> delete(@PathVariable int id) {
-    validator.checkId(id);
+  public ResponseEntity<HttpStatus> delete(@PathVariable  @Min(1) @Max(Integer.MAX_VALUE) int id) {
     certificateService.deleteById(id);
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }

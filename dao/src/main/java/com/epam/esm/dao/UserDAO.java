@@ -3,22 +3,22 @@ package com.epam.esm.dao;
 import com.epam.esm.dao.entity.OrderEntity;
 import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.dao.entity.UserEntity;
-import com.epam.esm.dao.page.PageDAO;
-import com.epam.esm.dao.page.PageParamDAO;
+import com.epam.esm.dao.page.Page;
+import com.epam.esm.dao.page.PageParam;
 
 public interface UserDAO {
 
-  PageDAO<UserEntity> findAll(PageParamDAO pageDAO);
+  Page<UserEntity> findAll(PageParam pageDAO);
 
-  PageDAO<UserEntity> findById(Integer id, PageParamDAO pageParamDAO);
+  Page<UserEntity> findById(Integer id, PageParam pageParam);
 
   UserEntity findById(Integer id);
 
   boolean isUserExist(Integer id);
 
-  PageDAO<OrderEntity> findByIdOrders(Integer id, PageParamDAO pageParamDAO);
+  Page<OrderEntity> findByIdOrders(Integer id, PageParam pageParam);
 
-  PageDAO<OrderEntity> findByIdOrderById(Integer userId, Integer orderId, PageParamDAO pageParamDAO);
+  Page<OrderEntity> findByIdOrderById(Integer userId, Integer orderId, PageParam pageParam);
 
-  PageDAO<TagEntity> findTagWithCost(Integer id, PageParamDAO pageParamDAO);
+  Page<TagEntity> findTagWithCost(Integer id, PageParam pageParam);
 }

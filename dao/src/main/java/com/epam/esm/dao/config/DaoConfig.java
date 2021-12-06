@@ -1,6 +1,5 @@
 package com.epam.esm.dao.config;
 
-import com.epam.esm.dao.util.QueryWork;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +15,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
@@ -27,24 +25,24 @@ import java.util.Properties;
 @PropertySource("classpath:db.properties")
 public class DaoConfig {
   @NonNull
-  @Value("${jdbc.driver}")
+  @Value("${db.driver}")
   private String driver;
   @NonNull
-  @Value("${jdbc.url}")
+  @Value("${db.url}")
   private String url;
   @NonNull
-  @Value("${jdbc.user}")
+  @Value("${db.user}")
   private String user;
   @NonNull
-  @Value("${jdbc.password}")
+  @Value("${db.password}")
   private String password;
-  @Value("${connection.pool.initialPoolSize:5}")
+  @Value("${db.initialPoolSize:5}")
   private int initialPoolSize;
-  @Value("${connection.pool.minPoolSize:5}")
+  @Value("${db.minPoolSize:5}")
   private int minPoolSize;
-  @Value("${connection.pool.maxPoolSize:20}")
+  @Value("${db.maxPoolSize:20}")
   private int maxPoolSize;
-  @Value("${connection.pool.maxIdleTime:3000}")
+  @Value("${db.maxIdleTime:3000}")
   private int maxIdleTime;
 
   @NonNull
@@ -114,10 +112,5 @@ public class DaoConfig {
     JpaTransactionManager transactionManager = new JpaTransactionManager();
     transactionManager.setEntityManagerFactory(entityManagerFactory(dataSource));
     return transactionManager;
-  }
-
-  @Bean
-  public QueryWork queryCreator(EntityManager entityManager) {
-    return new QueryWork(entityManager);
   }
 }

@@ -1,6 +1,8 @@
 package com.epam.esm.dao.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -8,10 +10,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Objects;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "Certificate")
@@ -49,41 +49,6 @@ public class GiftCertificateEntity implements Serializable {
       inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
   private List<TagEntity> tags;
 
-  @OneToMany(mappedBy = "certificate", cascade = CascadeType.MERGE)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "certificate", cascade = CascadeType.MERGE)
   private List<OrderEntity> orders;
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    GiftCertificateEntity that = (GiftCertificateEntity) o;
-    return Objects.equals(id, that.id)
-        && Objects.equals(name, that.name) && Objects.equals(description, that.description)
-        && Objects.equals(price, that.price) && Objects.equals(duration, that.duration)
-        && Objects.equals(createDate, that.createDate) && Objects.equals(lastUpdateDate, that.lastUpdateDate)
-        && Objects.equals(tags, that.tags);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, name, description, price, duration, createDate, lastUpdateDate, tags);
-  }
-
-  @Override
-  public String toString() {
-    return getClass().getName() + "{" +
-        "id=" + id +
-        ", name='" + name + '\'' +
-        ", description='" + description + '\'' +
-        ", price=" + price +
-        ", duration=" + duration +
-        ", createDate=" + createDate +
-        ", lastUpdateDate=" + lastUpdateDate +
-        ", tags=" + tags +
-        '}';
-  }
 }

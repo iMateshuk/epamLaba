@@ -9,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class PageDAO<T> {
+public class Page<T> {
   public List<T> list;
-  public PageParamDAO page;
+  public PageParam page;
 }

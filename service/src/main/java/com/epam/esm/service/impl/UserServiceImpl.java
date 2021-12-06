@@ -4,8 +4,8 @@ import com.epam.esm.dao.UserDAO;
 import com.epam.esm.dao.entity.OrderEntity;
 import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.dao.entity.UserEntity;
-import com.epam.esm.dao.page.PageDAO;
-import com.epam.esm.dao.page.PageParamDAO;
+import com.epam.esm.dao.page.Page;
+import com.epam.esm.dao.page.PageParam;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.dto.*;
 import com.epam.esm.service.exception.ServiceException;
@@ -25,8 +25,8 @@ public class UserServiceImpl implements UserService {
   @Transactional
   @Override
   public PageDTO<UserDTO> findAll(PageParamDTO pageDTO) {
-    PageDAO<UserEntity> pageDAO = userDAO.findAll(convertor.toTarget(pageDTO, PageParamDAO.class));
-    return convertorDTO.toDto(pageDAO, UserDTO.class);
+    Page<UserEntity> page = userDAO.findAll(convertor.toTarget(pageDTO, PageParam.class));
+    return convertorDTO.toDto(page, UserDTO.class);
   }
 
   @Transactional
@@ -35,8 +35,8 @@ public class UserServiceImpl implements UserService {
     if (!userDAO.isUserExist(id)) {
       throw new ServiceException(new ErrorDTO("user.search.error", id), 311);
     }
-    PageDAO<UserEntity> pageDAO = userDAO.findById(id, convertor.toTarget(pageDTO, PageParamDAO.class));
-    return convertorDTO.toDto(pageDAO, UserDTO.class);
+    Page<UserEntity> page = userDAO.findById(id, convertor.toTarget(pageDTO, PageParam.class));
+    return convertorDTO.toDto(page, UserDTO.class);
   }
 
   @Transactional
@@ -45,11 +45,11 @@ public class UserServiceImpl implements UserService {
     if (!userDAO.isUserExist(id)) {
       throw new ServiceException(new ErrorDTO("user.search.error", id), 322);
     }
-    PageDAO<OrderEntity> pageDAO = userDAO.findByIdOrders(id, convertor.toTarget(pageDTO, PageParamDAO.class));
-    if (pageDAO.getList().isEmpty()) {
+    Page<OrderEntity> page = userDAO.findByIdOrders(id, convertor.toTarget(pageDTO, PageParam.class));
+    if (page.getList().isEmpty()) {
       throw new ServiceException(new ErrorDTO("user.search.orders", id), 323);
     }
-    return convertorDTO.toDto(pageDAO, OrderDTO.class);
+    return convertorDTO.toDto(page, OrderDTO.class);
   }
 
   @Transactional
@@ -58,12 +58,12 @@ public class UserServiceImpl implements UserService {
     if (!userDAO.isUserExist(userId)) {
       throw new ServiceException(new ErrorDTO("user.search.error", userId), 334);
     }
-    PageDAO<OrderEntity> pageDAO =
-        userDAO.findByIdOrderById(userId, orderId, convertor.toTarget(pageDTO, PageParamDAO.class));
-    if (pageDAO.getList().isEmpty()) {
+    Page<OrderEntity> page =
+        userDAO.findByIdOrderById(userId, orderId, convertor.toTarget(pageDTO, PageParam.class));
+    if (page.getList().isEmpty()) {
       throw new ServiceException(new ErrorDTO("user.search.order", userId, orderId), 334);
     }
-    return convertorDTO.toDto(pageDAO, OrderDTO.class);
+    return convertorDTO.toDto(page, OrderDTO.class);
   }
 
   @Override
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
     if (!userDAO.isUserExist(id)) {
       throw new ServiceException(new ErrorDTO("user.search.error", id), 341);
     }
-    PageDAO<TagEntity> pageDAO = userDAO.findTagWithCost(id, convertor.toTarget(pageDTO, PageParamDAO.class));
-    return convertorDTO.toDto(pageDAO, TagDTO.class);
+    Page<TagEntity> page = userDAO.findTagWithCost(id, convertor.toTarget(pageDTO, PageParam.class));
+    return convertorDTO.toDto(page, TagDTO.class);
   }
 }
