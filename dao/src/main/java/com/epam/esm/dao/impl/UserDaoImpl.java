@@ -67,16 +67,7 @@ public class UserDaoImpl implements UserDAO {
   public PageDAO<TagEntity> findTagWithCost(Integer id, PageParamDAO pageParamDAO) {
     List<TagEntity> entities =
         queryWork.executeNativeQuery(pageParamDAO, UserSQL.SELECT_USED_TAGS.getSQL(), TagEntity.class, id);
-
-    String result = String.valueOf(
-        entityManager.createNativeQuery(UserSQL.COUNT_USED_TAGS.getSQL()).setParameter("id", id).getSingleResult());
-    long count;
-    try {
-      count = Long.parseLong(result);
-    } catch (NumberFormatException | NullPointerException ignore) {
-      count = 1L;
-    }
-    pageFill.fillingPage(pageParamDAO, count);
+    pageFill.fillingPageNativeQuery(pageParamDAO, UserSQL.COUNT_USED_TAGS.getSQL(), id);
     return new PageDAO<>(entities, pageParamDAO);
   }
 }

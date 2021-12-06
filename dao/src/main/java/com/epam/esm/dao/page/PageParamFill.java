@@ -25,4 +25,16 @@ public class PageParamFill {
     pageParamDAO.setTotalPages(count / pageParamDAO.getSize());
     return pageParamDAO;
   }
+
+  public PageParamDAO fillingPageNativeQuery(PageParamDAO pageParamDAO, String sql, Integer id) {
+    String result = String.valueOf(
+        entityManager.createNativeQuery(sql).setParameter("id", id).getSingleResult());
+    long count;
+    try {
+      count = Long.parseLong(result);
+    } catch (NumberFormatException | NullPointerException ignore) {
+      count = 1L;
+    }
+    return fillingPage(pageParamDAO, count);
+  }
 }
