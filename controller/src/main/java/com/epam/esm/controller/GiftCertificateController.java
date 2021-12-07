@@ -7,20 +7,21 @@ import com.epam.esm.page.PageModelCreator;
 import com.epam.esm.page.PageModelLink;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.GiftCertificateDTO;
-import com.epam.esm.service.dto.PageDTO;
-import com.epam.esm.service.dto.PageParamDTO;
+import com.epam.esm.service.page.Page;
+import com.epam.esm.service.page.PageParam;
 import com.epam.esm.service.util.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.Map;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 /**
  * RestController Gift-Certificate
@@ -31,6 +32,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
  */
 @AllArgsConstructor
 @RestController
+@Validated
 @RequestMapping("/certificates")
 public class GiftCertificateController {
   private final GiftCertificateService certificateService;
@@ -46,10 +48,8 @@ public class GiftCertificateController {
    * The method can throw ValidationException extends RuntimeException
    */
   @PostMapping
-  public ResponseEntity<GiftCertificateModel> insert(@RequestBody GiftCertificateDTO giftCertificateDTO) {
-    validator.checkCreationCertificate(giftCertificateDTO);
+  public ResponseEntity<GiftCertificateModel> insert(@Valid @RequestBody GiftCertificateDTO giftCertificateDTO) {
     GiftCertificateModel certificateModel = certificateAssembler.toModel(certificateService.insert(giftCertificateDTO));
-    certificateModel.add(linkTo(methodOn(GiftCertificateController.class).insert(giftCertificateDTO)).withSelfRel());
     return new ResponseEntity<>(certificateModel, HttpStatus.CREATED);
   }
 
@@ -63,9 +63,9 @@ public class GiftCertificateController {
   public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int number,
                                    @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int size,
                                    @RequestParam Map<String, String> parameters) {
-    PageParamDTO pageParamDTO = PageParamDTO.builder().size(size).number(number).build();
+    PageParam pageParam = PageParam.builder().size(size).number(number).build();
 
-    PageDTO<GiftCertificateDTO> certificates = certificateService.findAll(parameters, pageParamDTO);
+    Page<GiftCertificateDTO> certificates = certificateService.findAll(parameters, pageParam);
 
     PageModel<GiftCertificateModel> model = modelCreator.createModel(certificates, certificateAssembler);
     modelLink.addLinks(model, linkTo(GiftCertificateController.class), parameters);
@@ -73,20 +73,15 @@ public class GiftCertificateController {
   }
 
   /**
-   * @param id must be positive, match RegExp {^\d+$}
+   * @param id must be positive
    * @return GiftCertificateDTO
    * <p>
    * The method can throw ValidationException extends RuntimeException
    */
   @GetMapping("/{id}")
-  public ResponseEntity<?> findById(@PathVariable  @Min(1) @Max(Integer.MAX_VALUE) int id,
-                                    @RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int number,
-                                    @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int size) {
-    PageParamDTO pageParamDTO = PageParamDTO.builder().size(size).number(number).build();
-    PageDTO<GiftCertificateDTO> certificates = certificateService.findById(id, pageParamDTO);
-    return new ResponseEntity<>(
-        modelCreator.createModel(certificates, certificateAssembler, linkTo(GiftCertificateController.class).slash(id)),
-        HttpStatus.OK);
+  public ResponseEntity<?> findById(@PathVariable  @Min(1) @Max(Integer.MAX_VALUE) int id) {
+    GiftCertificateModel certificateModel = certificateAssembler.toModel(certificateService.findById(id));
+    return new ResponseEntity<>(certificateModel, HttpStatus.OK);
   }
 
   /**
@@ -103,7 +98,6 @@ public class GiftCertificateController {
     giftCertificateDTO.setId(id);
     validator.checkUpdateCertificate(giftCertificateDTO);
     GiftCertificateModel certificateModel = certificateAssembler.toModel(certificateService.update(giftCertificateDTO));
-    certificateModel.add(linkTo(methodOn(GiftCertificateController.class).update(id, giftCertificateDTO)).withSelfRel());
     return new ResponseEntity<>(certificateModel, HttpStatus.OK);
   }
 

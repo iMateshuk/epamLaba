@@ -29,7 +29,7 @@ public class TagAssembler implements RepresentationModelAssembler<TagDTO, TagMod
   }
 
   public TagModel addLinkToModel(TagModel tagModel) {
-    tagModel.add(linkTo(methodOn(TagController.class).findById(tagModel.getId(), 0, 20)).withSelfRel());
+    tagModel.add(linkTo(methodOn(TagController.class).findById(tagModel.getId())).withSelfRel());
     tagModel.add(linkTo(methodOn(TagController.class).deleteById(tagModel.getId())).withRel("delete"));
     return tagModel;
   }

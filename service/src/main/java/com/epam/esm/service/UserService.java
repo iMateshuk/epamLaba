@@ -1,16 +1,20 @@
 package com.epam.esm.service;
 
-import com.epam.esm.service.dto.*;
+import com.epam.esm.service.dto.OrderDTO;
+import com.epam.esm.service.dto.TagDTO;
+import com.epam.esm.service.dto.UserDTO;
+import com.epam.esm.service.page.Page;
+import com.epam.esm.service.page.PageParam;
 
 public interface UserService {
 
-  PageDTO<UserDTO> findAll(PageParamDTO pageDTO);
+  Page<UserDTO> findAll(PageParam pageDTO);
 
-  PageDTO<UserDTO> findById(Integer id, PageParamDTO pageParamDTO);
+  UserDTO findById(Integer id);
 
-  PageDTO<OrderDTO> findByIdOrders(Integer id, PageParamDTO pageParamDTO);
+  Page<OrderDTO> findByIdOrders(Integer id, PageParam pageParam);
 
-  PageDTO<OrderDTO> findByIdOrder(Integer userId, Integer orderId, PageParamDTO pageParamDTO);
+  OrderDTO findByIdOrder(Integer userId, Integer orderId);
 
-  PageDTO<TagDTO> findTagWithCost(Integer id, PageParamDTO pageParamDTO);
+  Page<TagDTO> findTagWithCost(Integer id, PageParam pageParam);
 }

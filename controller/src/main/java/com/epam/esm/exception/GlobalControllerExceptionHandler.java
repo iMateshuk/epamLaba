@@ -8,6 +8,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -44,11 +45,19 @@ public class GlobalControllerExceptionHandler {
   public GlobalExceptionDTO handle(ServiceConflictException exception) {
     return exceptionUtil.createDto(exception.getErrorCode(), HttpStatus.CONFLICT, exception.getErrorDto());
   }
+
   @ExceptionHandler(value = {ServiceListException.class})
   @ResponseStatus(HttpStatus.NOT_FOUND)
   public GlobalExceptionDTO handle(ServiceListException exception) {
     return exceptionUtil.createDto(exception.getErrorCode(), HttpStatus.NOT_FOUND,
         exception.getErrorDto().toArray(new ErrorDTO[0]));
+  }
+
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public GlobalExceptionDTO handle(MethodArgumentNotValidException exception) {
+    return exceptionUtil.createDto(exception.getErrorCount(), HttpStatus.BAD_REQUEST,
+        exception.getBindingResult().getAllErrors());
   }
 
   @ExceptionHandler(value = {EmptyResultDataAccessException.class})

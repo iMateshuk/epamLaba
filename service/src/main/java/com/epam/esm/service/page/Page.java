@@ -1,17 +1,17 @@
-package com.epam.esm.hateoas;
+package com.epam.esm.service.page;
 
 import lombok.*;
-import org.springframework.hateoas.RepresentationModel;
 
 import java.util.List;
 
-@Builder
 @AllArgsConstructor
-@Getter
-@Setter
 @NoArgsConstructor
-public class PageModel<T> extends RepresentationModel<PageModel<T>> {
+@Data
+@Builder
+public class Page<T> {
+  @NonNull
   private Integer size;
+  @NonNull
   private Integer number;
   private Long totalElements;
   private Long totalPages;

@@ -36,7 +36,7 @@ public class GiftCertificateAssembler implements RepresentationModelAssembler<Gi
 
   public GiftCertificateModel addLinkToModel(GiftCertificateModel certificateModel) {
     certificateModel.add(linkTo(methodOn(GiftCertificateController.class)
-        .findById(certificateModel.getId(), 0, 20)).withSelfRel());
+        .findById(certificateModel.getId())).withSelfRel());
     certificateModel.add(linkTo(methodOn(GiftCertificateController.class)
         .delete(certificateModel.getId())).withRel("delete"));
     certificateModel.add(linkTo(methodOn(OrderController.class)

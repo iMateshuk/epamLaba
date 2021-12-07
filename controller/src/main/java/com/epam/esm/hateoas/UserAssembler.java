@@ -45,14 +45,14 @@ public class UserAssembler implements RepresentationModelAssembler<UserDTO, User
         .map(order -> {
           OrderModel orderModel = convertor.toTarget(order, OrderModel.class);
           orderModel.add(linkTo(methodOn(UserController.class)
-              .findByIdOrder(userModel.getId(), order.getId(), 0, 20)).withSelfRel());
+              .findByIdOrder(userModel.getId(), order.getId())).withSelfRel());
           return orderModel;
         })
         .collect(Collectors.toList());
   }
 
   public UserModel addLinkToModel(UserModel userModel) {
-    userModel.add(linkTo(methodOn(UserController.class).findById(userModel.getId(), 0, 20)).withSelfRel());
+    userModel.add(linkTo(methodOn(UserController.class).findById(userModel.getId())).withSelfRel());
     userModel.add(linkTo(methodOn(UserController.class)
         .findByIdOrders(userModel.getId(), 0, 20)).withRel("orders"));
     return userModel;

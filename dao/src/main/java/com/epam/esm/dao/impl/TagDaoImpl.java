@@ -2,8 +2,7 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.TagEntity;
-import com.epam.esm.dao.page.Page;
-import com.epam.esm.dao.page.PageParam;
+import com.epam.esm.dao.page.PageData;
 import com.epam.esm.dao.util.TagSQL;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -23,24 +22,24 @@ public class TagDaoImpl implements TagDAO {
   }
 
   @Override
-  public Page<TagEntity> findAll(PageParam pageParam) {
-    int pageNumber = pageParam.getNumber();
-    int pageSize = pageParam.getSize();
-    List<TagEntity> tags = entityManager.createQuery(TagSQL.SELECT_ALL.getSQL(), TagEntity.class)
+  public List<TagEntity> findAll(PageData pageData) {
+    int pageNumber = pageData.getNumber();
+    int pageSize = pageData.getSize();
+
+    return entityManager.createQuery(TagSQL.SELECT_ALL.getSQL(), TagEntity.class)
         .setFirstResult(pageNumber * pageSize)
         .setMaxResults(pageSize)
         .getResultList();
-    Long count = entityManager.createQuery(TagSQL.COUNT_ALL.getSQL(), Long.class).getSingleResult();
-    fillPage(pageParam, count);
-    return new Page<>(tags, pageParam);
   }
 
   @Override
-  public Page<TagEntity> findById(int id, PageParam pageParam) {
-    List<TagEntity> tags = List.of(entityManager.find(TagEntity.class, id));
-    Long count = entityManager.createQuery(TagSQL.COUNT_ID.getSQL(), Long.class).setParameter("id", id).getSingleResult();
-    fillPage(pageParam, count);
-    return new Page<>(tags, pageParam);
+  public long count() {
+    return entityManager.createQuery(TagSQL.COUNT_ALL.getSQL(), Long.class).getSingleResult();
+  }
+
+  @Override
+  public TagEntity findById(int id) {
+    return entityManager.find(TagEntity.class, id);
   }
 
   @Override
@@ -65,14 +64,5 @@ public class TagDaoImpl implements TagDAO {
     TagEntity tagEntity = findById(id);
     tagEntity.getCerts().forEach(certificate -> certificate.getTags().remove(tagEntity));
     entityManager.remove(tagEntity);
-  }
-
-  private TagEntity findById(int id) {
-    return entityManager.find(TagEntity.class, id);
-  }
-
-  private void fillPage(PageParam pageParam, Long count) {
-    pageParam.setTotalElements(count);
-    pageParam.setTotalPages(count / pageParam.getSize());
   }
 }

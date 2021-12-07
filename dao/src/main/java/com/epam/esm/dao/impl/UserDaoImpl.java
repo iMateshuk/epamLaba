@@ -4,8 +4,7 @@ import com.epam.esm.dao.UserDAO;
 import com.epam.esm.dao.entity.OrderEntity;
 import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.dao.entity.UserEntity;
-import com.epam.esm.dao.page.Page;
-import com.epam.esm.dao.page.PageParam;
+import com.epam.esm.dao.page.PageData;
 import com.epam.esm.dao.util.OrderSQL;
 import com.epam.esm.dao.util.UserSQL;
 import lombok.AllArgsConstructor;
@@ -21,28 +20,19 @@ public class UserDaoImpl implements UserDAO {
 
   private final static String ID = "id";
 
-
   @Override
-  public Page<UserEntity> findAll(PageParam pageParam) {
-    int pageNumber = pageParam.getNumber();
-    int pageSize = pageParam.getSize();
-    List<UserEntity> users = entityManager.createQuery(UserSQL.SELECT_ALL.getSQL(), UserEntity.class)
+  public List<UserEntity> findAll(PageData pageData) {
+    int pageNumber = pageData.getNumber();
+    int pageSize = pageData.getSize();
+    return entityManager.createQuery(UserSQL.SELECT_ALL.getSQL(), UserEntity.class)
         .setFirstResult(pageNumber * pageSize)
         .setMaxResults(pageSize)
         .getResultList();
-    Long count = entityManager.createQuery(UserSQL.COUNT_ID.getSQL(), Long.class).getSingleResult();
-    fillPage(pageParam, count);
-    return new Page<>(users, pageParam);
   }
 
   @Override
-  public Page<UserEntity> findById(Integer id, PageParam pageParam) {
-    List<UserEntity> users = List.of(entityManager.find(UserEntity.class, id));
-    Long count = entityManager.createQuery(UserSQL.COUNT_ID.getSQL(), Long.class)
-        .setParameter(ID, id)
-        .getSingleResult();
-    fillPage(pageParam, count);
-    return new Page<>(users, pageParam);
+  public long count() {
+    return entityManager.createQuery(UserSQL.COUNT_ID.getSQL(), Long.class).getSingleResult();
   }
 
   @Override
@@ -56,59 +46,49 @@ public class UserDaoImpl implements UserDAO {
   }
 
   @Override
-  public Page<OrderEntity> findByIdOrders(Integer id, PageParam pageParam) {
-    int pageNumber = pageParam.getNumber();
-    int pageSize = pageParam.getSize();
-    List<OrderEntity> orders = entityManager.createQuery(OrderSQL.ORDERS_USER_ID.getSQL(), OrderEntity.class)
-        .setParameter(ID, id)
+  public List<OrderEntity> findByIdOrders(Integer orderID, PageData pageData) {
+    int pageNumber = pageData.getNumber();
+    int pageSize = pageData.getSize();
+    return entityManager.createQuery(OrderSQL.ORDERS_USER_ID.getSQL(), OrderEntity.class)
+        .setParameter(ID, orderID)
         .setFirstResult(pageNumber * pageSize)
         .setMaxResults(pageSize)
         .getResultList();
-    Long count = entityManager.createQuery(OrderSQL.ORDERS_COUNT_USER_ID.getSQL(), Long.class)
-        .setParameter(ID, id)
-        .getSingleResult();
-    fillPage(pageParam, count);
-    return new Page<>(orders, pageParam);
   }
 
   @Override
-  public Page<OrderEntity> findByIdOrderById(Integer userId, Integer orderId, PageParam pageParam) {
-    final String UID = "uid";
-    final String OID = "oid";
-    int pageNumber = pageParam.getNumber();
-    int pageSize = pageParam.getSize();
-    List<OrderEntity> orders = entityManager.createQuery(OrderSQL.ORDERS_ID_USER_ID.getSQL(), OrderEntity.class)
-        .setParameter(UID, userId)
-        .setParameter(OID, orderId)
-        .setFirstResult(pageNumber * pageSize)
-        .setMaxResults(pageSize)
-        .getResultList();
-    Long count = entityManager.createQuery(OrderSQL.COUNT_ID.getSQL(), Long.class)
+  public long count(Integer orderId) {
+    return entityManager.createQuery(OrderSQL.ORDERS_COUNT_USER_ID.getSQL(), Long.class)
         .setParameter(ID, orderId)
         .getSingleResult();
-    fillPage(pageParam, count);
-    return new Page<>(orders, pageParam);
   }
 
   @Override
-  public Page<TagEntity> findTagWithCost(Integer id, PageParam pageParam) {
-    int pageNumber = pageParam.getNumber();
-    int pageSize = pageParam.getSize();
-    List<TagEntity> entities = entityManager.createNativeQuery(UserSQL.SELECT_USED_TAGS.getSQL(), TagEntity.class)
+  public OrderEntity findByIdOrderById(Integer userId, Integer orderId) {
+    final String UID = "uid";
+    final String OID = "oid";
+    return entityManager.createQuery(OrderSQL.ORDERS_ID_USER_ID.getSQL(), OrderEntity.class)
+        .setParameter(UID, userId)
+        .setParameter(OID, orderId)
+        .getSingleResult();
+  }
+
+  @Override
+  public List<TagEntity> findTagWithCost(Integer id, PageData pageData) {
+    int pageNumber = pageData.getNumber();
+    int pageSize = pageData.getSize();
+    return entityManager.createNativeQuery(UserSQL.SELECT_USED_TAGS.getSQL(), TagEntity.class)
         .setParameter(ID, id)
         .setFirstResult(pageNumber * pageSize)
         .setMaxResults(pageSize)
         .getResultList();
-    Long count = checkQueryResult(entityManager.createNativeQuery(UserSQL.COUNT_USED_TAGS.getSQL())
-        .setParameter(ID, id)
-        .getSingleResult());
-    fillPage(pageParam, count);
-    return new Page<>(entities, pageParam);
   }
 
-  private void fillPage(PageParam pageParam, Long count) {
-    pageParam.setTotalElements(count);
-    pageParam.setTotalPages(count / pageParam.getSize());
+  @Override
+  public long countNativeQuery(Integer id) {
+    return checkQueryResult(entityManager.createNativeQuery(UserSQL.COUNT_USED_TAGS.getSQL())
+        .setParameter(ID, id)
+        .getSingleResult());
   }
 
   private Long checkQueryResult(Object result) {

@@ -1,8 +1,8 @@
 package com.epam.esm.service;
 
 import com.epam.esm.service.dto.GiftCertificateDTO;
-import com.epam.esm.service.dto.PageDTO;
-import com.epam.esm.service.dto.PageParamDTO;
+import com.epam.esm.service.page.Page;
+import com.epam.esm.service.page.PageParam;
 
 import java.util.Map;
 
@@ -19,20 +19,19 @@ public interface GiftCertificateService {
   /**
    *
    * @param id
-   * @param pageParamDTO
    * @return PAageDTO
    *
    * The method can throw ServiceException extends RuntimeException
    */
-  PageDTO<GiftCertificateDTO> findById(Integer id, PageParamDTO pageParamDTO);
+  GiftCertificateDTO findById(Integer id);
 
   /**
    *
    * @param allParameters
-   * @param pageParamDTO
+   * @param pageParam
    * @return
    */
-  PageDTO<GiftCertificateDTO> findAll(Map<String, String> allParameters, PageParamDTO pageParamDTO);
+  Page<GiftCertificateDTO> findAll(Map<String, String> allParameters, PageParam pageParam);
 
   /**
    *

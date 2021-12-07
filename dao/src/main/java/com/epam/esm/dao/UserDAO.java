@@ -3,22 +3,27 @@ package com.epam.esm.dao;
 import com.epam.esm.dao.entity.OrderEntity;
 import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.dao.entity.UserEntity;
-import com.epam.esm.dao.page.Page;
-import com.epam.esm.dao.page.PageParam;
+import com.epam.esm.dao.page.PageData;
+
+import java.util.List;
 
 public interface UserDAO {
 
-  Page<UserEntity> findAll(PageParam pageDAO);
+  List<UserEntity> findAll(PageData pageDAO);
 
-  Page<UserEntity> findById(Integer id, PageParam pageParam);
+  long count();
 
   UserEntity findById(Integer id);
 
   boolean isUserExist(Integer id);
 
-  Page<OrderEntity> findByIdOrders(Integer id, PageParam pageParam);
+  List<OrderEntity> findByIdOrders(Integer orderID, PageData pageData);
 
-  Page<OrderEntity> findByIdOrderById(Integer userId, Integer orderId, PageParam pageParam);
+  long count(Integer orderId);
 
-  Page<TagEntity> findTagWithCost(Integer id, PageParam pageParam);
+  OrderEntity findByIdOrderById(Integer userId, Integer orderId);
+
+  List<TagEntity> findTagWithCost(Integer id, PageData pageData);
+
+  long countNativeQuery(Integer id);
 }

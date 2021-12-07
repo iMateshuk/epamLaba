@@ -1,8 +1,7 @@
 package com.epam.esm.page;
 
 import com.epam.esm.hateoas.PageModel;
-import com.epam.esm.hateoas.PageParamAssembler;
-import com.epam.esm.service.dto.PageDTO;
+import com.epam.esm.service.page.Page;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
@@ -14,22 +13,24 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Component
 public class PageModelCreator {
-  private final PageParamAssembler pageParamAssembler;
   private final PageModelLink pageLink;
 
-  public <S, T extends RepresentationModel<T>> PageModel<T> createModel(PageDTO<S> pageDTO,
+  public <S, T extends RepresentationModel<T>> PageModel<T> createModel(Page<S> page,
                                                                         RepresentationModelAssembler<S, T> assembler,
-                                                                        WebMvcLinkBuilder linkTo){
-    PageModel<T> pageModel = createModel(pageDTO, assembler);
+                                                                        WebMvcLinkBuilder linkTo) {
+    PageModel<T> pageModel = createModel(page, assembler);
     pageLink.addLinks(pageModel, linkTo);
     return pageModel;
   }
 
-  public <S, T extends RepresentationModel<T>> PageModel<T> createModel(PageDTO<S> pageDTO,
-                                                                        RepresentationModelAssembler<S, T> assembler){
-    PageModel<T> pageModel = new PageModel<>();
-    pageModel.setList(pageDTO.getList().stream().map(assembler::toModel).collect(Collectors.toList()));
-    pageModel.setPage(pageParamAssembler.toModel(pageDTO.getPage()));
-    return pageModel;
+  public <S, T extends RepresentationModel<T>> PageModel<T> createModel(Page<S> page,
+                                                                        RepresentationModelAssembler<S, T> assembler) {
+    return PageModel.<T>builder()
+        .size(page.getSize())
+        .number(page.getNumber())
+        .totalElements(page.getTotalElements())
+        .totalPages(page.getTotalPages())
+        .list(page.getList().stream().map(assembler::toModel).collect(Collectors.toList()))
+        .build();
   }
 }

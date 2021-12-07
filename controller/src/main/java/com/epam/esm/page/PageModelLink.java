@@ -1,7 +1,6 @@
 package com.epam.esm.page;
 
 import com.epam.esm.hateoas.PageModel;
-import com.epam.esm.hateoas.PageParamModel;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
@@ -11,9 +10,7 @@ import java.util.Map;
 @Component
 public class PageModelLink {
 
-  public <T extends RepresentationModel<T>> void addLinks(PageModel<T> page, WebMvcLinkBuilder linkTo) {
-    PageParamModel pageModel = page.getPage();
-
+  public <T extends RepresentationModel<T>> void addLinks(PageModel<T> pageModel, WebMvcLinkBuilder linkTo) {
     final String NUMBER = "?number=";
     final String SIZE = "&size=" + pageModel.getSize();
 
@@ -41,7 +38,6 @@ public class PageModelLink {
     StringBuilder strBuilder = new StringBuilder();
     strBuilder.append("?");
     param.forEach((key, value) -> strBuilder.append(key).append("=").append(value).append("&"));
-    int lastIndex = strBuilder.lastIndexOf(strBuilder.toString());
     addLinks(page, linkTo.slash(strBuilder));
   }
 }

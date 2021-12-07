@@ -2,21 +2,21 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.TagEntity;
-import com.epam.esm.dao.page.Page;
-import com.epam.esm.dao.page.PageParam;
+import com.epam.esm.dao.page.PageData;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.ErrorDTO;
-import com.epam.esm.service.dto.PageDTO;
-import com.epam.esm.service.dto.PageParamDTO;
 import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.exception.ServiceConflictException;
 import com.epam.esm.service.exception.ServiceException;
-import com.epam.esm.service.page.PageConvertorDTO;
+import com.epam.esm.service.page.Page;
+import com.epam.esm.service.page.PageParam;
 import com.epam.esm.service.util.ServiceConvertor;
 import com.epam.esm.service.util.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Service Tag
@@ -31,7 +31,6 @@ public class TagServiceImpl implements TagService {
   private final TagDAO tagDAO;
   private final Validator validator;
   private final ServiceConvertor convertor;
-  private final PageConvertorDTO convertorDTO;
 
   /**
    * @param name of new Tag.
@@ -54,9 +53,17 @@ public class TagServiceImpl implements TagService {
    */
   @Transactional
   @Override
-  public PageDTO<TagDTO> findAll(PageParamDTO pageParamDTO) {
-    Page<TagEntity> page = tagDAO.findAll(convertor.toTarget(pageParamDTO, PageParam.class));
-    return convertorDTO.toDto(page, TagDTO.class);
+  public Page<TagDTO> findAll(PageParam pageParam) {
+    List<TagEntity> tags= tagDAO.findAll(convertor.toTarget(pageParam, PageData.class));
+    Long count = tagDAO.count();
+
+    return Page.<TagDTO>builder()
+        .size(pageParam.getSize())
+        .number(pageParam.getNumber())
+        .totalElements(count)
+        .totalPages(count / pageParam.getSize())
+        .list(convertor.toTarget(tags, TagDTO.class))
+        .build();
   }
 
   /**
@@ -67,12 +74,11 @@ public class TagServiceImpl implements TagService {
    */
   @Transactional
   @Override
-  public PageDTO<TagDTO> findById(Integer id, PageParamDTO pageParamDTO) {
+  public TagDTO findById(Integer id) {
     if (!tagDAO.isExistById(id)) {
       throw new ServiceException(new ErrorDTO("tag.search.error", id), 203);
     }
-    Page<TagEntity> page = tagDAO.findById(id, convertor.toTarget(pageParamDTO, PageParam.class));
-    return convertorDTO.toDto(page, TagDTO.class);
+    return convertor.toTarget(tagDAO.findById(id), TagDTO.class);
   }
 
   /**

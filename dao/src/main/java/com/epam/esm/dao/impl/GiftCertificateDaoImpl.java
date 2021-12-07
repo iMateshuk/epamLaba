@@ -4,8 +4,7 @@ import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.entity.TagEntity;
-import com.epam.esm.dao.page.Page;
-import com.epam.esm.dao.page.PageParam;
+import com.epam.esm.dao.page.PageData;
 import com.epam.esm.dao.util.GiftCertificateSQL;
 import com.epam.esm.dao.util.QueryBuilder;
 import lombok.AllArgsConstructor;
@@ -29,17 +28,6 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
   }
 
   @Override
-  public Page<GiftCertificateEntity> findById(int id, PageParam pageParam) {
-    final String ID = "id";
-    List<GiftCertificateEntity> certificates = List.of(entityManager.find(GiftCertificateEntity.class, id));
-    Long count = entityManager.createQuery(GiftCertificateSQL.COUNT_ID.getSQL(), Long.class)
-        .setParameter(ID, id)
-        .getSingleResult();
-    fillPage(pageParam, count);
-    return new Page<>(certificates, pageParam);
-  }
-
-  @Override
   public GiftCertificateEntity findById(int id) {
     return entityManager.find(GiftCertificateEntity.class, id);
   }
@@ -55,17 +43,19 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
   }
 
   @Override
-  public Page<GiftCertificateEntity> findAll(Map<String, String> parameters, PageParam pageParam) {
-    int pageNumber = pageParam.getNumber();
-    int pageSize = pageParam.getSize();
-    List<GiftCertificateEntity> certificates = entityManager.createQuery(queryBuilder.buildQuery(parameters))
+  public List<GiftCertificateEntity> findAll(Map<String, String> parameters, PageData pageData) {
+    int pageNumber = pageData.getNumber();
+    int pageSize = pageData.getSize();
+    return entityManager.createQuery(queryBuilder.buildQuery(parameters))
         .setFirstResult(pageNumber * pageSize)
         .setMaxResults(pageSize)
         .getResultList();
+  }
+
+  @Override
+  public long count(Map<String, String> parameters) {
     String query = queryBuilder.buildNativeQuery(GiftCertificateSQL.SELECT_MAIN_SEARCH.getSQL(), parameters);
-    Long count = checkQueryResult(entityManager.createNativeQuery(query).getSingleResult());
-    fillPage(pageParam, count);
-    return new Page<>(certificates, pageParam);
+    return checkQueryResult(entityManager.createNativeQuery(query).getSingleResult());
   }
 
   @Override
@@ -121,11 +111,6 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
             tagEntity.setId(entity.getId());
           }
         });
-  }
-
-  private void fillPage(PageParam pageParam, Long count) {
-    pageParam.setTotalElements(count);
-    pageParam.setTotalPages(count / pageParam.getSize());
   }
 
   private Long checkQueryResult(Object result) {

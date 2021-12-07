@@ -1,15 +1,15 @@
 package com.epam.esm.service;
 
-import com.epam.esm.service.dto.PageDTO;
-import com.epam.esm.service.dto.PageParamDTO;
 import com.epam.esm.service.dto.TagDTO;
+import com.epam.esm.service.page.Page;
+import com.epam.esm.service.page.PageParam;
 
 public interface TagService {
   TagDTO insertByName(String name);
 
-  PageDTO<TagDTO> findAll(PageParamDTO pageParamDTO);
+  Page<TagDTO> findAll(PageParam pageParam);
 
-  PageDTO<TagDTO> findById(Integer id, PageParamDTO pageParamDTO);
+  TagDTO findById(Integer id);
 
   void deleteById(Integer id);
 }

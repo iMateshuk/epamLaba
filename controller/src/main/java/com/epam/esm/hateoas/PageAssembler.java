@@ -1,6 +1,6 @@
 package com.epam.esm.hateoas;
 
-import com.epam.esm.service.dto.PageDTO;
+import com.epam.esm.service.page.Page;
 import com.epam.esm.service.util.ServiceConvertor;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
@@ -11,11 +11,11 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Component
-public class PageAssembler implements RepresentationModelAssembler<PageDTO<?>, PageModel<?>> {
+public class PageAssembler implements RepresentationModelAssembler<Page<?>, PageModel<?>> {
   private final ServiceConvertor convertor;
 
   @Override
-  public PageModel<?> toModel(PageDTO<?> ignore) {
+  public PageModel<?> toModel(Page<?> ignore) {
     return null;
   }
 

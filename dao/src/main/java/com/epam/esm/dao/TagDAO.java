@@ -1,15 +1,18 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.dao.entity.TagEntity;
-import com.epam.esm.dao.page.Page;
-import com.epam.esm.dao.page.PageParam;
+import com.epam.esm.dao.page.PageData;
+
+import java.util.List;
 
 public interface TagDAO {
   TagEntity insertByName(String tagName);
 
-  Page<TagEntity> findAll(PageParam pageParam);
+  List<TagEntity> findAll(PageData pageData);
 
-  Page<TagEntity> findById(int id, PageParam pageParam);
+  long count();
+
+  TagEntity findById(int id);
 
   TagEntity findByName(String tagName);
 
