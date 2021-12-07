@@ -1,14 +1,12 @@
 package com.epam.esm.dao.config;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import org.springframework.lang.NonNull;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -22,56 +20,24 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource("classpath:db.properties")
+@AllArgsConstructor
 public class DaoConfig {
-  @NonNull
-  @Value("${db.driver}")
-  private String driver;
-  @NonNull
-  @Value("${db.url}")
-  private String url;
-  @NonNull
-  @Value("${db.user}")
-  private String user;
-  @NonNull
-  @Value("${db.password}")
-  private String password;
-  @Value("${db.initialPoolSize:5}")
-  private int initialPoolSize;
-  @Value("${db.minPoolSize:5}")
-  private int minPoolSize;
-  @Value("${db.maxPoolSize:20}")
-  private int maxPoolSize;
-  @Value("${db.maxIdleTime:3000}")
-  private int maxIdleTime;
-
-  @NonNull
-  @Value("${hibernate.packagesToScan}")
-  private String packagesToScan;
-  @NonNull
-  @Value("${hibernate.show_sql}")
-  private String showSql;
-  @NonNull
-  @Value("${hibernate.ddl-auto}")
-  private String ddlAuto;
-  @NonNull
-  @Value("${hibernate.naming-strategy}")
-  private String nameStrategy;
+  private final DaoConfigProperties configProperties;
 
   @Bean
   @Profile("prod")
   public DataSource dataSource() {
     ComboPooledDataSource dataSource = new ComboPooledDataSource();
     try {
-      dataSource.setDriverClass(driver);
-      dataSource.setJdbcUrl(url);
-      dataSource.setUser(user);
-      dataSource.setPassword(password);
+      dataSource.setDriverClass(configProperties.getDriver());
+      dataSource.setJdbcUrl(configProperties.getUrl());
+      dataSource.setUser(configProperties.getUser());
+      dataSource.setPassword(configProperties.getPassword());
 
-      dataSource.setInitialPoolSize(initialPoolSize);
-      dataSource.setMinPoolSize(minPoolSize);
-      dataSource.setMaxPoolSize(maxPoolSize);
-      dataSource.setMaxIdleTime(maxIdleTime);
+      dataSource.setInitialPoolSize(configProperties.getInitialPoolSize());
+      dataSource.setMinPoolSize(configProperties.getMinPoolSize());
+      dataSource.setMaxPoolSize(configProperties.getMaxPoolSize());
+      dataSource.setMaxIdleTime(configProperties.getMaxIdleTime());
 
     } catch (PropertyVetoException e) {
       throw new ExceptionInInitializerError(e);
@@ -84,22 +50,22 @@ public class DaoConfig {
   public DataSource embeddedDataSource() {
     return new EmbeddedDatabaseBuilder()
         .setType(EmbeddedDatabaseType.H2)
-        .setName("test;MODE=MySQL;IGNORECASE=TRUE;DATABASE_TO_UPPER=false;INIT=CREATE SCHEMA IF NOT EXISTS gc")
-        .addScript("classpath:sql/gc-dev.sql")
-        .addScript("classpath:sql/fill-gc.sql")
+        .setName(configProperties.getEmbUrl())
+        .addScript(configProperties.getEmbDev())
+        .addScript(configProperties.getEmbFill())
         .build();
   }
 
   @Bean
   public EntityManagerFactory entityManagerFactory(DataSource dataSource) {
     Properties properties = new Properties();
-    properties.put("hibernate.show_sql", showSql);
-    properties.put("hibernate.ddl-auto", ddlAuto);
-    properties.put("hibernate.naming-strategy", nameStrategy);
+    properties.put("hibernate.show_sql", configProperties.getShowSql());
+    properties.put("hibernate.ddl-auto", configProperties.getDdlAuto());
+    properties.put("hibernate.naming-strategy", configProperties.getNameStrategy());
 
     LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
     factory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-    factory.setPackagesToScan(packagesToScan);
+    factory.setPackagesToScan(configProperties.getPackagesToScan());
     factory.setDataSource(dataSource);
     factory.setJpaProperties(properties);
     factory.afterPropertiesSet();
