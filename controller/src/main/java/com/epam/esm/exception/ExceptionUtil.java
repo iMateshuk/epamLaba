@@ -28,7 +28,7 @@ public class ExceptionUtil {
   }
 
   public GlobalExceptionDTO createDto(Integer errorCode, String simpleName) {
-    return new GlobalExceptionDTO(simpleName, errorCode);
+    return new GlobalExceptionDTO(messageSource.getMessage(simpleName, null, LocaleContextHolder.getLocale()), errorCode);
   }
 
   public GlobalExceptionDTO createDto(Integer errorCode, HttpStatus status, List<ObjectError> errors) {

@@ -7,14 +7,13 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-
-import java.util.Arrays;
 
 @RestControllerAdvice
 @AllArgsConstructor
@@ -69,33 +68,36 @@ public class GlobalControllerExceptionHandler {
   @ExceptionHandler(value = {DuplicateKeyException.class})
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public GlobalExceptionDTO handle(DuplicateKeyException e) {
-    return exceptionUtil.createDto(HttpStatus.NOT_FOUND.value(), e.getClass().getSimpleName());
+    return exceptionUtil.createDto(HttpStatus.BAD_REQUEST.value(), e.getClass().getSimpleName());
   }
 
   @ExceptionHandler(value = {IncorrectResultSizeDataAccessException.class})
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public GlobalExceptionDTO handle(IncorrectResultSizeDataAccessException e) {
-    return exceptionUtil.createDto(HttpStatus.NOT_FOUND.value(), e.getClass().getSimpleName());
+    return exceptionUtil.createDto(HttpStatus.BAD_REQUEST.value(), e.getClass().getSimpleName());
   }
 
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public GlobalExceptionDTO handleException(MethodArgumentTypeMismatchException e) {
-    return exceptionUtil.createDto(HttpStatus.NOT_FOUND.value(), e.getClass().getSimpleName());
+    return exceptionUtil.createDto(HttpStatus.BAD_REQUEST.value(), e.getClass().getSimpleName());
   }
 
   @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
   @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
   public GlobalExceptionDTO handleException(HttpRequestMethodNotSupportedException e) {
-    return exceptionUtil.createDto(HttpStatus.NOT_FOUND.value(), e.getClass().getSimpleName());
+    return exceptionUtil.createDto(HttpStatus.METHOD_NOT_ALLOWED.value(), e.getClass().getSimpleName());
+  }
+
+  @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+  @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+  public GlobalExceptionDTO handleException(HttpMediaTypeNotSupportedException e) {
+    return exceptionUtil.createDto(HttpStatus.METHOD_NOT_ALLOWED.value(), e.getClass().getSimpleName());
   }
 
   @ExceptionHandler(Exception.class)
   @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
   public GlobalExceptionDTO handleException(Exception e) {
-    Arrays.stream(e.getStackTrace()).forEach(System.out::println);
-    System.out.println();
-    System.out.println(e.getMessage());
     return exceptionUtil.createDto(HttpStatus.SERVICE_UNAVAILABLE.value(), e.getClass().getSimpleName());
   }
 }
