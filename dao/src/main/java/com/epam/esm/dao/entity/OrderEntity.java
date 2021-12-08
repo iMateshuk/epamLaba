@@ -35,11 +35,9 @@ public class OrderEntity implements Serializable, Auditable {
   @JoinColumn(name = "cert_id", nullable = false)
   private GiftCertificateEntity certificate;
 
-  @CreationTimestamp
   @Column(name = "created_date", nullable = false, updatable = false)
   private Timestamp createdDate;
 
-  @UpdateTimestamp
   @Column(name = "modified_date", nullable = false)
   private Timestamp modifiedDate;
 }

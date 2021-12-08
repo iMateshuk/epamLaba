@@ -34,11 +34,9 @@ public class UserEntity implements Serializable, Auditable {
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<OrderEntity> orders;
 
-  @CreationTimestamp
   @Column(name = "created_date", nullable = false, updatable = false)
   private Timestamp createdDate;
 
-  @UpdateTimestamp
   @Column(name = "modified_date", nullable = false)
   private Timestamp modifiedDate;
 }

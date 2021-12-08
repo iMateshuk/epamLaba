@@ -5,8 +5,6 @@ import com.epam.esm.dao.audit.Auditable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -36,11 +34,9 @@ public class TagEntity implements Serializable, Auditable {
   @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE}, mappedBy = "tags")
   private List<GiftCertificateEntity> certs;
 
-  @CreationTimestamp
   @Column(name = "created_date", nullable = false, updatable = false)
   private Timestamp createdDate;
 
-  @UpdateTimestamp
   @Column(name = "modified_date", nullable = false)
   private Timestamp modifiedDate;
 }

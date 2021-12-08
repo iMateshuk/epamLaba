@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -47,11 +46,9 @@ public class GiftCertificateEntity implements Serializable, Auditable {
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "certificate", cascade = CascadeType.MERGE)
   private List<OrderEntity> orders;
 
-  @CreationTimestamp
   @Column(name = "created_date", nullable = false, updatable = false)
   private Timestamp createdDate;
 
-  @UpdateTimestamp
   @Column(name = "modified_date", nullable = false)
   private Timestamp modifiedDate;
 }
