@@ -5,5 +5,10 @@ import com.epam.esm.service.dto.PurchaseDTO;
 
 public interface OrderService {
 
+  /**
+   *
+   * @param purchaseDTO
+   * @return new user order
+   */
   OrderDTO insert(PurchaseDTO purchaseDTO);
 }

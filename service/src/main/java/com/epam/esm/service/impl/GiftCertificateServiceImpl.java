@@ -48,8 +48,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     if (certificateDTO.getTags() == null) {
       certificateDTO.setTags(new ArrayList<>());
     }
-    return convertor.toTarget(certificateDAO
-        .insert(convertor.toTarget(certificateDTO, GiftCertificateEntity.class)), GiftCertificateDTO.class);
+    return convertor.toTarget(
+        certificateDAO.insert(convertor.toTarget(certificateDTO, GiftCertificateEntity.class)),
+        GiftCertificateDTO.class
+    );
   }
 
   @Transactional
@@ -76,16 +78,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         .totalPages(count / pageParam.getSize())
         .list(convertor.toTarget(certificates, GiftCertificateDTO.class))
         .build();
-
   }
 
-  /**
-   * @param certificateDTO DTO object
-   * @return GiftCertificateDTO
-   * <p>
-   * The method can throw ServiceException extends RuntimeException<p>
-   * The method uses a transaction
-   */
   @Transactional
   @Override
   public GiftCertificateDTO update(GiftCertificateDTO certificateDTO) {
@@ -103,15 +97,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     if (certificateDescription != null) {
       validator.matchField(certificateDescription);
     }
-    return convertor.toTarget(certificateDAO
-        .update(convertor.toTarget(certificateDTO, GiftCertificateEntity.class)), GiftCertificateDTO.class);
+    return convertor.toTarget(
+        certificateDAO.update(convertor.toTarget(certificateDTO, GiftCertificateEntity.class)),
+        GiftCertificateDTO.class
+    );
   }
 
-  /**
-   * @param id positive int
-   *           <p>
-   *           The method can throw ServiceException extends RuntimeException
-   */
   @Transactional
   @Override
   public void deleteById(Integer id) {

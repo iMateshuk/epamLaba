@@ -8,13 +8,41 @@ import com.epam.esm.service.page.PageParam;
 
 public interface UserService {
 
+  /**
+   *
+   * @param pageDTO
+   * @return page, include list of userDTOs
+   */
   Page<UserDTO> findAll(PageParam pageDTO);
 
+  /**
+   *
+   * @param id
+   * @return userDTO found by id
+   */
   UserDTO findById(Integer id);
 
+  /**
+   *
+   * @param id
+   * @param pageParam
+   * @return page, include list of orderDTOs
+   */
   Page<OrderDTO> findByIdOrders(Integer id, PageParam pageParam);
 
+  /**
+   *
+   * @param userId
+   * @param orderId
+   * @return user order found by userId and orderId
+   */
   OrderDTO findByIdOrder(Integer userId, Integer orderId);
 
+  /**
+   *
+   * @param id
+   * @param pageParam
+   * @return page, include list of tagDTOs
+   */
   Page<TagDTO> findTagWithCost(Integer id, PageParam pageParam);
 }

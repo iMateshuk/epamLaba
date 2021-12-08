@@ -20,6 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Service User
+ * Use for business logic of APP
+ *
+ * @author Ivan Matsiashuk
+ * @version 1.0
+ */
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {

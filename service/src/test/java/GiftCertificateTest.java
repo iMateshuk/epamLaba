@@ -1,21 +1,25 @@
 import com.epam.esm.dao.GiftCertificateDAO;
-import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.entity.TagEntity;
+import com.epam.esm.dao.page.PageData;
 import com.epam.esm.service.dto.GiftCertificateDTO;
 import com.epam.esm.service.dto.TagDTO;
-import com.epam.esm.service.exception.ValidationException;
+import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.impl.GiftCertificateServiceImpl;
+import com.epam.esm.service.page.Page;
+import com.epam.esm.service.page.PageParam;
 import com.epam.esm.service.util.RequestedParameter;
+import com.epam.esm.service.util.ServiceConvertor;
 import com.epam.esm.service.util.Validator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -24,7 +28,11 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(SpringExtension.class)
+@AutoConfigureMockMvc
+@SpringBootTest(classes = {GiftCertificateServiceImpl.class})
 public class GiftCertificateTest {
 
   private static final TagDTO tagDTO01 = new TagDTO();
@@ -35,12 +43,12 @@ public class GiftCertificateTest {
   private static final TagEntity tagEntity01 = new TagEntity();
   private static final TagEntity tagEntity02 = new TagEntity();
 
-  private static final List<TagEntity> tagEntities = new ArrayList<>();
-
-  private static final GiftCertificateDTO requestGiftCertificateDTO = new GiftCertificateDTO();
-  private static final GiftCertificateEntity GIFT_CERTIFICATE = new GiftCertificateEntity();
+  private static final GiftCertificateDTO certificateDTO = new GiftCertificateDTO();
+  private static final GiftCertificateEntity certificateEntity = new GiftCertificateEntity();
   private static final Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
+  private final static PageParam pageParam = PageParam.builder().number(0).size(20).build();
+  private final static PageData pageData = PageData.builder().number(0).size(20).build();
 
   @BeforeAll
   public static void setupData() {
@@ -57,94 +65,103 @@ public class GiftCertificateTest {
     tagEntity02.setId(2);
     tagEntity02.setName("otherTestTag");
 
-    tagEntities.add(tagEntity01);
-    tagEntities.add(tagEntity02);
+    certificateDTO.setDescription("GC Description");
+    certificateDTO.setName("GC Name");
+    certificateDTO.setDuration(5);
+    certificateDTO.setPrice(49.99f);
+    certificateDTO.setTags(tagDTOs);
 
-    requestGiftCertificateDTO.setDescription("GC Description");
-    requestGiftCertificateDTO.setName("GC Name");
-    requestGiftCertificateDTO.setDuration(5);
-    requestGiftCertificateDTO.setPrice(49.99f);
-    requestGiftCertificateDTO.setTags(tagDTOs);
-
-    GIFT_CERTIFICATE.setId(1);
-    GIFT_CERTIFICATE.setName(requestGiftCertificateDTO.getName());
-    GIFT_CERTIFICATE.setDescription(requestGiftCertificateDTO.getDescription());
-    GIFT_CERTIFICATE.setPrice(requestGiftCertificateDTO.getPrice());
-    GIFT_CERTIFICATE.setDuration(requestGiftCertificateDTO.getDuration());
-    GIFT_CERTIFICATE.setCreateDate(timestamp);
-    GIFT_CERTIFICATE.setLastUpdateDate(timestamp);
+    certificateEntity.setId(1);
+    certificateEntity.setName(certificateDTO.getName());
+    certificateEntity.setDescription(certificateDTO.getDescription());
+    certificateEntity.setPrice(certificateDTO.getPrice());
+    certificateEntity.setDuration(certificateDTO.getDuration());
+    certificateEntity.setCreateDate(timestamp);
+    certificateEntity.setLastUpdateDate(timestamp);
   }
 
-  @BeforeEach
-  public void setup() {
-    MockitoAnnotations.openMocks(this);
-    requestGiftCertificateDTO.setId(0);
-  }
+  @Autowired
+  private GiftCertificateServiceImpl mockCertificateService;
 
-  @InjectMocks
-  private GiftCertificateServiceImpl mockGiftCertificate;
+  @MockBean
+  private GiftCertificateDAO mockCertificateDAO;
 
-  @Mock
-  private TagDAO mockTagDAO;
-
-  @Mock
-  private GiftCertificateDAO mockGiftCertificateDAO;
-
-  @Mock
+  @MockBean
   private Validator mockValidator;
 
+  @MockBean
+  private ServiceConvertor mockConvertor;
+
   @Test
-  public void createGiftCertificateTest() {
-    /*GiftCertificateEntity requestedGiftCertificate = certificateConverter.toEntity(requestGiftCertificateDTO);
-    Mockito.when(mockGiftCertificateDAO.insert(requestedGiftCertificate))
-        .thenReturn(GIFT_CERTIFICATE);
-    GiftCertificateDTO createdGiftCertificateDTO = certificateConverter
-        .toDto(mockGiftCertificateDAO.insert(requestedGiftCertificate));*/
+  public void insetTest() {
+    when(mockCertificateDAO.isExistByName(certificateDTO.getName())).thenReturn(false);
+    when(mockConvertor.toTarget(certificateDTO, GiftCertificateEntity.class)).thenReturn(certificateEntity);
+    when(mockCertificateDAO.insert(certificateEntity)).thenReturn(certificateEntity);
+    certificateDTO.setId(1);
+    when(mockConvertor.toTarget(certificateEntity, GiftCertificateDTO.class)).thenReturn(certificateDTO);
 
-    GiftCertificateDTO returnGiftCertificateDTO = mockGiftCertificate.insert(requestGiftCertificateDTO);
+    assertEquals(certificateDTO, mockCertificateService.insert(certificateDTO));
+    assertEquals(1, mockCertificateService.insert(certificateDTO).getId());
+  }
 
-    Assertions.assertAll(
-        /*() -> assertDoesNotThrow(() -> mockGiftCertificateDAO.insert(requestedGiftCertificate)),*/
+  @Test
+  public void findByIdTest() {
+    when(mockCertificateDAO.isExistById(1)).thenReturn(true);
+    when(mockCertificateDAO.findById(1)).thenReturn(certificateEntity);
+    certificateDTO.setId(1);
+    when(mockConvertor.toTarget(certificateEntity, GiftCertificateDTO.class)).thenReturn(certificateDTO);
 
-        () -> assertEquals(returnGiftCertificateDTO.getId(), 1),
-/*        () -> assertEquals(returnGiftCertificateDTO.getName(), requestedGiftCertificate.getName()),
-        () -> assertEquals(returnGiftCertificateDTO.getDescription(), requestedGiftCertificate.getDescription()),*/
-        () -> assertEquals(returnGiftCertificateDTO.getTags().size(), requestGiftCertificateDTO.getTags().size()),
-        () -> assertEquals(returnGiftCertificateDTO.getTags().get(0).getName(), requestGiftCertificateDTO.getTags().get(0).getName())
-    );
-    requestGiftCertificateDTO.setName("123!_*@");
-    Mockito.doThrow(ValidationException.class)
-        .when(mockValidator).matchField("123!_*@", requestGiftCertificateDTO.getDescription());
-    assertThrows(ValidationException.class, () -> mockGiftCertificate.insert(requestGiftCertificateDTO));
+    assertEquals(1, mockCertificateService.findById(1).getId());
+
+    when(mockCertificateDAO.isExistById(1)).thenReturn(false);
+    assertThrows(ServiceException.class, () -> mockCertificateService.findById(1));
   }
 
   @Test
   public void searchGiftCertificatesTest() {
-    Map<String, String> cleanMap = new HashMap<>();
     Map<String, String> noMatchParam = new HashMap<>();
-    Map<String, String> allRequestParams = new HashMap<>();
     Map<String, String> parameters = new HashMap<>();
 
     List<GiftCertificateEntity> certificateEntities = new ArrayList<>();
-    certificateEntities.add(GIFT_CERTIFICATE);
+    certificateEntities.add(certificateEntity);
+
+    List<GiftCertificateDTO> certificateDTOs = new ArrayList<>();
+    certificateDTOs.add(certificateDTO);
 
     noMatchParam.put(RequestedParameter.SORT_CERT_NAME.toString(), RequestedParameter.SORT_CERT_NAME.getParameterKey());
-    allRequestParams.put(RequestedParameter.SORT_CERT_NAME.getParameterKey(), RequestedParameter.SORT_CERT_NAME.toString());
     parameters.put(RequestedParameter.SORT_CERT_NAME.toString(), RequestedParameter.SORT_CERT_NAME.toString());
 
-    /*Mockito.when(mockGiftCertificateDAO.findAllWithParam(parameters)).thenReturn(certificateEntities);*/
+    when(mockCertificateDAO.findAll(noMatchParam, pageData)).thenReturn(new ArrayList<>());
+    when(mockCertificateDAO.findAll(parameters, pageData)).thenReturn(certificateEntities);
 
-    /*Assertions.assertAll(
-        () -> assertThrows(ServiceValidationException.class, () -> mockGiftCertificate.findAllWithParam(cleanMap)),
-        () -> assertThrows(ServiceValidationException.class, () -> mockGiftCertificate.findAllWithParam(noMatchParam)),
+    when(mockCertificateDAO.count(noMatchParam)).thenReturn(1L);
+    when(mockCertificateDAO.count(parameters)).thenReturn(1L);
 
-        () -> assertDoesNotThrow(() -> mockGiftCertificate.findAllWithParam(allRequestParams))
-    );*/
+    when(mockConvertor.toTarget(certificateEntities, GiftCertificateDTO.class)).thenReturn(certificateDTOs);
+
+    Page<GiftCertificateDTO> cleanCertificateDTO = Page.<GiftCertificateDTO>builder()
+        .size(pageParam.getSize())
+        .number(pageParam.getNumber())
+        .totalElements(1L)
+        .totalPages(1L / pageParam.getSize())
+        .list(new ArrayList<>())
+        .build();
+
+    Page<GiftCertificateDTO> machCertificateDTO = Page.<GiftCertificateDTO>builder()
+        .size(pageParam.getSize())
+        .number(pageParam.getNumber())
+        .totalElements(1L)
+        .totalPages(1L / pageParam.getSize())
+        .list(certificateDTOs)
+        .build();
+
+    assertEquals(0, cleanCertificateDTO.getList().size());
+    assertEquals(certificateDTOs, machCertificateDTO.getList());
   }
 
   @Test
-  public void updateGiftCertificateWithTagsTest() {
-    requestGiftCertificateDTO.setId(1);
+  public void updateTest() {
+    certificateDTO.setId(1);
     GiftCertificateDTO existGiftCertificateDTO = new GiftCertificateDTO();
 
     TagDTO existTagDTO01 = new TagDTO();
@@ -168,15 +185,12 @@ public class GiftCertificateTest {
     existGiftCertificateDTO.setPrice(1.99f);
     existGiftCertificateDTO.setTags(existTagDTOs);
 
-    Mockito.when(mockGiftCertificateDAO.isExistById(requestGiftCertificateDTO.getId()))
-        .thenReturn(true);
-  /*  GiftCertificateEntity requestedGiftCertificate = certificateConverter.toEntity(requestGiftCertificateDTO);
-    Mockito.when(mockGiftCertificateDAO.update(requestedGiftCertificate))
-        .thenReturn(GIFT_CERTIFICATE);
-    GiftCertificateDTO updatedGiftCertificateDTO = certificateConverter
-        .toDto(mockGiftCertificateDAO.update(requestedGiftCertificate));*/
+    when(mockCertificateDAO.isExistById(certificateDTO.getId())).thenReturn(true);
+    when(mockConvertor.toTarget(certificateDTO, GiftCertificateEntity.class)).thenReturn(certificateEntity);
+    when(mockCertificateDAO.update(certificateEntity)).thenReturn(certificateEntity);
+    when(mockConvertor.toTarget(certificateEntity, GiftCertificateDTO.class)).thenReturn(certificateDTO);
 
-    GiftCertificateDTO returnGiftCertificateDTO = mockGiftCertificate.update(requestGiftCertificateDTO);
+    GiftCertificateDTO returnGiftCertificateDTO = mockCertificateService.update(certificateDTO);
     Assertions.assertAll(
         () -> assertEquals(returnGiftCertificateDTO.getId(), existGiftCertificateDTO.getId()),
         () -> assertNotEquals(returnGiftCertificateDTO.getName(), existGiftCertificateDTO.getName()),
@@ -191,8 +205,11 @@ public class GiftCertificateTest {
   }
 
   @Test
-  public void delGiftCertificateTest() {
-    Mockito.when(mockGiftCertificateDAO.isExistById(1)).thenReturn(true);
-    assertDoesNotThrow(() -> mockGiftCertificate.deleteById(1));
+  public void deleteById() {
+    when(mockCertificateDAO.isExistById(1000)).thenReturn(true);
+    assertDoesNotThrow(() -> mockCertificateService.deleteById(1000));
+
+    when(mockCertificateDAO.isExistById(1001)).thenReturn(false);
+    assertThrows(ServiceException.class, () -> mockCertificateService.deleteById(1001));
   }
 }

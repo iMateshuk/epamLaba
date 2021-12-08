@@ -32,12 +32,6 @@ public class TagServiceImpl implements TagService {
   private final Validator validator;
   private final ServiceConvertor convertor;
 
-  /**
-   * @param name of new Tag.
-   * @return TagDTO
-   * <p>
-   * The method can throw ServiceConflictException extends RuntimeException
-   */
   @Transactional
   @Override
   public TagDTO insertByName(String name) {
@@ -48,9 +42,6 @@ public class TagServiceImpl implements TagService {
     return convertor.toTarget(tagDAO.insertByName(name), TagDTO.class);
   }
 
-  /**
-   * @return List of TagDTO
-   */
   @Transactional
   @Override
   public Page<TagDTO> findAll(PageParam pageParam) {
@@ -66,12 +57,6 @@ public class TagServiceImpl implements TagService {
         .build();
   }
 
-  /**
-   * @param id Tag field.
-   * @return TagDTO
-   * <p>
-   * The method can throw ServiceException extends RuntimeException
-   */
   @Transactional
   @Override
   public TagDTO findById(Integer id) {
@@ -81,11 +66,6 @@ public class TagServiceImpl implements TagService {
     return convertor.toTarget(tagDAO.findById(id), TagDTO.class);
   }
 
-  /**
-   * @param id Tag field.
-   * <p>
-   * The method can throw ServiceException extends RuntimeException
-   */
   @Transactional
   @Override
   public void deleteById(Integer id) {

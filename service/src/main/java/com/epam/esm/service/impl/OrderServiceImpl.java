@@ -19,6 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service Order
+ * Use for business logic of APP
+ *
+ * @author Ivan Matsiashuk
+ * @version 1.0
+ */
 @Service
 @AllArgsConstructor
 public class OrderServiceImpl implements OrderService {
