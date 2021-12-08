@@ -1,5 +1,7 @@
 package com.epam.esm.dao.entity;
 
+import com.epam.esm.dao.audit.Auditable;
+import com.epam.esm.dao.audit.AuditableListener;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,12 +13,13 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
+@EntityListeners(AuditableListener.class)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "Certificate")
 @Table(name = "gift_certificate", schema = "gc")
-public class GiftCertificateEntity implements Serializable {
+public class GiftCertificateEntity implements Serializable, Auditable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

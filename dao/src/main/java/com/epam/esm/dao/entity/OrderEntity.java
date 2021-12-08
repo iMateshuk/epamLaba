@@ -1,5 +1,7 @@
 package com.epam.esm.dao.entity;
 
+import com.epam.esm.dao.audit.Auditable;
+import com.epam.esm.dao.audit.AuditableListener;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -7,12 +9,13 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+@EntityListeners(AuditableListener.class)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "Order")
 @Table(name = "orders", schema = "gc")
-public class OrderEntity implements Serializable {
+public class OrderEntity implements Serializable, Auditable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")

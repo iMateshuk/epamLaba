@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -21,6 +23,8 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 @AllArgsConstructor
+@EnableJpaRepositories
+@EnableJpaAuditing
 public class DaoConfig {
   private final DaoConfigProperties configProperties;
 

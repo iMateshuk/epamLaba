@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.validation.ConstraintViolationException;
+
 @RestControllerAdvice
 @AllArgsConstructor
 public class GlobalControllerExceptionHandler {
@@ -80,6 +82,13 @@ public class GlobalControllerExceptionHandler {
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public GlobalExceptionDTO handleException(MethodArgumentTypeMismatchException e) {
+    return exceptionUtil.createDto(HttpStatus.BAD_REQUEST.value(), e.getClass().getSimpleName());
+  }
+
+
+  @ExceptionHandler(ConstraintViolationException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public GlobalExceptionDTO handleException(ConstraintViolationException e) {
     return exceptionUtil.createDto(HttpStatus.BAD_REQUEST.value(), e.getClass().getSimpleName());
   }
 

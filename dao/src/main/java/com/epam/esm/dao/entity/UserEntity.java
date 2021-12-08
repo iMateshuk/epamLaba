@@ -1,17 +1,20 @@
 package com.epam.esm.dao.entity;
 
+import com.epam.esm.dao.audit.Auditable;
+import com.epam.esm.dao.audit.AuditableListener;
 import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
+@EntityListeners(AuditableListener.class)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "User")
 @Table(name = "users", schema = "gc")
-public class UserEntity implements Serializable {
+public class UserEntity implements Serializable, Auditable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
