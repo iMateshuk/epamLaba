@@ -1,14 +1,19 @@
 package com.epam.esm.dao.entity;
 
+import com.epam.esm.dao.audit.AuditListener;
 import com.epam.esm.dao.audit.Auditable;
-import com.epam.esm.dao.audit.AuditableListener;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 
-@EntityListeners(AuditableListener.class)
+@EntityListeners(AuditListener.class)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,4 +33,12 @@ public class UserEntity implements Serializable, Auditable {
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<OrderEntity> orders;
+
+  @CreationTimestamp
+  @Column(name = "created_date", nullable = false, updatable = false)
+  private Timestamp createdDate;
+
+  @UpdateTimestamp
+  @Column(name = "modified_date", nullable = false)
+  private Timestamp modifiedDate;
 }

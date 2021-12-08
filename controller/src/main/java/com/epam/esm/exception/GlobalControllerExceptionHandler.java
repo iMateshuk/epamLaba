@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.persistence.NoResultException;
 import javax.validation.ConstraintViolationException;
 
 @RestControllerAdvice
@@ -64,6 +65,12 @@ public class GlobalControllerExceptionHandler {
   @ExceptionHandler(value = {EmptyResultDataAccessException.class})
   @ResponseStatus(HttpStatus.NOT_FOUND)
   public GlobalExceptionDTO handle(EmptyResultDataAccessException e) {
+    return exceptionUtil.createDto(HttpStatus.NOT_FOUND.value(), e.getClass().getSimpleName());
+  }
+
+  @ExceptionHandler(NoResultException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public GlobalExceptionDTO handleException(NoResultException e) {
     return exceptionUtil.createDto(HttpStatus.NOT_FOUND.value(), e.getClass().getSimpleName());
   }
 

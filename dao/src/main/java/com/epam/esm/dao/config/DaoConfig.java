@@ -21,10 +21,10 @@ import java.beans.PropertyVetoException;
 import java.util.Properties;
 
 @Configuration
-@EnableTransactionManagement
-@AllArgsConstructor
 @EnableJpaRepositories
 @EnableJpaAuditing
+@EnableTransactionManagement
+@AllArgsConstructor
 public class DaoConfig {
   private final DaoConfigProperties configProperties;
 

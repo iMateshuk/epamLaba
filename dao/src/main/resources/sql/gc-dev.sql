@@ -3,19 +3,21 @@ create schema if not exists gc;
 
 -- gift_certificate
 create table gift_certificate(
-    id               int unsigned auto_increment primary key,
-    name             varchar(45)    not null,
-    description      varchar(200)   not null,
-    price            float unsigned not null,
-    duration         int            not null,
-    create_date      datetime       not null,
-    last_update_date datetime       not null
+	id int unsigned auto_increment primary key,
+	name varchar(45) not null,
+	description varchar(200) not null,
+	price float unsigned not null,
+	duration int not null,
+	created_date datetime not null,
+	modified_date datetime not null
 );
 
 -- tags
 create table tags(
 	id int unsigned auto_increment primary key,
-	name varchar(45) not null, 
+	name varchar(45) not null,
+	created_date datetime not null,
+	modified_date datetime not null,
 	constraint name_UNIQUE unique (name)
 );
 
@@ -35,16 +37,19 @@ create table users(
 	id int unsigned auto_increment primary key,
 	user_name varchar(45) not null,
 	password varchar(45) not null,
+	created_date datetime not null,
+	modified_date datetime not null,
 	constraint user_name_UNIQUE unique (user_name)
 );
 
 -- gc_orders
 create table orders(
 	id int unsigned auto_increment primary key,
-	user_id int unsigned not null,
 	cost float not null,
-	create_date datetime not null,
+	user_id int unsigned not null,
 	cert_id int unsigned not null,
+	created_date datetime not null,
+	modified_date datetime not null,
 	constraint fk_order_user1 foreign key (user_id) references users (id),
 	constraint fk_cert_id foreign key (cert_id) references gift_certificate (id)
 );

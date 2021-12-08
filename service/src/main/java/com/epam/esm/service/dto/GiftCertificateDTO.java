@@ -33,7 +33,7 @@ public class GiftCertificateDTO {
   @Max(value = Integer.MAX_VALUE,  message = "app.Max.message")
   private Integer duration;
 
-  private String createDate;
-  private String lastUpdateDate;
+  private String createdDate;
+  private String modifiedDate;
   private List<TagDTO> tags;
 }

@@ -44,7 +44,11 @@ public class OrderServiceTest {
 
   @Test
   public void insertByNameTest() {
-    UserEntity userEntity = new UserEntity(1,"name","password", new ArrayList<>());
+    UserEntity userEntity = new UserEntity();
+    userEntity.setId(1);
+    userEntity.setUserName("name");
+    userEntity.setPassword("password");
+    userEntity.setOrders(new ArrayList<>());
     GiftCertificateEntity certificateEntity = new GiftCertificateEntity();
     certificateEntity.setPrice(99F);
     PurchaseDTO purchaseDTO = PurchaseDTO.builder().certId(1).userId(1).build();

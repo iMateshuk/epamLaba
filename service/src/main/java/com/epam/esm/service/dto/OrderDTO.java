@@ -11,6 +11,6 @@ import java.sql.Timestamp;
 public class OrderDTO {
   private Integer id;
   private Float cost;
-  private Timestamp createDate;
+  private Timestamp createdDate;
   private GiftCertificateDTO certificate;
 }

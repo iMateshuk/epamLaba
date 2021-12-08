@@ -15,6 +15,6 @@ import java.sql.Timestamp;
 public class OrderModel extends RepresentationModel<OrderModel> {
   private Integer id;
   private Float cost;
-  private Timestamp createDate;
+  private Timestamp createdDate;
   private GiftCertificateModel certificate;
 }

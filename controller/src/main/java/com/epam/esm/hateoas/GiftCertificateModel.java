@@ -18,7 +18,7 @@ public class GiftCertificateModel extends RepresentationModel<GiftCertificateMod
   private String description;
   private Float price;
   private Integer duration;
-  private String createDate;
-  private String lastUpdateDate;
+  private String createdDate;
+  private String modifiedDate;
   private List<TagModel> tags;
 }

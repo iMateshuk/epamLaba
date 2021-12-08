@@ -1,15 +1,18 @@
 package com.epam.esm.dao.entity;
 
+import com.epam.esm.dao.audit.AuditListener;
 import com.epam.esm.dao.audit.Auditable;
-import com.epam.esm.dao.audit.AuditableListener;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-@EntityListeners(AuditableListener.class)
+@EntityListeners(AuditListener.class)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,10 +27,6 @@ public class OrderEntity implements Serializable, Auditable {
   @Column(name = "cost", nullable = false)
   private Float cost;
 
-  @CreationTimestamp
-  @Column(name = "create_date", nullable = false, updatable = false)
-  private Timestamp createDate;
-
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
   private UserEntity user;
@@ -35,4 +34,12 @@ public class OrderEntity implements Serializable, Auditable {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "cert_id", nullable = false)
   private GiftCertificateEntity certificate;
+
+  @CreationTimestamp
+  @Column(name = "created_date", nullable = false, updatable = false)
+  private Timestamp createdDate;
+
+  @UpdateTimestamp
+  @Column(name = "modified_date", nullable = false)
+  private Timestamp modifiedDate;
 }

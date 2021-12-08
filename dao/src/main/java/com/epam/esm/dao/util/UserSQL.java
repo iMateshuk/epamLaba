@@ -6,7 +6,7 @@ public enum UserSQL {
   COUNT_ALL("SELECT count(id) FROM User u"),
   COUNT_ID("SELECT count(id) FROM User u where id=:id"),
 
-  SELECT_USED_TAGS("SELECT t.id, t.name, COUNT(*) as count FROM gc.tags t " +
+  SELECT_USED_TAGS("SELECT t.*, COUNT(*) as count FROM gc.tags t " +
       "inner join gc.gc_tag gt on t.id=gt.tag_id " +
       "inner join gc.gift_certificate c on gt.gc_id=c.id " +
       "inner join gc.orders o on c.id=o.cert_id " +
