@@ -3,7 +3,7 @@ package com.epam.esm.hateoas;
 import com.epam.esm.controller.UserController;
 import com.epam.esm.service.dto.OrderDTO;
 import com.epam.esm.service.dto.UserDTO;
-import com.epam.esm.service.util.ServiceConvertor;
+import com.epam.esm.service.util.Mapper;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
@@ -17,13 +17,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @AllArgsConstructor
 @Component
 public class UserAssembler implements RepresentationModelAssembler<UserDTO, UserModel> {
-  private final ServiceConvertor convertor;
+  private final Mapper mapper;
   private final GiftCertificateAssembler certificateAssembler;
   private final TagAssembler tagAssembler;
 
   @Override
   public UserModel toModel(UserDTO userDTO) {
-    UserModel userModel = convertor.toTarget(userDTO, UserModel.class);
+    UserModel userModel = mapper.toTarget(userDTO, UserModel.class);
 
     userModel.setOrders(toOrderModel(userDTO.getOrders(), userModel));
     userModel.getOrders().forEach(order -> {
@@ -43,7 +43,7 @@ public class UserAssembler implements RepresentationModelAssembler<UserDTO, User
   private List<OrderModel> toOrderModel(List<OrderDTO> orders, UserModel userModel) {
     return orders.stream()
         .map(order -> {
-          OrderModel orderModel = convertor.toTarget(order, OrderModel.class);
+          OrderModel orderModel = mapper.toTarget(order, OrderModel.class);
           orderModel.add(linkTo(methodOn(UserController.class)
               .findByIdOrder(userModel.getId(), order.getId())).withSelfRel());
           return orderModel;

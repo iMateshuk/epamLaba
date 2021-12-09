@@ -5,7 +5,7 @@ import com.epam.esm.service.dto.OrderDTO;
 import com.epam.esm.service.dto.UserDTO;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.impl.UserServiceImpl;
-import com.epam.esm.service.util.ServiceConvertor;
+import com.epam.esm.service.util.Mapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class UserServiceTest {
   private UserDAO mockUserDAO;
 
   @MockBean
-  private ServiceConvertor mockConvertor;
+  private Mapper mockMapper;
 
   @Test
   public void findByIdTest() {
@@ -41,7 +41,7 @@ public class UserServiceTest {
     when(mockUserDAO.isUserExist(1)).thenReturn(true);
     when(mockUserDAO.findById(1)).thenReturn(userEntity);
 
-    when(mockConvertor.toTarget(userEntity, UserDTO.class)).thenReturn(userDTO);
+    when(mockMapper.toTarget(userEntity, UserDTO.class)).thenReturn(userDTO);
     assertEquals(1, mockUserService.findById(1).getId());
 
     when(mockUserDAO.isUserExist(1)).thenReturn(false);
@@ -57,7 +57,7 @@ public class UserServiceTest {
     when(mockUserDAO.isUserExist(1)).thenReturn(true);
     when(mockUserDAO.findByIdOrderById(1, 1)).thenReturn(orderEntity);
 
-    when(mockConvertor.toTarget(orderEntity, OrderDTO.class)).thenReturn(orderDTO);
+    when(mockMapper.toTarget(orderEntity, OrderDTO.class)).thenReturn(orderDTO);
     assertEquals(1, mockUserService.findByIdOrder(1, 1).getId());
 
     when(mockUserDAO.isUserExist(1)).thenReturn(false);

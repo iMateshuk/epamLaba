@@ -7,7 +7,7 @@ import com.epam.esm.service.exception.ValidationException;
 import com.epam.esm.service.impl.TagServiceImpl;
 import com.epam.esm.service.page.Page;
 import com.epam.esm.service.page.PageParam;
-import com.epam.esm.service.util.ServiceConvertor;
+import com.epam.esm.service.util.Mapper;
 import com.epam.esm.service.util.Validator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -65,13 +65,13 @@ public class TagServiceTest {
   private Validator mockValidator;
 
   @MockBean
-  private ServiceConvertor mockConvertor;
+  private Mapper mockMapper;
 
   @Test
   public void insertByNameTest() {
     when(mockTagDAO.isExistByName("123_ABC")).thenReturn(false);
     when(mockTagDAO.insertByName("123_ABC")).thenReturn(tagEntity01);
-    when(mockConvertor.toTarget(tagEntity01, TagDTO.class)).thenReturn(tagDTO01);
+    when(mockMapper.toTarget(tagEntity01, TagDTO.class)).thenReturn(tagDTO01);
     assertEquals(tagDTO01, mockTagService.insertByName("123_ABC"));
     assertEquals(2, mockTagService.insertByName("123_ABC").getId());
 
@@ -89,8 +89,8 @@ public class TagServiceTest {
     dtos.add(tagDTO01);
     dtos.add(tagDTO02);
 
-    when(mockConvertor.toTarget(pageParam, PageData.class)).thenReturn(pageData);
-    when(mockConvertor.toTarget(tags, TagDTO.class)).thenReturn(dtos);
+    when(mockMapper.toTarget(pageParam, PageData.class)).thenReturn(pageData);
+    when(mockMapper.toTarget(tags, TagDTO.class)).thenReturn(dtos);
     when(mockTagDAO.findAll(pageData)).thenReturn(tags);
     when(mockTagDAO.count()).thenReturn(2L);
 
@@ -111,7 +111,7 @@ public class TagServiceTest {
   public void findById() {
     when(mockTagDAO.isExistById(1)).thenReturn(true);
     when(mockTagDAO.findById(1)).thenReturn(tagEntity01);
-    when(mockConvertor.toTarget(tagEntity01, TagDTO.class)).thenReturn(tagDTO01);
+    when(mockMapper.toTarget(tagEntity01, TagDTO.class)).thenReturn(tagDTO01);
     assertEquals(tagDTO01, mockTagService.findById(1));
     assertEquals(2, mockTagService.findById(1).getId());
 

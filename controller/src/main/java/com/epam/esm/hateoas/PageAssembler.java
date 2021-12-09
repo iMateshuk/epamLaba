@@ -1,7 +1,7 @@
 package com.epam.esm.hateoas;
 
 import com.epam.esm.service.page.Page;
-import com.epam.esm.service.util.ServiceConvertor;
+import com.epam.esm.service.util.Mapper;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Component
 public class PageAssembler implements RepresentationModelAssembler<Page<?>, PageModel<?>> {
-  private final ServiceConvertor convertor;
+  private final Mapper mapper;
 
   @Override
   public PageModel<?> toModel(Page<?> ignore) {
@@ -20,13 +20,13 @@ public class PageAssembler implements RepresentationModelAssembler<Page<?>, Page
   }
 
   public <T, S> T toModel(S source, Class<T> targetClass) {
-    return convertor.toTarget(source, targetClass);
+    return mapper.toTarget(source, targetClass);
   }
 
   public <S, T> List<T> toModel(List<S> source, Class<T> targetClass) {
     return source
         .stream()
-        .map(element -> convertor.toTarget(element, targetClass))
+        .map(element -> mapper.toTarget(element, targetClass))
         .collect(Collectors.toList());
   }
 }

@@ -11,7 +11,7 @@ import com.epam.esm.service.exception.ServiceConflictException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.page.Page;
 import com.epam.esm.service.util.RequestedParameter;
-import com.epam.esm.service.util.ServiceConvertor;
+import com.epam.esm.service.util.Mapper;
 import com.epam.esm.service.util.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 public class GiftCertificateServiceImpl implements GiftCertificateService {
   private final GiftCertificateDAO certificateDAO;
   private final Validator validator;
-  private final ServiceConvertor convertor;
+  private final Mapper mapper;
 
   @Transactional
   @Override
@@ -48,8 +48,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     if (certificateDTO.getTags() == null) {
       certificateDTO.setTags(new ArrayList<>());
     }
-    return convertor.toTarget(
-        certificateDAO.insert(convertor.toTarget(certificateDTO, GiftCertificateEntity.class)),
+    return mapper.toTarget(
+        certificateDAO.insert(mapper.toTarget(certificateDTO, GiftCertificateEntity.class)),
         GiftCertificateDTO.class
     );
   }
@@ -60,7 +60,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     if (!certificateDAO.isExistById(id)) {
       throw new ServiceException(new ErrorDTO("certificate.search.error", id), 103);
     }
-    return convertor.toTarget(certificateDAO.findById(id), GiftCertificateDTO.class);
+    return mapper.toTarget(certificateDAO.findById(id), GiftCertificateDTO.class);
   }
 
   @Transactional
@@ -68,7 +68,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
   public Page<GiftCertificateDTO> findAll(Map<String, String> allParameters, PageParam pageParam) {
     Map<String, String> parameters = createMapParameter(allParameters);
     List<GiftCertificateEntity> certificates =
-        certificateDAO.findAll(parameters, convertor.toTarget(pageParam, PageData.class));
+        certificateDAO.findAll(parameters, mapper.toTarget(pageParam, PageData.class));
     Long count = certificateDAO.count(parameters);
 
     return Page.<GiftCertificateDTO>builder()
@@ -76,7 +76,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         .number(pageParam.getNumber())
         .totalElements(count)
         .totalPages(count / pageParam.getSize())
-        .list(convertor.toTarget(certificates, GiftCertificateDTO.class))
+        .list(mapper.toTarget(certificates, GiftCertificateDTO.class))
         .build();
   }
 
@@ -97,8 +97,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     if (certificateDescription != null) {
       validator.matchField(certificateDescription);
     }
-    return convertor.toTarget(
-        certificateDAO.update(convertor.toTarget(certificateDTO, GiftCertificateEntity.class)),
+    return mapper.toTarget(
+        certificateDAO.update(mapper.toTarget(certificateDTO, GiftCertificateEntity.class)),
         GiftCertificateDTO.class
     );
   }

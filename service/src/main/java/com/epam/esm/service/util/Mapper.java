@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Component
-public class ServiceConvertor {
+public class Mapper {
   private final ModelMapper modelMapper;
 
   public <S, T> T toTarget(S source, Class<T> targetClass) {

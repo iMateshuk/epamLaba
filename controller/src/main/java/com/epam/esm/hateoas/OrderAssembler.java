@@ -1,7 +1,7 @@
 package com.epam.esm.hateoas;
 
 import com.epam.esm.service.dto.OrderDTO;
-import com.epam.esm.service.util.ServiceConvertor;
+import com.epam.esm.service.util.Mapper;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
@@ -12,13 +12,13 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Component
 public class OrderAssembler implements RepresentationModelAssembler<OrderDTO, OrderModel> {
-  private final ServiceConvertor convertor;
+  private final Mapper mapper;
   private final GiftCertificateAssembler certificateAssembler;
   private final TagAssembler tagAssembler;
 
   @Override
   public OrderModel toModel(OrderDTO orderDTO) {
-    OrderModel orderModel = convertor.toTarget(orderDTO, OrderModel.class);
+    OrderModel orderModel = mapper.toTarget(orderDTO, OrderModel.class);
     GiftCertificateModel certificateModel = orderModel.getCertificate();
     orderModel.setCertificate(certificateAssembler.addLinkToModel(certificateModel));
     certificateModel.setTags(

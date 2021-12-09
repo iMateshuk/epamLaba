@@ -8,7 +8,7 @@ import com.epam.esm.service.dto.GiftCertificateDTO;
 import com.epam.esm.service.dto.OrderDTO;
 import com.epam.esm.service.dto.PurchaseDTO;
 import com.epam.esm.service.impl.OrderServiceImpl;
-import com.epam.esm.service.util.ServiceConvertor;
+import com.epam.esm.service.util.Mapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class OrderServiceTest {
   private OrderDAO mockOrderDAO;
 
   @MockBean
-  private ServiceConvertor mockConvertor;
+  private Mapper mockMapper;
 
   @Test
   public void insertByNameTest() {
@@ -64,7 +64,7 @@ public class OrderServiceTest {
     when(mockCertificateDAO.findById(purchaseDTO.getCertId())).thenReturn(certificateEntity);
 
     when(mockOrderDAO.insert(orderEntity)).thenReturn(orderEntity);
-    when(mockConvertor.toTarget(orderEntity, OrderDTO.class)).thenReturn(orderDTO);
+    when(mockMapper.toTarget(orderEntity, OrderDTO.class)).thenReturn(orderDTO);
 
     assertEquals(orderDTO.getId(), mockOrderService.insert(purchaseDTO).getId());
     assertEquals(orderDTO.getCost(), mockOrderService.insert(purchaseDTO).getCost());

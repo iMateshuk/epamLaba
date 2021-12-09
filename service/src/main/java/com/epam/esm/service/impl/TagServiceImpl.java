@@ -10,7 +10,7 @@ import com.epam.esm.service.exception.ServiceConflictException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.page.Page;
 import com.epam.esm.service.page.PageParam;
-import com.epam.esm.service.util.ServiceConvertor;
+import com.epam.esm.service.util.Mapper;
 import com.epam.esm.service.util.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ import java.util.List;
 public class TagServiceImpl implements TagService {
   private final TagDAO tagDAO;
   private final Validator validator;
-  private final ServiceConvertor convertor;
+  private final Mapper mapper;
 
   @Transactional
   @Override
@@ -39,13 +39,13 @@ public class TagServiceImpl implements TagService {
     if (tagDAO.isExistByName(name)) {
       throw new ServiceConflictException(new ErrorDTO("tag.create.error", name), 201);
     }
-    return convertor.toTarget(tagDAO.insertByName(name), TagDTO.class);
+    return mapper.toTarget(tagDAO.insertByName(name), TagDTO.class);
   }
 
   @Transactional
   @Override
   public Page<TagDTO> findAll(PageParam pageParam) {
-    List<TagEntity> tags= tagDAO.findAll(convertor.toTarget(pageParam, PageData.class));
+    List<TagEntity> tags= tagDAO.findAll(mapper.toTarget(pageParam, PageData.class));
     Long count = tagDAO.count();
 
     return Page.<TagDTO>builder()
@@ -53,7 +53,7 @@ public class TagServiceImpl implements TagService {
         .number(pageParam.getNumber())
         .totalElements(count)
         .totalPages(count / pageParam.getSize())
-        .list(convertor.toTarget(tags, TagDTO.class))
+        .list(mapper.toTarget(tags, TagDTO.class))
         .build();
   }
 
@@ -63,7 +63,7 @@ public class TagServiceImpl implements TagService {
     if (!tagDAO.isExistById(id)) {
       throw new ServiceException(new ErrorDTO("tag.search.error", id), 203);
     }
-    return convertor.toTarget(tagDAO.findById(id), TagDTO.class);
+    return mapper.toTarget(tagDAO.findById(id), TagDTO.class);
   }
 
   @Transactional

@@ -11,7 +11,7 @@ import com.epam.esm.service.dto.ErrorDTO;
 import com.epam.esm.service.dto.OrderDTO;
 import com.epam.esm.service.dto.PurchaseDTO;
 import com.epam.esm.service.exception.ServiceListException;
-import com.epam.esm.service.util.ServiceConvertor;
+import com.epam.esm.service.util.Mapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +32,7 @@ public class OrderServiceImpl implements OrderService {
   private final GiftCertificateDAO certificateDAO;
   private final UserDAO userDAO;
   private final OrderDAO orderDAO;
-  private final ServiceConvertor convertor;
+  private final Mapper mapper;
 
   @Transactional
   @Override
@@ -57,6 +57,6 @@ public class OrderServiceImpl implements OrderService {
     orderEntity.setCost(certificateEntity.getPrice());
     orderEntity.setUser(userEntity);
 
-    return convertor.toTarget(orderDAO.insert(orderEntity), OrderDTO.class);
+    return mapper.toTarget(orderDAO.insert(orderEntity), OrderDTO.class);
   }
 }
