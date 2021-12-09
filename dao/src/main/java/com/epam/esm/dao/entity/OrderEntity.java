@@ -3,6 +3,7 @@ package com.epam.esm.dao.entity;
 import com.epam.esm.dao.audit.AuditListener;
 import com.epam.esm.dao.audit.Auditable;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +22,7 @@ import java.sql.Timestamp;
 
 @EntityListeners(AuditListener.class)
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "Order")

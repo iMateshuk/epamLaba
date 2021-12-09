@@ -1,7 +1,6 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.dao.entity.GiftCertificateEntity;
-import com.epam.esm.dao.page.PageData;
 
 import java.util.List;
 import java.util.Map;
@@ -38,10 +37,11 @@ public interface GiftCertificateDAO {
   /**
    *
    * @param parameters
-   * @param pageData
+   * @param pageNumber
+   * @param pageSize
    * @return list of entity
    */
-  List<GiftCertificateEntity> findAll(Map<String, String> parameters, PageData pageData);
+  List<GiftCertificateEntity> findAll(Map<String, String> parameters, int pageNumber, int pageSize);
 
   /**
    *

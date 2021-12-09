@@ -17,6 +17,6 @@ public class TagDTO implements Serializable {
   private Integer id;
 
   @NotBlank
-  @Size(min = 3, max = 30)
+  @Size(min = 3, max = 30, message = "app.Size.message")
   private String name;
 }

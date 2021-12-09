@@ -1,3 +1,4 @@
+import com.epam.esm.dao.OrderDAO;
 import com.epam.esm.dao.UserDAO;
 import com.epam.esm.dao.entity.OrderEntity;
 import com.epam.esm.dao.entity.UserEntity;
@@ -30,6 +31,9 @@ public class UserServiceTest {
   private UserDAO mockUserDAO;
 
   @MockBean
+  private OrderDAO mockOrderDAO;
+
+  @MockBean
   private Mapper mockMapper;
 
   @Test
@@ -55,12 +59,12 @@ public class UserServiceTest {
     OrderDTO orderDTO = OrderDTO.builder().id(1).build();
 
     when(mockUserDAO.isUserExist(1)).thenReturn(true);
-    when(mockUserDAO.findByIdOrderById(1, 1)).thenReturn(orderEntity);
+    when(mockOrderDAO.findById(1)).thenReturn(orderEntity);
 
     when(mockMapper.toTarget(orderEntity, OrderDTO.class)).thenReturn(orderDTO);
-    assertEquals(1, mockUserService.findByIdOrder(1, 1).getId());
+    assertEquals(1, mockUserService.findOrderById( 1).getId());
 
     when(mockUserDAO.isUserExist(1)).thenReturn(false);
-    assertThrows(ServiceException.class, () -> mockUserService.findByIdOrder(1, 1));
+    assertThrows(ServiceException.class, () -> mockUserService.findOrderById( 1));
   }
 }

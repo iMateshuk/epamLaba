@@ -35,7 +35,7 @@ public class TagServiceTest {
   private final static TagDTO tagDTO01 = new TagDTO();
   private final static TagDTO tagDTO02 = new TagDTO();
 
-  private final static PageParam pageParam = PageParam.builder().number(0).size(20).build();
+  private final static PageParam pageParam = PageParam.builder().pageNumber(0).pageSize(20).build();
   private final static PageData pageData = PageData.builder().number(0).size(20).build();
 
   @BeforeAll
@@ -95,10 +95,10 @@ public class TagServiceTest {
     when(mockTagDAO.count()).thenReturn(2L);
 
     Page<TagDTO> pageTagDTO = Page.<TagDTO>builder()
-        .size(pageParam.getSize())
-        .number(pageParam.getNumber())
+        .size(pageParam.getPageSize())
+        .number(pageParam.getPageNumber())
         .totalElements(2L)
-        .totalPages(2L / pageParam.getSize())
+        .totalPages(2L / pageParam.getPageSize())
         .list(dtos)
         .build();
 

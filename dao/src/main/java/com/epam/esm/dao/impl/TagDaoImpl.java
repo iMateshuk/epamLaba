@@ -2,7 +2,6 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.TagEntity;
-import com.epam.esm.dao.page.PageData;
 import com.epam.esm.dao.util.TagSQL;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -22,10 +21,7 @@ public class TagDaoImpl implements TagDAO {
   }
 
   @Override
-  public List<TagEntity> findAll(PageData pageData) {
-    int pageNumber = pageData.getNumber();
-    int pageSize = pageData.getSize();
-
+  public List<TagEntity> findAll(int pageNumber, int pageSize) {
     return entityManager.createQuery(TagSQL.SELECT_ALL.getSQL(), TagEntity.class)
         .setFirstResult(pageNumber * pageSize)
         .setMaxResults(pageSize)

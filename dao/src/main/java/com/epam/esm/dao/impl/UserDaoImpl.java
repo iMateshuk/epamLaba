@@ -4,7 +4,6 @@ import com.epam.esm.dao.UserDAO;
 import com.epam.esm.dao.entity.OrderEntity;
 import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.dao.entity.UserEntity;
-import com.epam.esm.dao.page.PageData;
 import com.epam.esm.dao.util.OrderSQL;
 import com.epam.esm.dao.util.UserSQL;
 import lombok.AllArgsConstructor;
@@ -21,9 +20,7 @@ public class UserDaoImpl implements UserDAO {
   private final static String ID = "id";
 
   @Override
-  public List<UserEntity> findAll(PageData pageData) {
-    int pageNumber = pageData.getNumber();
-    int pageSize = pageData.getSize();
+  public List<UserEntity> findAll(int pageNumber, int pageSize) {
     return entityManager.createQuery(UserSQL.SELECT_ALL.getSQL(), UserEntity.class)
         .setFirstResult(pageNumber * pageSize)
         .setMaxResults(pageSize)
@@ -46,11 +43,9 @@ public class UserDaoImpl implements UserDAO {
   }
 
   @Override
-  public List<OrderEntity> findOrdersByUserId(Integer orderID, PageData pageData) {
-    int pageNumber = pageData.getNumber();
-    int pageSize = pageData.getSize();
+  public List<OrderEntity> findOrdersByUserId(Integer userId, int pageNumber, int pageSize) {
     return entityManager.createQuery(OrderSQL.ORDERS_USER_ID.getSQL(), OrderEntity.class)
-        .setParameter(ID, orderID)
+        .setParameter(ID, userId)
         .setFirstResult(pageNumber * pageSize)
         .setMaxResults(pageSize)
         .getResultList();
@@ -63,20 +58,10 @@ public class UserDaoImpl implements UserDAO {
         .getSingleResult();
   }
 
-  @Override
-  public OrderEntity findByIdOrderById(Integer userId, Integer orderId) {
-    final String UID = "uid";
-    final String OID = "oid";
-    return entityManager.createQuery(OrderSQL.ORDERS_ID_USER_ID.getSQL(), OrderEntity.class)
-        .setParameter(UID, userId)
-        .setParameter(OID, orderId)
-        .getSingleResult();
-  }
 
   @Override
-  public List<TagEntity> findTagWithCost(Integer userId, PageData pageData) {
-    int pageNumber = pageData.getNumber();
-    int pageSize = pageData.getSize();
+  @SuppressWarnings("unchecked")
+  public List<TagEntity> findTagWithCost(Integer userId, int pageNumber, int pageSize) {
     return entityManager.createNativeQuery(UserSQL.SELECT_USED_TAGS.getSQL(), TagEntity.class)
         .setParameter(ID, userId)
         .setFirstResult(pageNumber * pageSize)
@@ -86,18 +71,9 @@ public class UserDaoImpl implements UserDAO {
 
   @Override
   public long countNativeQuery(Integer id) {
-    return checkQueryResult(entityManager.createNativeQuery(UserSQL.COUNT_USED_TAGS.getSQL())
+    return ((Number) entityManager.createNativeQuery(UserSQL.COUNT_USED_TAGS.getSQL())
         .setParameter(ID, id)
-        .getSingleResult());
-  }
-
-  private Long checkQueryResult(Object result) {
-    long count;
-    try {
-      count = Long.parseLong(String.valueOf(result));
-    } catch (NumberFormatException | NullPointerException ignore) {
-      count = 1L;
-    }
-    return count;
+        .getSingleResult()
+    ).longValue();
   }
 }

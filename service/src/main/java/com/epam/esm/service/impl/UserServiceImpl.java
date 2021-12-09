@@ -1,10 +1,10 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.dao.OrderDAO;
 import com.epam.esm.dao.UserDAO;
 import com.epam.esm.dao.entity.OrderEntity;
 import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.dao.entity.UserEntity;
-import com.epam.esm.dao.page.PageData;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.dto.ErrorDTO;
 import com.epam.esm.service.dto.OrderDTO;
@@ -31,18 +31,19 @@ import java.util.List;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
   private final UserDAO userDAO;
+  private final OrderDAO orderDAO;
   private final Mapper mapper;
 
   @Transactional
   @Override
   public Page<UserDTO> findAll(PageParam pageParam) {
-    List<UserEntity> users = userDAO.findAll(mapper.toTarget(pageParam, PageData.class));
+    List<UserEntity> users = userDAO.findAll(pageParam.getPageNumber(), pageParam.getPageSize());
     long count = userDAO.count();
     return Page.<UserDTO>builder()
-        .size(pageParam.getSize())
-        .number(pageParam.getNumber())
+        .size(pageParam.getPageSize())
+        .number(pageParam.getPageNumber())
         .totalElements(count)
-        .totalPages(count / pageParam.getSize())
+        .totalPages(count / pageParam.getPageSize())
         .list(mapper.toTarget(users, UserDTO.class))
         .build();
   }
@@ -58,28 +59,25 @@ public class UserServiceImpl implements UserService {
 
   @Transactional
   @Override
-  public Page<OrderDTO> findOrdersByUserId(Integer id, PageParam pageParam) {
-    if (!userDAO.isUserExist(id)) {
-      throw new ServiceException(new ErrorDTO("user.search.error", id), 322);
+  public Page<OrderDTO> findOrdersByUserId(Integer userId, PageParam pageParam) {
+    if (!userDAO.isUserExist(userId)) {
+      throw new ServiceException(new ErrorDTO("user.search.error", userId), 322);
     }
-    List<OrderEntity> orders = userDAO.findOrdersByUserId(id, mapper.toTarget(pageParam, PageData.class));
-    long count = userDAO.count(id);
+    List<OrderEntity> orders = userDAO.findOrdersByUserId(userId, pageParam.getPageNumber(), pageParam.getPageSize());
+    long count = userDAO.count(userId);
     return Page.<OrderDTO>builder()
-        .size(pageParam.getSize())
-        .number(pageParam.getNumber())
+        .size(pageParam.getPageSize())
+        .number(pageParam.getPageNumber())
         .totalElements(count)
-        .totalPages(count / pageParam.getSize())
+        .totalPages(count / pageParam.getPageSize())
         .list(mapper.toTarget(orders, OrderDTO.class))
         .build();
   }
 
   @Transactional
   @Override
-  public OrderDTO findByIdOrder(Integer userId, Integer orderId) {
-    if (!userDAO.isUserExist(userId)) {
-      throw new ServiceException(new ErrorDTO("user.search.error", userId), 334);
-    }
-    return mapper.toTarget(userDAO.findByIdOrderById(userId, orderId), OrderDTO.class);
+  public OrderDTO findOrderById(Integer orderId) {
+    return mapper.toTarget(orderDAO.findById(orderId), OrderDTO.class);
   }
 
   @Override
@@ -87,13 +85,13 @@ public class UserServiceImpl implements UserService {
     if (!userDAO.isUserExist(userId)) {
       throw new ServiceException(new ErrorDTO("user.search.error", userId), 341);
     }
-    List<TagEntity> tags = userDAO.findTagWithCost(userId, mapper.toTarget(pageParam, PageData.class));
+    List<TagEntity> tags = userDAO.findTagWithCost(userId, pageParam.getPageNumber(), pageParam.getPageSize());
     long count = userDAO.countNativeQuery(userId);
     return Page.<TagDTO>builder()
-        .size(pageParam.getSize())
-        .number(pageParam.getNumber())
+        .size(pageParam.getPageSize())
+        .number(pageParam.getPageNumber())
         .totalElements(count)
-        .totalPages(count / pageParam.getSize())
+        .totalPages(count / pageParam.getPageSize())
         .list(mapper.toTarget(tags, TagDTO.class))
         .build();
   }

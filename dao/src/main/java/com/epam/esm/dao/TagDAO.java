@@ -1,7 +1,6 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.dao.entity.TagEntity;
-import com.epam.esm.dao.page.PageData;
 
 import java.util.List;
 
@@ -15,10 +14,11 @@ public interface TagDAO {
 
   /**
    *
-   * @param pageData
+   * @param pageNumber
+   * @param pageSize
    * @return list of tagEntity
    */
-  List<TagEntity> findAll(PageData pageData);
+  List<TagEntity> findAll(int pageNumber, int pageSize);
 
   /**
    *

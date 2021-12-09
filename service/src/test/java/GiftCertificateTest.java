@@ -47,7 +47,7 @@ public class GiftCertificateTest {
   private static final GiftCertificateEntity certificateEntity = new GiftCertificateEntity();
   private static final Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-  private final static PageParam pageParam = PageParam.builder().number(0).size(20).build();
+  private final static PageParam pageParam = PageParam.builder().pageNumber(0).pageSize(20).build();
   private final static PageData pageData = PageData.builder().number(0).size(20).build();
 
   @BeforeAll
@@ -140,18 +140,18 @@ public class GiftCertificateTest {
     when(mockMapper.toTarget(certificateEntities, GiftCertificateDTO.class)).thenReturn(certificateDTOs);
 
     Page<GiftCertificateDTO> cleanCertificateDTO = Page.<GiftCertificateDTO>builder()
-        .size(pageParam.getSize())
-        .number(pageParam.getNumber())
+        .size(pageParam.getPageSize())
+        .number(pageParam.getPageNumber())
         .totalElements(1L)
-        .totalPages(1L / pageParam.getSize())
+        .totalPages(1L / pageParam.getPageSize())
         .list(new ArrayList<>())
         .build();
 
     Page<GiftCertificateDTO> machCertificateDTO = Page.<GiftCertificateDTO>builder()
-        .size(pageParam.getSize())
-        .number(pageParam.getNumber())
+        .size(pageParam.getPageSize())
+        .number(pageParam.getPageNumber())
         .totalElements(1L)
-        .totalPages(1L / pageParam.getSize())
+        .totalPages(1L / pageParam.getPageSize())
         .list(certificateDTOs)
         .build();
 

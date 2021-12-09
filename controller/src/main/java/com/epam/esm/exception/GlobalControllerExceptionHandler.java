@@ -48,13 +48,6 @@ public class GlobalControllerExceptionHandler {
     return exceptionUtil.createDto(exception.getErrorCode(), HttpStatus.CONFLICT, exception.getErrorDto());
   }
 
-  @ExceptionHandler(value = {ServiceListException.class})
-  @ResponseStatus(HttpStatus.NOT_FOUND)
-  public GlobalExceptionDTO handle(ServiceListException exception) {
-    return exceptionUtil.createDto(exception.getErrorCode(), HttpStatus.NOT_FOUND,
-        exception.getErrorDto().toArray(new ErrorDTO[0]));
-  }
-
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public GlobalExceptionDTO handle(MethodArgumentNotValidException exception) {

@@ -2,16 +2,15 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
-import com.epam.esm.dao.page.PageData;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.ErrorDTO;
 import com.epam.esm.service.dto.GiftCertificateDTO;
-import com.epam.esm.service.page.PageParam;
 import com.epam.esm.service.exception.ServiceConflictException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.page.Page;
-import com.epam.esm.service.util.RequestedParameter;
+import com.epam.esm.service.page.PageParam;
 import com.epam.esm.service.util.Mapper;
+import com.epam.esm.service.util.RequestedParameter;
 import com.epam.esm.service.util.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -68,14 +67,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
   public Page<GiftCertificateDTO> findAll(Map<String, String> allParameters, PageParam pageParam) {
     Map<String, String> parameters = createMapParameter(allParameters);
     List<GiftCertificateEntity> certificates =
-        certificateDAO.findAll(parameters, mapper.toTarget(pageParam, PageData.class));
+        certificateDAO.findAll(parameters, pageParam.getPageNumber(), pageParam.getPageSize());
     Long count = certificateDAO.count(parameters);
 
     return Page.<GiftCertificateDTO>builder()
-        .size(pageParam.getSize())
-        .number(pageParam.getNumber())
+        .size(pageParam.getPageSize())
+        .number(pageParam.getPageNumber())
         .totalElements(count)
-        .totalPages(count / pageParam.getSize())
+        .totalPages(count / pageParam.getPageSize())
         .list(mapper.toTarget(certificates, GiftCertificateDTO.class))
         .build();
   }

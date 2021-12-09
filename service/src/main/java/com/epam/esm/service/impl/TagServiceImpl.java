@@ -2,7 +2,6 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.TagEntity;
-import com.epam.esm.dao.page.PageData;
 import com.epam.esm.service.TagService;
 import com.epam.esm.service.dto.ErrorDTO;
 import com.epam.esm.service.dto.TagDTO;
@@ -45,14 +44,14 @@ public class TagServiceImpl implements TagService {
   @Transactional
   @Override
   public Page<TagDTO> findAll(PageParam pageParam) {
-    List<TagEntity> tags= tagDAO.findAll(mapper.toTarget(pageParam, PageData.class));
+    List<TagEntity> tags= tagDAO.findAll(pageParam.getPageNumber(), pageParam.getPageSize());
     Long count = tagDAO.count();
 
     return Page.<TagDTO>builder()
-        .size(pageParam.getSize())
-        .number(pageParam.getNumber())
+        .size(pageParam.getPageSize())
+        .number(pageParam.getPageNumber())
         .totalElements(count)
-        .totalPages(count / pageParam.getSize())
+        .totalPages(count / pageParam.getPageSize())
         .list(mapper.toTarget(tags, TagDTO.class))
         .build();
   }

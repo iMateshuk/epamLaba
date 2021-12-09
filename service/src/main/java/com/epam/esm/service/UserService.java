@@ -24,19 +24,18 @@ public interface UserService {
 
   /**
    *
-   * @param id
+   * @param userId
    * @param pageParam
    * @return page, include list of orderDTOs
    */
-  Page<OrderDTO> findOrdersByUserId(Integer id, PageParam pageParam);
+  Page<OrderDTO> findOrdersByUserId(Integer userId, PageParam pageParam);
 
   /**
    *
-   * @param userId
    * @param orderId
    * @return user order found by userId and orderId
    */
-  OrderDTO findByIdOrder(Integer userId, Integer orderId);
+  OrderDTO findOrderById(Integer orderId);
 
   /**
    *

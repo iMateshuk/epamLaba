@@ -4,7 +4,6 @@ import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.entity.TagEntity;
-import com.epam.esm.dao.page.PageData;
 import com.epam.esm.dao.util.GiftCertificateSQL;
 import com.epam.esm.dao.util.QueryBuilder;
 import lombok.AllArgsConstructor;
@@ -43,9 +42,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
   }
 
   @Override
-  public List<GiftCertificateEntity> findAll(Map<String, String> parameters, PageData pageData) {
-    int pageNumber = pageData.getNumber();
-    int pageSize = pageData.getSize();
+  public List<GiftCertificateEntity> findAll(Map<String, String> parameters, int pageNumber, int pageSize) {
     return entityManager.createQuery(queryBuilder.buildQuery(parameters))
         .setFirstResult(pageNumber * pageSize)
         .setMaxResults(pageSize)
@@ -55,7 +52,9 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
   @Override
   public long count(Map<String, String> parameters) {
     String query = queryBuilder.buildNativeQuery(GiftCertificateSQL.SELECT_MAIN_SEARCH.getSQL(), parameters);
-    return checkQueryResult(entityManager.createNativeQuery(query).getSingleResult());
+    return ((Number) entityManager.createNativeQuery(query)
+        .getSingleResult()
+    ).longValue();
   }
 
   @Override
@@ -111,15 +110,5 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
             tagEntity.setId(entity.getId());
           }
         });
-  }
-
-  private Long checkQueryResult(Object result) {
-    long count;
-    try {
-      count = Long.parseLong(String.valueOf(result));
-    } catch (NumberFormatException | NullPointerException ignore) {
-      count = 1L;
-    }
-    return count;
   }
 }

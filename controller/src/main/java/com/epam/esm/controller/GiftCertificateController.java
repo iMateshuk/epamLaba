@@ -63,7 +63,7 @@ public class GiftCertificateController {
   public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int pageNumber,
                                    @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int pageSize,
                                    @RequestParam Map<String, String> parameters) {
-    PageParam pageParam = PageParam.builder().size(pageSize).number(pageNumber).build();
+    PageParam pageParam = PageParam.builder().pageSize(pageSize).pageNumber(pageNumber).build();
 
     Page<GiftCertificateDTO> certificates = certificateService.findAll(parameters, pageParam);
 

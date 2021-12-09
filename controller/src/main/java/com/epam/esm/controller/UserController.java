@@ -38,7 +38,7 @@ public class UserController {
   @GetMapping
   public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int pageNumber,
                                    @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int pageSize) {
-    PageParam pageParam = PageParam.builder().number(pageNumber).size(pageSize).build();
+    PageParam pageParam = PageParam.builder().pageNumber(pageNumber).pageSize(pageSize).build();
     Page<UserDTO> page = userService.findAll(pageParam);
     return new ResponseEntity<>(
         modelCreator.createModel(page, userAssembler, linkTo(UserController.class)),
@@ -54,7 +54,7 @@ public class UserController {
   public ResponseEntity<?> findOrdersByUserId(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int userId,
                                               @RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int pageNumber,
                                               @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int pageSize) {
-    PageParam pageParam = PageParam.builder().number(pageNumber).size(pageSize).build();
+    PageParam pageParam = PageParam.builder().pageNumber(pageNumber).pageSize(pageSize).build();
     Page<OrderDTO> page = userService.findOrdersByUserId(userId, pageParam);
     linkTo(UserController.class).slash(userId).slash("orders");
     return new ResponseEntity<>(
@@ -67,14 +67,14 @@ public class UserController {
   @GetMapping("/{userId}/orders/{orderId}")
   public ResponseEntity<?> findByIdOrder(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int userId,
                                          @PathVariable @Min(1) @Max(Integer.MAX_VALUE) int orderId) {
-    return new ResponseEntity<>(orderAssembler.toModel(userService.findByIdOrder(userId, orderId)), HttpStatus.OK);
+    return new ResponseEntity<>(orderAssembler.toModel(userService.findOrderById(orderId)), HttpStatus.OK);
   }
 
   @GetMapping("/{userId}/orders/tags")
   public ResponseEntity<?> findMostUsedTagWithCost(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int userId,
                                                    @RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int pageNumber,
                                                    @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int pageSize) {
-    PageParam pageParam = PageParam.builder().number(pageNumber).size(pageSize).build();
+    PageParam pageParam = PageParam.builder().pageNumber(pageNumber).pageSize(pageSize).build();
     Page<TagDTO> page = userService.findTagWithCost(userId, pageParam);
     return new ResponseEntity<>(
         modelCreator.createModel(page, tagAssembler, linkTo(UserController.class)
