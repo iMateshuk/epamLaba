@@ -97,7 +97,8 @@ public class GiftCertificateController {
                                                      @RequestBody GiftCertificateDTO giftCertificateDTO) {
     giftCertificateDTO.setId(id);
     validator.checkUpdateCertificate(giftCertificateDTO);
-    GiftCertificateModel certificateModel = certificateAssembler.toModel(certificateService.update(giftCertificateDTO));
+    certificateService.update(giftCertificateDTO);
+    GiftCertificateModel certificateModel = certificateAssembler.toModel(certificateService.findById(id));
     return new ResponseEntity<>(certificateModel, HttpStatus.OK);
   }
 

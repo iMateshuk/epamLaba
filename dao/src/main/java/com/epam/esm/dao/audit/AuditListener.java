@@ -1,6 +1,5 @@
 package com.epam.esm.dao.audit;
 
-import javax.persistence.PostUpdate;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import java.sql.Timestamp;
@@ -18,10 +17,4 @@ public class AuditListener {
   public void preUpdate(Auditable auditable) {
     auditable.setModifiedDate(Timestamp.from(Instant.now()));
   }
-
-  @PostUpdate
-  public void postUpdate(Auditable auditable) {
-    auditable.setModifiedDate(auditable.getModifiedDate());
-  }
-
 }
