@@ -44,12 +44,15 @@ public class TagServiceImpl implements TagService {
   @Transactional
   @Override
   public Page<TagDTO> findAll(PageParam pageParam) {
-    List<TagEntity> tags= tagDAO.findAll(pageParam.getPageNumber(), pageParam.getPageSize());
+    int pageNumber = pageParam.getPageNumber();
+    int pageSize = pageParam.getPageSize();
+
+    List<TagEntity> tags= tagDAO.findAll(pageNumber, pageSize);
     Long count = tagDAO.count();
 
     return Page.<TagDTO>builder()
-        .size(pageParam.getPageSize())
-        .number(pageParam.getPageNumber())
+        .pageSize(pageSize)
+        .pageNumber(pageNumber)
         .totalElements(count)
         .totalPages(count / pageParam.getPageSize())
         .list(mapper.toTarget(tags, TagDTO.class))

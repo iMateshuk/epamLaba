@@ -15,8 +15,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class PageModel<T> extends RepresentationModel<PageModel<T>> {
-  private Integer size;
-  private Integer number;
+  private Integer pageSize;
+  private Integer pageNumber;
   private Long totalElements;
   private Long totalPages;
   private List<T> list;

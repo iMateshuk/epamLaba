@@ -66,13 +66,16 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
   @Override
   public Page<GiftCertificateDTO> findAll(Map<String, String> allParameters, PageParam pageParam) {
     Map<String, String> parameters = createMapParameter(allParameters);
+    int pageNumber = pageParam.getPageNumber();
+    int pageSize = pageParam.getPageSize();
+
     List<GiftCertificateEntity> certificates =
-        certificateDAO.findAll(parameters, pageParam.getPageNumber(), pageParam.getPageSize());
+        certificateDAO.findAll(parameters, pageNumber, pageSize);
     Long count = certificateDAO.count(parameters);
 
     return Page.<GiftCertificateDTO>builder()
-        .size(pageParam.getPageSize())
-        .number(pageParam.getPageNumber())
+        .pageSize(pageSize)
+        .pageNumber(pageNumber)
         .totalElements(count)
         .totalPages(count / pageParam.getPageSize())
         .list(mapper.toTarget(certificates, GiftCertificateDTO.class))

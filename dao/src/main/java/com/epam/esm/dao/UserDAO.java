@@ -55,6 +55,14 @@ public interface UserDAO {
   /**
    *
    * @param userId
+   * @param orderId
+   * @return user's order found by order id
+   */
+  OrderEntity findUserOrderById(Integer userId, Integer orderId);
+
+  /**
+   *
+   * @param userId
    * @param pageNumber
    * @param pageSize
    * @return list of all user's orders tags with high cost and most uses

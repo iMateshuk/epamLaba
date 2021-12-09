@@ -13,8 +13,8 @@ import java.util.List;
 @Data
 @Builder
 public class Page<T> {
-  private Integer size;
-  private Integer number;
+  private Integer pageSize;
+  private Integer pageNumber;
   private Long totalElements;
   private Long totalPages;
   private List<T> list;

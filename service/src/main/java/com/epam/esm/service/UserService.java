@@ -35,7 +35,7 @@ public interface UserService {
    * @param orderId
    * @return user order found by userId and orderId
    */
-  OrderDTO findOrderById(Integer orderId);
+  OrderDTO findUserOrderById(Integer userId, Integer orderId);
 
   /**
    *

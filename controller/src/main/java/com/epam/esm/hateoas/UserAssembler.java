@@ -45,7 +45,7 @@ public class UserAssembler implements RepresentationModelAssembler<UserDTO, User
         .map(order -> {
           OrderModel orderModel = mapper.toTarget(order, OrderModel.class);
           orderModel.add(linkTo(methodOn(UserController.class)
-              .findByIdOrder(userModel.getId(), order.getId())).withSelfRel());
+              .findUserOrderById(userModel.getId(), order.getId())).withSelfRel());
           return orderModel;
         })
         .collect(Collectors.toList());

@@ -26,8 +26,8 @@ public class PageModelCreator {
   public <S, T extends RepresentationModel<T>> PageModel<T> createModel(Page<S> page,
                                                                         RepresentationModelAssembler<S, T> assembler) {
     return PageModel.<T>builder()
-        .size(page.getSize())
-        .number(page.getNumber())
+        .pageSize(page.getPageSize())
+        .pageNumber(page.getPageNumber())
         .totalElements(page.getTotalElements())
         .totalPages(page.getTotalPages())
         .list(page.getList().stream().map(assembler::toModel).collect(Collectors.toList()))

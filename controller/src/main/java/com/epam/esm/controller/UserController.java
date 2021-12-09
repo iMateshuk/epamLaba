@@ -65,9 +65,9 @@ public class UserController {
   }
 
   @GetMapping("/{userId}/orders/{orderId}")
-  public ResponseEntity<?> findByIdOrder(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int userId,
-                                         @PathVariable @Min(1) @Max(Integer.MAX_VALUE) int orderId) {
-    return new ResponseEntity<>(orderAssembler.toModel(userService.findOrderById(orderId)), HttpStatus.OK);
+  public ResponseEntity<?> findUserOrderById(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int userId,
+                                             @PathVariable @Min(1) @Max(Integer.MAX_VALUE) int orderId) {
+    return new ResponseEntity<>(orderAssembler.toModel(userService.findUserOrderById(userId, orderId)), HttpStatus.OK);
   }
 
   @GetMapping("/{userId}/orders/tags")

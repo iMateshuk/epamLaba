@@ -11,10 +11,10 @@ import java.util.Map;
 public class PageModelLink {
 
   public <T extends RepresentationModel<T>> void addLinks(PageModel<T> pageModel, WebMvcLinkBuilder linkTo) {
-    final String NUMBER = "?number=";
-    final String SIZE = "&size=" + pageModel.getSize();
+    final String NUMBER = "?pageNumber=";
+    final String SIZE = "&pageSize=" + pageModel.getPageSize();
 
-    int number = pageModel.getNumber();
+    int number = pageModel.getPageNumber();
     long totalPages = pageModel.getTotalPages();
 
     String first = String.valueOf(0);

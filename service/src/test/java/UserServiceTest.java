@@ -62,9 +62,9 @@ public class UserServiceTest {
     when(mockOrderDAO.findById(1)).thenReturn(orderEntity);
 
     when(mockMapper.toTarget(orderEntity, OrderDTO.class)).thenReturn(orderDTO);
-    assertEquals(1, mockUserService.findOrderById( 1).getId());
+    assertEquals(1, mockUserService.findUserOrderById( 1,1).getId());
 
     when(mockUserDAO.isUserExist(1)).thenReturn(false);
-    assertThrows(ServiceException.class, () -> mockUserService.findOrderById( 1));
+    assertThrows(ServiceException.class, () -> mockUserService.findUserOrderById( 1,1));
   }
 }

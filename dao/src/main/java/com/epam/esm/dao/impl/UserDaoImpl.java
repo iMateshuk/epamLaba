@@ -58,6 +58,15 @@ public class UserDaoImpl implements UserDAO {
         .getSingleResult();
   }
 
+  @Override
+  public OrderEntity findUserOrderById(Integer userId, Integer orderId) {
+    final String UID = "uid";
+    final String OID = "oid";
+    return entityManager.createQuery(OrderSQL.ORDERS_ID_USER_ID.getSQL(), OrderEntity.class)
+        .setParameter(UID, userId)
+        .setParameter(OID, orderId)
+        .getSingleResult();
+  }
 
   @Override
   @SuppressWarnings("unchecked")
