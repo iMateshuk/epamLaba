@@ -6,7 +6,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -90,13 +96,12 @@ public class QueryBuilder {
         .forEach((param) -> searchBuilder.append(appendSearch(searchBuilder, param.getKey(), param.getValue())));
     params.entrySet().stream().filter((param) -> param.getKey().matches(JOIN_REG_EX))
         .forEach((param) -> searchBuilder.append(appendSearch(searchBuilder, param.getKey(), param.getValue())));
-    final String query = sqlBuilder
+    return sqlBuilder
         .append(sql)
         .append(searchBuilder)
         .append(GiftCertificateSQL.APPEND_GROUP.getSQL())
         .append(END)
         .toString();
-    return query;
   }
 
   private String appendSearch(StringBuilder builder, String key, String value) {

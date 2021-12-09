@@ -1,6 +1,10 @@
 package com.epam.esm.service.page;
 
-import lombok.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -9,9 +13,7 @@ import java.util.List;
 @Data
 @Builder
 public class Page<T> {
-  @NonNull
   private Integer size;
-  @NonNull
   private Integer number;
   private Long totalElements;
   private Long totalPages;
