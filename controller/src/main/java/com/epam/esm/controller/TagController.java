@@ -57,9 +57,9 @@ public class TagController {
    * @return List of TagDTO
    */
   @GetMapping
-  public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int number,
-                                   @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int size) {
-    PageParam pageParam = PageParam.builder().number(number).size(size).build();
+  public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int pageNumber,
+                                   @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int pageSize) {
+    PageParam pageParam = PageParam.builder().number(pageNumber).size(pageSize).build();
     Page<TagDTO> page = tagService.findAll(pageParam);
     return new ResponseEntity<>(
         modelCreator.createModel(page, tagAssembler, linkTo(TagController.class)),

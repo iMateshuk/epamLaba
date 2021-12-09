@@ -39,7 +39,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
 
   @Override
   public boolean isExistById(int id) {
-    return entityManager.contains(findById(id));
+    return findById(id) != null;
   }
 
   @Override

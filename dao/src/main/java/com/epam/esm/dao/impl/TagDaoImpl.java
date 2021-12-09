@@ -56,7 +56,7 @@ public class TagDaoImpl implements TagDAO {
 
   @Override
   public boolean isExistById(int id) {
-    return entityManager.contains(findById(id));
+    return findById(id) != null;
   }
 
   @Override

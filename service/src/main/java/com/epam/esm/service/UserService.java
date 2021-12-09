@@ -28,7 +28,7 @@ public interface UserService {
    * @param pageParam
    * @return page, include list of orderDTOs
    */
-  Page<OrderDTO> findByIdOrders(Integer id, PageParam pageParam);
+  Page<OrderDTO> findOrdersByUserId(Integer id, PageParam pageParam);
 
   /**
    *
@@ -40,9 +40,9 @@ public interface UserService {
 
   /**
    *
-   * @param id
+   * @param userId
    * @param pageParam
    * @return page, include list of tagDTOs
    */
-  Page<TagDTO> findTagWithCost(Integer id, PageParam pageParam);
+  Page<TagDTO> findTagWithCost(Integer userId, PageParam pageParam);
 }

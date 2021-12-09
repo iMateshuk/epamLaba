@@ -42,7 +42,7 @@ public interface UserDAO {
    * @param pageData
    * @return list of user orders
    */
-  List<OrderEntity> findByIdOrders(Integer orderID, PageData pageData);
+  List<OrderEntity> findOrdersByUserId(Integer orderID, PageData pageData);
 
   /**
    *
@@ -61,11 +61,11 @@ public interface UserDAO {
 
   /**
    *
-   * @param id
+   * @param userId
    * @param pageData
    * @return list of all user's orders tags with high cost and most uses
    */
-  List<TagEntity> findTagWithCost(Integer id, PageData pageData);
+  List<TagEntity> findTagWithCost(Integer userId, PageData pageData);
 
   /**
    *

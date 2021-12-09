@@ -54,7 +54,7 @@ public class UserAssembler implements RepresentationModelAssembler<UserDTO, User
   public UserModel addLinkToModel(UserModel userModel) {
     userModel.add(linkTo(methodOn(UserController.class).findById(userModel.getId())).withSelfRel());
     userModel.add(linkTo(methodOn(UserController.class)
-        .findByIdOrders(userModel.getId(), 0, 20)).withRel("orders"));
+        .findOrdersByUserId(userModel.getId(), 0, 20)).withRel("orders"));
     return userModel;
   }
 }

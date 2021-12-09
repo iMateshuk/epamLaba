@@ -10,7 +10,7 @@ import java.util.Locale;
 
 @Configuration
 @AllArgsConstructor
-public class DispatcherConfig {
+public class MainConfig {
   private final MainConfigProperties configProperties;
 
   @Bean

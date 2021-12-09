@@ -42,11 +42,11 @@ public class UserDaoImpl implements UserDAO {
 
   @Override
   public boolean isUserExist(Integer id) {
-    return entityManager.contains(findById(id));
+    return findById(id) != null;
   }
 
   @Override
-  public List<OrderEntity> findByIdOrders(Integer orderID, PageData pageData) {
+  public List<OrderEntity> findOrdersByUserId(Integer orderID, PageData pageData) {
     int pageNumber = pageData.getNumber();
     int pageSize = pageData.getSize();
     return entityManager.createQuery(OrderSQL.ORDERS_USER_ID.getSQL(), OrderEntity.class)
@@ -74,11 +74,11 @@ public class UserDaoImpl implements UserDAO {
   }
 
   @Override
-  public List<TagEntity> findTagWithCost(Integer id, PageData pageData) {
+  public List<TagEntity> findTagWithCost(Integer userId, PageData pageData) {
     int pageNumber = pageData.getNumber();
     int pageSize = pageData.getSize();
     return entityManager.createNativeQuery(UserSQL.SELECT_USED_TAGS.getSQL(), TagEntity.class)
-        .setParameter(ID, id)
+        .setParameter(ID, userId)
         .setFirstResult(pageNumber * pageSize)
         .setMaxResults(pageSize)
         .getResultList();

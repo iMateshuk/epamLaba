@@ -9,7 +9,7 @@ import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
 
 @Configuration
 public class ServiceConfig {
-   @Bean
+  @Bean
   public ModelMapper modelMapper() {
     ModelMapper modelMapper = new ModelMapper();
 

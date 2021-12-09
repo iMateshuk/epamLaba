@@ -58,14 +58,11 @@ public class UserServiceImpl implements UserService {
 
   @Transactional
   @Override
-  public Page<OrderDTO> findByIdOrders(Integer id, PageParam pageParam) {
+  public Page<OrderDTO> findOrdersByUserId(Integer id, PageParam pageParam) {
     if (!userDAO.isUserExist(id)) {
       throw new ServiceException(new ErrorDTO("user.search.error", id), 322);
     }
-    List<OrderEntity> orders = userDAO.findByIdOrders(id, mapper.toTarget(pageParam, PageData.class));
-    if (orders.isEmpty()) {
-      throw new ServiceException(new ErrorDTO("user.search.orders", id), 323);
-    }
+    List<OrderEntity> orders = userDAO.findOrdersByUserId(id, mapper.toTarget(pageParam, PageData.class));
     long count = userDAO.count(id);
     return Page.<OrderDTO>builder()
         .size(pageParam.getSize())
@@ -86,12 +83,12 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Page<TagDTO> findTagWithCost(Integer id, PageParam pageParam) {
-    if (!userDAO.isUserExist(id)) {
-      throw new ServiceException(new ErrorDTO("user.search.error", id), 341);
+  public Page<TagDTO> findTagWithCost(Integer userId, PageParam pageParam) {
+    if (!userDAO.isUserExist(userId)) {
+      throw new ServiceException(new ErrorDTO("user.search.error", userId), 341);
     }
-    List<TagEntity> tags = userDAO.findTagWithCost(id, mapper.toTarget(pageParam, PageData.class));
-    long count = userDAO.countNativeQuery(id);
+    List<TagEntity> tags = userDAO.findTagWithCost(userId, mapper.toTarget(pageParam, PageData.class));
+    long count = userDAO.countNativeQuery(userId);
     return Page.<TagDTO>builder()
         .size(pageParam.getSize())
         .number(pageParam.getNumber())

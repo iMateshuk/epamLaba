@@ -16,31 +16,7 @@ public class Validator {
   private static final int MIN_LEN_NAME = 3;
   private static final String RE_MATCH = "[\\w+( )?]+";
 
-  public void checkCreationCertificate(GiftCertificateDTO giftCertificateDTO) {
-    List<ErrorDTO> errors = new ArrayList<>();
-
-    String certificateName = giftCertificateDTO.getName();
-    if (certificateName == null || certificateName.length() < MIN_LEN_NAME) {
-      errors.add(new ErrorDTO("certificate.name.min.length.error", MIN_LEN_NAME));
-    }
-    String description = giftCertificateDTO.getDescription();
-    if (description == null || description.length() < MIN_LEN_NAME) {
-      errors.add(new ErrorDTO("certificate.description.min.length.error", MIN_LEN_NAME));
-    }
-    Float price = giftCertificateDTO.getPrice();
-    if (price == null || price <= MIN_VALUE) {
-      errors.add(new ErrorDTO("certificate.price.min.error", MIN_VALUE));
-    }
-    Integer duration = giftCertificateDTO.getDuration();
-    if (duration == null || duration <= MIN_VALUE) {
-      errors.add(new ErrorDTO("certificate.duration.min.error", MIN_VALUE));
-    }
-    if (!errors.isEmpty()) {
-      throw new ValidationException(errors, 1);
-    }
-  }
-
-  public void checkUpdateCertificate(GiftCertificateDTO giftCertificateDTO) {
+  public void validateCertificateForUpdate(GiftCertificateDTO giftCertificateDTO) {
     List<ErrorDTO> errors = new ArrayList<>();
 
     Integer id = giftCertificateDTO.getId();
@@ -68,17 +44,6 @@ public class Validator {
     }
   }
 
-  public void checkTagName(String tagName) {
-    List<ErrorDTO> errors = new ArrayList<>();
-
-    if (tagName == null || tagName.length() < MIN_LEN_NAME) {
-      errors.add(new ErrorDTO("tag.name.min.length.error", MIN_LEN_NAME));
-    }
-    if (!errors.isEmpty()) {
-      throw new ValidationException(errors, 2);
-    }
-  }
-
   public void matchField(String... fields) {
     List<ErrorDTO> errors = new ArrayList<>();
 
@@ -92,18 +57,7 @@ public class Validator {
     }
   }
 
-  public void checkId(int id) {
-    List<ErrorDTO> errors = new ArrayList<>();
-
-    if (id <= MIN_VALUE) {
-      errors.add(new ErrorDTO("id.min.error", MIN_VALUE));
-    }
-    if (!errors.isEmpty()) {
-      throw new ValidationException(errors, 3);
-    }
-  }
-
-  public void checkPurchaseDTO(PurchaseDTO purchaseDTO) {
+  public void validatePurchaseDto(PurchaseDTO purchaseDTO) {
     List<ErrorDTO> errors = new ArrayList<>();
 
     Integer userId = purchaseDTO.getUserId();

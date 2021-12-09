@@ -36,9 +36,9 @@ public class UserController {
   private final PageModelCreator modelCreator;
 
   @GetMapping
-  public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int number,
-                                   @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int size) {
-    PageParam pageParam = PageParam.builder().number(number).size(size).build();
+  public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int pageNumber,
+                                   @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int pageSize) {
+    PageParam pageParam = PageParam.builder().number(pageNumber).size(pageSize).build();
     Page<UserDTO> page = userService.findAll(pageParam);
     return new ResponseEntity<>(
         modelCreator.createModel(page, userAssembler, linkTo(UserController.class)),
@@ -51,14 +51,16 @@ public class UserController {
   }
 
   @GetMapping("/{userId}/orders")
-  public ResponseEntity<?> findByIdOrders(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int userId,
-                                          @RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int number,
-                                          @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int size) {
-    PageParam pageParam = PageParam.builder().number(number).size(size).build();
-    Page<OrderDTO> page = userService.findByIdOrders(userId, pageParam);
+  public ResponseEntity<?> findOrdersByUserId(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int userId,
+                                              @RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int pageNumber,
+                                              @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int pageSize) {
+    PageParam pageParam = PageParam.builder().number(pageNumber).size(pageSize).build();
+    Page<OrderDTO> page = userService.findOrdersByUserId(userId, pageParam);
     linkTo(UserController.class).slash(userId).slash("orders");
     return new ResponseEntity<>(
-        modelCreator.createModel(page, orderAssembler, linkTo(UserController.class).slash(userId).slash("orders")),
+        modelCreator.createModel(page, orderAssembler, linkTo(UserController.class)
+            .slash(userId)
+            .slash("orders")),
         HttpStatus.OK);
   }
 
@@ -68,14 +70,17 @@ public class UserController {
     return new ResponseEntity<>(orderAssembler.toModel(userService.findByIdOrder(userId, orderId)), HttpStatus.OK);
   }
 
-  @GetMapping("/{id}/orders/tags")
-  public ResponseEntity<?> findMostUsedTagWithCost(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int id,
-                                                   @RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int number,
-                                                   @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int size) {
-    PageParam pageParam = PageParam.builder().number(number).size(size).build();
-    Page<TagDTO> page = userService.findTagWithCost(id, pageParam);
+  @GetMapping("/{userId}/orders/tags")
+  public ResponseEntity<?> findMostUsedTagWithCost(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int userId,
+                                                   @RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int pageNumber,
+                                                   @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int pageSize) {
+    PageParam pageParam = PageParam.builder().number(pageNumber).size(pageSize).build();
+    Page<TagDTO> page = userService.findTagWithCost(userId, pageParam);
     return new ResponseEntity<>(
-        modelCreator.createModel(page, tagAssembler, linkTo(UserController.class).slash(id).slash("orders").slash("tags")),
+        modelCreator.createModel(page, tagAssembler, linkTo(UserController.class)
+            .slash(userId)
+            .slash("orders")
+            .slash("tags")),
         HttpStatus.OK);
   }
 }

@@ -23,7 +23,7 @@ public class OrderController {
 
   @PostMapping
   public ResponseEntity<OrderModel> insert(@RequestBody PurchaseDTO purchaseDTO) {
-    validator.checkPurchaseDTO(purchaseDTO);
+    validator.validatePurchaseDto(purchaseDTO);
     OrderModel orderModel = orderAssembler.toModel(orderService.insert(purchaseDTO));
     orderModel.add(linkTo(methodOn(OrderController.class).insert(purchaseDTO)).withSelfRel());
     return new ResponseEntity<>(orderModel, HttpStatus.CREATED);

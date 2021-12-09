@@ -60,10 +60,10 @@ public class GiftCertificateController {
    * The method can throw ServiceException extends RuntimeException
    */
   @GetMapping
-  public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int number,
-                                   @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int size,
+  public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int pageNumber,
+                                   @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int pageSize,
                                    @RequestParam Map<String, String> parameters) {
-    PageParam pageParam = PageParam.builder().size(size).number(number).build();
+    PageParam pageParam = PageParam.builder().size(pageSize).number(pageNumber).build();
 
     Page<GiftCertificateDTO> certificates = certificateService.findAll(parameters, pageParam);
 
@@ -96,7 +96,7 @@ public class GiftCertificateController {
   public ResponseEntity<GiftCertificateModel> update(@PathVariable  @Min(1) @Max(Integer.MAX_VALUE) int id,
                                                      @RequestBody GiftCertificateDTO giftCertificateDTO) {
     giftCertificateDTO.setId(id);
-    validator.checkUpdateCertificate(giftCertificateDTO);
+    validator.validateCertificateForUpdate(giftCertificateDTO);
     certificateService.update(giftCertificateDTO);
     GiftCertificateModel certificateModel = certificateAssembler.toModel(certificateService.findById(id));
     return new ResponseEntity<>(certificateModel, HttpStatus.OK);
