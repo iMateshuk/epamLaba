@@ -1,6 +1,4 @@
-import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.OrderDAO;
-import com.epam.esm.dao.UserDAO;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.entity.OrderEntity;
 import com.epam.esm.dao.entity.UserEntity;
@@ -9,6 +7,7 @@ import com.epam.esm.service.dto.OrderDTO;
 import com.epam.esm.service.dto.PurchaseDTO;
 import com.epam.esm.service.impl.OrderServiceImpl;
 import com.epam.esm.service.util.Mapper;
+import com.epam.esm.service.util.Validator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +30,13 @@ public class OrderServiceTest {
   private OrderServiceImpl mockOrderService;
 
   @MockBean
-  private UserDAO mockUserDAO;
-
-  @MockBean
-  private GiftCertificateDAO mockCertificateDAO;
-
-  @MockBean
   private OrderDAO mockOrderDAO;
 
   @MockBean
   private Mapper mockMapper;
+
+  @MockBean
+  private Validator mockValidator;
 
   @Test
   public void insertByNameTest() {
@@ -60,8 +56,7 @@ public class OrderServiceTest {
 
     OrderDTO orderDTO = OrderDTO.builder().id(1).cost(99F).certificate(new GiftCertificateDTO()).build();
 
-    when(mockUserDAO.findById(purchaseDTO.getUserId())).thenReturn(userEntity);
-    when(mockCertificateDAO.findById(purchaseDTO.getCertId())).thenReturn(certificateEntity);
+    when(mockValidator.validatePurchaseDto(purchaseDTO)).thenReturn(orderEntity);
 
     when(mockOrderDAO.insert(orderEntity)).thenReturn(orderEntity);
     when(mockMapper.toTarget(orderEntity, OrderDTO.class)).thenReturn(orderDTO);

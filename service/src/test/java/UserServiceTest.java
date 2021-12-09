@@ -1,4 +1,3 @@
-import com.epam.esm.dao.OrderDAO;
 import com.epam.esm.dao.UserDAO;
 import com.epam.esm.dao.entity.OrderEntity;
 import com.epam.esm.dao.entity.UserEntity;
@@ -31,9 +30,6 @@ public class UserServiceTest {
   private UserDAO mockUserDAO;
 
   @MockBean
-  private OrderDAO mockOrderDAO;
-
-  @MockBean
   private Mapper mockMapper;
 
   @Test
@@ -53,14 +49,12 @@ public class UserServiceTest {
   }
 
   @Test
-  public void findByIdOrderTest() {
-    OrderEntity orderEntity = new OrderEntity();
-    orderEntity.setId(1);
+  public void findUserOrderByIdTest() {
+    OrderEntity orderEntity = OrderEntity.builder().id(1).build();
     OrderDTO orderDTO = OrderDTO.builder().id(1).build();
 
     when(mockUserDAO.isUserExist(1)).thenReturn(true);
-    when(mockOrderDAO.findById(1)).thenReturn(orderEntity);
-
+    when(mockUserDAO.findUserOrderById(1, 1)).thenReturn(orderEntity);
     when(mockMapper.toTarget(orderEntity, OrderDTO.class)).thenReturn(orderDTO);
     assertEquals(1, mockUserService.findUserOrderById( 1,1).getId());
 

@@ -1,6 +1,5 @@
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.TagEntity;
-import com.epam.esm.dao.page.PageData;
 import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.exception.ValidationException;
@@ -36,7 +35,6 @@ public class TagServiceTest {
   private final static TagDTO tagDTO02 = new TagDTO();
 
   private final static PageParam pageParam = PageParam.builder().pageNumber(0).pageSize(20).build();
-  private final static PageData pageData = PageData.builder().number(0).size(20).build();
 
   @BeforeAll
   public static void setupData() {
@@ -89,14 +87,13 @@ public class TagServiceTest {
     dtos.add(tagDTO01);
     dtos.add(tagDTO02);
 
-    when(mockMapper.toTarget(pageParam, PageData.class)).thenReturn(pageData);
     when(mockMapper.toTarget(tags, TagDTO.class)).thenReturn(dtos);
-    when(mockTagDAO.findAll(pageData)).thenReturn(tags);
+    when(mockTagDAO.findAll(pageParam.getPageNumber(), pageParam.getPageSize())).thenReturn(tags);
     when(mockTagDAO.count()).thenReturn(2L);
 
     Page<TagDTO> pageTagDTO = Page.<TagDTO>builder()
-        .size(pageParam.getPageSize())
-        .number(pageParam.getPageNumber())
+        .pageSize(pageParam.getPageSize())
+        .pageNumber(pageParam.getPageNumber())
         .totalElements(2L)
         .totalPages(2L / pageParam.getPageSize())
         .list(dtos)

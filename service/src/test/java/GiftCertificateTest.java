@@ -1,7 +1,6 @@
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.entity.TagEntity;
-import com.epam.esm.dao.page.PageData;
 import com.epam.esm.service.dto.GiftCertificateDTO;
 import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.exception.ServiceException;
@@ -48,7 +47,6 @@ public class GiftCertificateTest {
   private static final Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
   private final static PageParam pageParam = PageParam.builder().pageNumber(0).pageSize(20).build();
-  private final static PageData pageData = PageData.builder().number(0).size(20).build();
 
   @BeforeAll
   public static void setupData() {
@@ -131,8 +129,8 @@ public class GiftCertificateTest {
     noMatchParam.put(RequestedParameter.SORT_CERT_NAME.toString(), RequestedParameter.SORT_CERT_NAME.getParameterKey());
     parameters.put(RequestedParameter.SORT_CERT_NAME.toString(), RequestedParameter.SORT_CERT_NAME.toString());
 
-    when(mockCertificateDAO.findAll(noMatchParam, pageData)).thenReturn(new ArrayList<>());
-    when(mockCertificateDAO.findAll(parameters, pageData)).thenReturn(certificateEntities);
+    when(mockCertificateDAO.findAll(noMatchParam, pageParam.getPageNumber(), pageParam.getPageSize())).thenReturn(new ArrayList<>());
+    when(mockCertificateDAO.findAll(parameters, pageParam.getPageNumber(), pageParam.getPageSize())).thenReturn(certificateEntities);
 
     when(mockCertificateDAO.count(noMatchParam)).thenReturn(1L);
     when(mockCertificateDAO.count(parameters)).thenReturn(1L);
@@ -140,16 +138,16 @@ public class GiftCertificateTest {
     when(mockMapper.toTarget(certificateEntities, GiftCertificateDTO.class)).thenReturn(certificateDTOs);
 
     Page<GiftCertificateDTO> cleanCertificateDTO = Page.<GiftCertificateDTO>builder()
-        .size(pageParam.getPageSize())
-        .number(pageParam.getPageNumber())
+        .pageSize(pageParam.getPageSize())
+        .pageNumber(pageParam.getPageNumber())
         .totalElements(1L)
         .totalPages(1L / pageParam.getPageSize())
         .list(new ArrayList<>())
         .build();
 
     Page<GiftCertificateDTO> machCertificateDTO = Page.<GiftCertificateDTO>builder()
-        .size(pageParam.getPageSize())
-        .number(pageParam.getPageNumber())
+        .pageSize(pageParam.getPageSize())
+        .pageNumber(pageParam.getPageNumber())
         .totalElements(1L)
         .totalPages(1L / pageParam.getPageSize())
         .list(certificateDTOs)
