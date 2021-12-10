@@ -16,8 +16,6 @@ create table gift_certificate(
 create table tags(
 	id int unsigned auto_increment primary key,
 	name varchar(45) not null,
-	created_date datetime not null,
-	modified_date datetime not null,
 	constraint name_UNIQUE unique (name)
 );
 
@@ -37,8 +35,6 @@ create table users(
 	id int unsigned auto_increment primary key,
 	user_name varchar(45) not null,
 	password varchar(45) not null,
-	created_date datetime not null,
-	modified_date datetime not null,
 	constraint user_name_UNIQUE unique (user_name)
 );
 
@@ -49,7 +45,6 @@ create table orders(
 	user_id int unsigned not null,
 	cert_id int unsigned not null,
 	created_date datetime not null,
-	modified_date datetime not null,
 	constraint fk_order_user1 foreign key (user_id) references users (id),
 	constraint fk_cert_id foreign key (cert_id) references gift_certificate (id)
 );

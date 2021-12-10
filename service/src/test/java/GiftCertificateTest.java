@@ -141,7 +141,7 @@ public class GiftCertificateTest {
         .pageSize(pageParam.getPageSize())
         .pageNumber(pageParam.getPageNumber())
         .totalElements(1L)
-        .totalPages(1L / pageParam.getPageSize())
+        .lastPage(1L / pageParam.getPageSize())
         .list(new ArrayList<>())
         .build();
 
@@ -149,7 +149,7 @@ public class GiftCertificateTest {
         .pageSize(pageParam.getPageSize())
         .pageNumber(pageParam.getPageNumber())
         .totalElements(1L)
-        .totalPages(1L / pageParam.getPageSize())
+        .lastPage(1L / pageParam.getPageSize())
         .list(certificateDTOs)
         .build();
 

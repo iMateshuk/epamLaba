@@ -8,13 +8,15 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @AllArgsConstructor
 @RestController
@@ -24,10 +26,15 @@ public class OrderController {
   private final OrderService orderService;
   private final OrderAssembler orderAssembler;
 
+  @GetMapping("/{id}")
+  public ResponseEntity<?> findById(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int id) {
+    OrderModel orderModel = orderAssembler.toModel(orderService.findById(id));
+    return new ResponseEntity<>(orderModel, HttpStatus.OK);
+  }
+
   @PostMapping
   public ResponseEntity<OrderModel> insert(@Validated @RequestBody PurchaseDTO purchaseDTO) {
     OrderModel orderModel = orderAssembler.toModel(orderService.insert(purchaseDTO));
-    orderModel.add(linkTo(methodOn(OrderController.class).insert(purchaseDTO)).withSelfRel());
     return new ResponseEntity<>(orderModel, HttpStatus.CREATED);
   }
 }

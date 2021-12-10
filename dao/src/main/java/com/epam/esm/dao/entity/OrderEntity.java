@@ -1,15 +1,13 @@
 package com.epam.esm.dao.entity;
 
-import com.epam.esm.dao.audit.AuditListener;
-import com.epam.esm.dao.audit.Auditable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,14 +18,14 @@ import javax.persistence.Table;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-@EntityListeners(AuditListener.class)
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "Order")
 @Table(name = "orders", schema = "gc")
-public class OrderEntity implements Serializable, Auditable {
+@Audited
+public class OrderEntity implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
@@ -46,7 +44,4 @@ public class OrderEntity implements Serializable, Auditable {
 
   @Column(name = "created_date", nullable = false, updatable = false)
   private Timestamp createdDate;
-
-  @Column(name = "modified_date", nullable = false)
-  private Timestamp modifiedDate;
 }

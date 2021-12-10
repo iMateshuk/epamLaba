@@ -16,6 +16,6 @@ public class Page<T> {
   private Integer pageSize;
   private Integer pageNumber;
   private Long totalElements;
-  private Long totalPages;
+  private Long lastPage;
   private List<T> list;
 }

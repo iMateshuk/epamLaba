@@ -58,4 +58,6 @@ public class DaoConfigProperties {
   private String embDev;
   @NotNull
   private String embFill;
+  @NotNull
+  private String embHbmDdl;
 }

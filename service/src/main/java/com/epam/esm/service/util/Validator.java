@@ -1,13 +1,9 @@
 package com.epam.esm.service.util;
 
-import com.epam.esm.dao.GiftCertificateDAO;
-import com.epam.esm.dao.UserDAO;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
-import com.epam.esm.dao.entity.OrderEntity;
 import com.epam.esm.dao.entity.UserEntity;
 import com.epam.esm.service.dto.ErrorDTO;
 import com.epam.esm.service.dto.GiftCertificateDTO;
-import com.epam.esm.service.dto.PurchaseDTO;
 import com.epam.esm.service.exception.ValidationException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -19,9 +15,6 @@ import java.util.stream.Stream;
 @Component
 @AllArgsConstructor
 public class Validator {
-  private final GiftCertificateDAO certificateDAO;
-  private final UserDAO userDAO;
-
   private static final int MIN_VALUE = 0;
   private static final int MIN_LEN_NAME = 3;
   private static final String RE_MATCH = "[\\w+( )?]+";
@@ -67,26 +60,18 @@ public class Validator {
     }
   }
 
-  public OrderEntity validatePurchaseDto(PurchaseDTO purchaseDTO) {
+  public void validatePurchaseDto(GiftCertificateEntity certificateEntity, Integer certId,
+                                  UserEntity userEntity, Integer userId) {
     List<ErrorDTO> errors = new ArrayList<>();
 
-    Integer certId = purchaseDTO.getCertId();
-    GiftCertificateEntity certificateEntity = certificateDAO.findById(certId);
     if (certificateEntity == null) {
       errors.add(new ErrorDTO("purchase.certid.notfound", certId));
     }
-    Integer userId = purchaseDTO.getUserId();
-    UserEntity userEntity = userDAO.findById(userId);
     if (userEntity == null) {
       errors.add(new ErrorDTO("purchase.userid.notfound", userId));
     }
     if (!errors.isEmpty()) {
       throw new ValidationException(errors, 4);
     }
-    return OrderEntity.builder()
-        .certificate(certificateEntity)
-        .cost(certificateEntity.getPrice())
-        .user(userEntity)
-        .build();
   }
 }

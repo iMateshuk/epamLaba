@@ -29,7 +29,7 @@ public class PageModelCreator {
         .pageSize(page.getPageSize())
         .pageNumber(page.getPageNumber())
         .totalElements(page.getTotalElements())
-        .totalPages(page.getTotalPages())
+        .lastPage(page.getLastPage())
         .list(page.getList().stream().map(assembler::toModel).collect(Collectors.toList()))
         .build();
   }

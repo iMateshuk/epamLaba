@@ -15,7 +15,7 @@ public class PageModelLink {
     final String SIZE = "&pageSize=" + pageModel.getPageSize();
 
     int number = pageModel.getPageNumber();
-    long totalPages = pageModel.getTotalPages();
+    long totalPages = pageModel.getLastPage();
 
     String first = String.valueOf(0);
     String prev = String.valueOf(Math.max(number - 1, 0));

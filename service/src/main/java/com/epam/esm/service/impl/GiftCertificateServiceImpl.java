@@ -53,16 +53,15 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     );
   }
 
-  @Transactional
   @Override
   public GiftCertificateDTO findById(Integer id) {
-    if (!certificateDAO.isExistById(id)) {
+    GiftCertificateEntity certificateEntity = certificateDAO.findById(id);
+    if (certificateEntity == null) {
       throw new ServiceException(new ErrorDTO("certificate.search.error", id), 103);
     }
-    return mapper.toTarget(certificateDAO.findById(id), GiftCertificateDTO.class);
+    return mapper.toTarget(certificateEntity, GiftCertificateDTO.class);
   }
 
-  @Transactional
   @Override
   public Page<GiftCertificateDTO> findAll(Map<String, String> allParameters, PageParam pageParam) {
     Map<String, String> parameters = createMapParameter(allParameters);
@@ -77,7 +76,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         .pageSize(pageSize)
         .pageNumber(pageNumber)
         .totalElements(count)
-        .totalPages(count / pageParam.getPageSize())
+        .lastPage(count / pageParam.getPageSize())
         .list(mapper.toTarget(certificates, GiftCertificateDTO.class))
         .build();
   }

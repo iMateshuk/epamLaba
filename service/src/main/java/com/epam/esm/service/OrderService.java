@@ -7,8 +7,15 @@ public interface OrderService {
 
   /**
    *
+   * @param id
+   * @return order
+   */
+  OrderDTO findById(Integer id);
+
+  /**
+   *
    * @param purchaseDTO
-   * @return new user order
+   * @return new order
    */
   OrderDTO insert(PurchaseDTO purchaseDTO);
 }

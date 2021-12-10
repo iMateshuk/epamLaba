@@ -15,7 +15,6 @@ import com.epam.esm.service.page.PageParam;
 import com.epam.esm.service.util.Mapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -32,7 +31,6 @@ public class UserServiceImpl implements UserService {
   private final UserDAO userDAO;
   private final Mapper mapper;
 
-  @Transactional
   @Override
   public Page<UserDTO> findAll(PageParam pageParam) {
     int pageNumber = pageParam.getPageNumber();
@@ -45,21 +43,20 @@ public class UserServiceImpl implements UserService {
         .pageSize(pageSize)
         .pageNumber(pageNumber)
         .totalElements(count)
-        .totalPages(count / pageParam.getPageSize())
+        .lastPage(count / pageParam.getPageSize())
         .list(mapper.toTarget(users, UserDTO.class))
         .build();
   }
 
-  @Transactional
   @Override
   public UserDTO findById(Integer id) {
-    if (!userDAO.isUserExist(id)) {
+    UserEntity userEntity = userDAO.findById(id);
+    if (userEntity == null) {
       throw new ServiceException(new ErrorDTO("user.search.error", id), 311);
     }
-    return mapper.toTarget(userDAO.findById(id), UserDTO.class);
+    return mapper.toTarget(userEntity, UserDTO.class);
   }
 
-  @Transactional
   @Override
   public Page<OrderDTO> findOrdersByUserId(Integer userId, PageParam pageParam) {
     if (!userDAO.isUserExist(userId)) {
@@ -75,12 +72,11 @@ public class UserServiceImpl implements UserService {
         .pageSize(pageSize)
         .pageNumber(pageNumber)
         .totalElements(count)
-        .totalPages(count / pageParam.getPageSize())
+        .lastPage(count / pageParam.getPageSize())
         .list(mapper.toTarget(orders, OrderDTO.class))
         .build();
   }
 
-  @Transactional
   @Override
   public OrderDTO findUserOrderById(Integer userId, Integer orderId) {
     if (!userDAO.isUserExist(userId)) {
@@ -103,7 +99,7 @@ public class UserServiceImpl implements UserService {
         .pageSize(pageSize)
         .pageNumber(pageNumber)
         .totalElements(count)
-        .totalPages(count / pageParam.getPageSize())
+        .lastPage(count / pageParam.getPageSize())
         .list(mapper.toTarget(tags, TagDTO.class))
         .build();
   }

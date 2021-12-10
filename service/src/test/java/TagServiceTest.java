@@ -95,7 +95,7 @@ public class TagServiceTest {
         .pageSize(pageParam.getPageSize())
         .pageNumber(pageParam.getPageNumber())
         .totalElements(2L)
-        .totalPages(2L / pageParam.getPageSize())
+        .lastPage(2L / pageParam.getPageSize())
         .list(dtos)
         .build();
 

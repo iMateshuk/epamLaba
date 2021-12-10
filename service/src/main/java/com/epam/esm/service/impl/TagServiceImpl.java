@@ -41,31 +41,30 @@ public class TagServiceImpl implements TagService {
     return mapper.toTarget(tagDAO.insertByName(name), TagDTO.class);
   }
 
-  @Transactional
   @Override
   public Page<TagDTO> findAll(PageParam pageParam) {
     int pageNumber = pageParam.getPageNumber();
     int pageSize = pageParam.getPageSize();
 
-    List<TagEntity> tags= tagDAO.findAll(pageNumber, pageSize);
+    List<TagEntity> tags = tagDAO.findAll(pageNumber, pageSize);
     Long count = tagDAO.count();
 
     return Page.<TagDTO>builder()
         .pageSize(pageSize)
         .pageNumber(pageNumber)
         .totalElements(count)
-        .totalPages(count / pageParam.getPageSize())
+        .lastPage(count / pageParam.getPageSize())
         .list(mapper.toTarget(tags, TagDTO.class))
         .build();
   }
 
-  @Transactional
   @Override
   public TagDTO findById(Integer id) {
-    if (!tagDAO.isExistById(id)) {
+    TagEntity tagEntity = tagDAO.findById(id);
+    if (tagEntity == null) {
       throw new ServiceException(new ErrorDTO("tag.search.error", id), 203);
     }
-    return mapper.toTarget(tagDAO.findById(id), TagDTO.class);
+    return mapper.toTarget(tagEntity, TagDTO.class);
   }
 
   @Transactional

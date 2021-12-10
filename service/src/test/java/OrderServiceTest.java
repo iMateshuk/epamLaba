@@ -1,4 +1,6 @@
+import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.OrderDAO;
+import com.epam.esm.dao.UserDAO;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.entity.OrderEntity;
 import com.epam.esm.dao.entity.UserEntity;
@@ -33,6 +35,12 @@ public class OrderServiceTest {
   private OrderDAO mockOrderDAO;
 
   @MockBean
+  private GiftCertificateDAO mockCertificateDAO;
+
+  @MockBean
+  private UserDAO mockUserDAO;
+
+  @MockBean
   private Mapper mockMapper;
 
   @MockBean
@@ -40,24 +48,24 @@ public class OrderServiceTest {
 
   @Test
   public void insertByNameTest() {
-    UserEntity userEntity = new UserEntity();
-    userEntity.setId(1);
-    userEntity.setUserName("name");
-    userEntity.setPassword("password");
-    userEntity.setOrders(new ArrayList<>());
-    GiftCertificateEntity certificateEntity = new GiftCertificateEntity();
-    certificateEntity.setPrice(99F);
     PurchaseDTO purchaseDTO = PurchaseDTO.builder().certId(1).userId(1).build();
-
-    OrderEntity orderEntity = new OrderEntity();
-    orderEntity.setCertificate(certificateEntity);
-    orderEntity.setCost(certificateEntity.getPrice());
-    orderEntity.setUser(userEntity);
+    GiftCertificateEntity certificateEntity = GiftCertificateEntity.builder().id(1).price(99F).build();
+    UserEntity userEntity = UserEntity.builder()
+        .id(1)
+        .userName("name")
+        .password("password")
+        .orders(new ArrayList<>())
+        .build();
+    OrderEntity orderEntity = OrderEntity.builder()
+        .certificate(certificateEntity)
+        .cost(certificateEntity.getPrice())
+        .user(userEntity)
+        .build();
 
     OrderDTO orderDTO = OrderDTO.builder().id(1).cost(99F).certificate(new GiftCertificateDTO()).build();
 
-    when(mockValidator.validatePurchaseDto(purchaseDTO)).thenReturn(orderEntity);
-
+    when(mockCertificateDAO.findById(purchaseDTO.getCertId())).thenReturn(certificateEntity);
+    when(mockUserDAO.findById(purchaseDTO.getUserId())).thenReturn(userEntity);
     when(mockOrderDAO.insert(orderEntity)).thenReturn(orderEntity);
     when(mockMapper.toTarget(orderEntity, OrderDTO.class)).thenReturn(orderDTO);
 

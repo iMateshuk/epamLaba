@@ -1,9 +1,7 @@
 package com.epam.esm.hateoas;
 
 import com.epam.esm.controller.GiftCertificateController;
-import com.epam.esm.controller.OrderController;
 import com.epam.esm.service.dto.GiftCertificateDTO;
-import com.epam.esm.service.dto.PurchaseDTO;
 import com.epam.esm.service.util.Mapper;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
@@ -39,8 +37,6 @@ public class GiftCertificateAssembler implements RepresentationModelAssembler<Gi
         .findById(certificateModel.getId())).withSelfRel());
     certificateModel.add(linkTo(methodOn(GiftCertificateController.class)
         .delete(certificateModel.getId())).withRel("delete"));
-    certificateModel.add(linkTo(methodOn(OrderController.class)
-        .insert(new PurchaseDTO())).withRel("buy"));
     return certificateModel;
   }
 }

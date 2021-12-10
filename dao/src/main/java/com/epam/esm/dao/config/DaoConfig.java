@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -21,8 +19,6 @@ import java.beans.PropertyVetoException;
 import java.util.Properties;
 
 @Configuration
-@EnableJpaRepositories
-@EnableJpaAuditing
 @EnableTransactionManagement
 @AllArgsConstructor
 public class DaoConfig {
@@ -63,6 +59,7 @@ public class DaoConfig {
   @Bean
   public EntityManagerFactory entityManagerFactory(DataSource dataSource) {
     Properties properties = new Properties();
+    properties.put("hibernate.hbm2ddl.auto", configProperties.getEmbHbmDdl());
     properties.put("hibernate.show_sql", configProperties.getShowSql());
     properties.put("hibernate.ddl-auto", configProperties.getDdlAuto());
     properties.put("hibernate.naming-strategy", configProperties.getNameStrategy());
