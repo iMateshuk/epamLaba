@@ -2,7 +2,6 @@ package com.epam.esm.dao.util;
 
 public enum UserSQL {
   SELECT_ALL("SELECT u FROM User u"),
-  SELECT_ID("SELECT u FROM User u where id=:id"),
   COUNT_ALL("SELECT count(id) FROM User u"),
 
   SELECT_USED_TAGS("SELECT t.*, COUNT(*) as count FROM gc.tags t " +

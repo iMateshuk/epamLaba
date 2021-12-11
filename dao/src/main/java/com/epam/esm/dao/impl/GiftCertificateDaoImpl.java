@@ -51,10 +51,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
 
   @Override
   public long count(Map<String, String> parameters) {
-    String query = queryBuilder.buildNativeQuery(GiftCertificateSQL.SELECT_MAIN_SEARCH.getSQL(), parameters);
-    return ((Number) entityManager.createNativeQuery(query)
-        .getSingleResult()
-    ).longValue();
+    return entityManager.createQuery(queryBuilder.buildCountQuery(parameters)).getSingleResult();
   }
 
   @Override
