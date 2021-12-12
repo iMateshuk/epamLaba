@@ -51,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
     Integer userId = purchaseDTO.getUserId();
     UserEntity userEntity = userDAO.findById(userId);
 
-    validator.validatePurchaseDto(certificateEntity, certId, userEntity, userId);
+    validator.validateEntitiesOfPurchaseDto(certificateEntity, certId, userEntity, userId);
 
     OrderEntity orderEntity = OrderEntity.builder()
         .certificate(certificateEntity).cost(certificateEntity.getPrice()).user(userEntity).build();

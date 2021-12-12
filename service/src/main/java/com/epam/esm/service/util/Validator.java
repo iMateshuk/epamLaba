@@ -60,8 +60,8 @@ public class Validator {
     }
   }
 
-  public void validatePurchaseDto(GiftCertificateEntity certificateEntity, Integer certId,
-                                  UserEntity userEntity, Integer userId) {
+  public void validateEntitiesOfPurchaseDto(GiftCertificateEntity certificateEntity, Integer certId,
+                                            UserEntity userEntity, Integer userId) {
     List<ErrorDTO> errors = new ArrayList<>();
 
     if (certificateEntity == null) {
