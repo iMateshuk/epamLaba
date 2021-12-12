@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
@@ -42,6 +43,7 @@ public class OrderEntity implements Serializable {
   @JoinColumn(name = "cert_id", nullable = false)
   private GiftCertificateEntity certificate;
 
+  @CreationTimestamp
   @Column(name = "created_date", nullable = false, updatable = false)
   private Timestamp createdDate;
 }

@@ -56,7 +56,7 @@ public class GiftCertificateEntity implements Serializable {
       inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
   private List<TagEntity> tags;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "certificate", cascade = CascadeType.MERGE)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "certificate", cascade = CascadeType.MERGE, orphanRemoval = true)
   private List<OrderEntity> orders;
 
   @CreationTimestamp
