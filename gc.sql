@@ -5,6 +5,9 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
 -- Schema gc
 -- -----------------------------------------------------
 
@@ -23,8 +26,8 @@ CREATE TABLE IF NOT EXISTS `gc`.`gift_certificate` (
   `description` VARCHAR(200) NOT NULL,
   `price` FLOAT UNSIGNED NOT NULL,
   `duration` INT NOT NULL,
-  `create_date` DATETIME NOT NULL,
-  `last_update_date` DATETIME NOT NULL,
+  `created_date` DATETIME NOT NULL,
+  `modified_date` DATETIME NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 162
@@ -85,9 +88,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 CREATE TABLE IF NOT EXISTS `gc`.`orders` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` INT UNSIGNED NOT NULL,
-  `cost` FLOAT NOT NULL,
-  `create_date` DATETIME NOT NULL,
   `cert_id` INT UNSIGNED NOT NULL,
+  `cost` FLOAT NOT NULL,
+  `created_date` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_order_user1_idx` (`user_id` ASC) VISIBLE,
   INDEX `cert_id_idx` (`cert_id` ASC) VISIBLE,
@@ -98,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `gc`.`orders` (
     FOREIGN KEY (`user_id`)
     REFERENCES `gc`.`users` (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 31
+AUTO_INCREMENT = 41
 DEFAULT CHARACTER SET = utf8mb3;
 
 
