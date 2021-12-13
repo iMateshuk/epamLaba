@@ -106,13 +106,12 @@ public class TagServiceTest {
 
   @Test
   public void findById() {
-    when(mockTagDAO.isExistById(1)).thenReturn(true);
     when(mockTagDAO.findById(1)).thenReturn(tagEntity01);
     when(mockMapper.toTarget(tagEntity01, TagDTO.class)).thenReturn(tagDTO01);
     assertEquals(tagDTO01, mockTagService.findById(1));
     assertEquals(2, mockTagService.findById(1).getId());
 
-    when(mockTagDAO.isExistById(1)).thenReturn(false);
+    when(mockTagDAO.findById(1)).thenReturn(null);
     assertThrows(ServiceException.class, () -> mockTagService.findById(1));
   }
 

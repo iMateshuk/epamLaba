@@ -34,17 +34,14 @@ public class UserServiceTest {
 
   @Test
   public void findByIdTest() {
-    UserEntity userEntity = new UserEntity();
-    userEntity.setId(1);
+    UserEntity userEntity = UserEntity.builder().id(1).build();
     UserDTO userDTO = UserDTO.builder().id(1).build();
 
-    when(mockUserDAO.isUserExist(1)).thenReturn(true);
     when(mockUserDAO.findById(1)).thenReturn(userEntity);
-
     when(mockMapper.toTarget(userEntity, UserDTO.class)).thenReturn(userDTO);
     assertEquals(1, mockUserService.findById(1).getId());
 
-    when(mockUserDAO.isUserExist(1)).thenReturn(false);
+    when(mockUserDAO.findById(1)).thenReturn(null);
     assertThrows(ServiceException.class, () -> mockUserService.findById(1));
   }
 

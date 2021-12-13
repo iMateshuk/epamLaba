@@ -104,14 +104,13 @@ public class GiftCertificateTest {
 
   @Test
   public void findByIdTest() {
-    when(mockCertificateDAO.isExistById(1)).thenReturn(true);
     when(mockCertificateDAO.findById(1)).thenReturn(certificateEntity);
     certificateDTO.setId(1);
     when(mockMapper.toTarget(certificateEntity, GiftCertificateDTO.class)).thenReturn(certificateDTO);
 
     assertEquals(1, mockCertificateService.findById(1).getId());
 
-    when(mockCertificateDAO.isExistById(1)).thenReturn(false);
+    when(mockCertificateDAO.findById(1)).thenReturn(null);
     assertThrows(ServiceException.class, () -> mockCertificateService.findById(1));
   }
 
