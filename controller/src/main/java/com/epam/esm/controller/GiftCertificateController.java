@@ -2,7 +2,6 @@ package com.epam.esm.controller;
 
 import com.epam.esm.hateoas.GiftCertificateAssembler;
 import com.epam.esm.hateoas.GiftCertificateModel;
-import com.epam.esm.hateoas.PageModel;
 import com.epam.esm.page.PageModelCreator;
 import com.epam.esm.page.PageModelLink;
 import com.epam.esm.service.GiftCertificateService;
@@ -14,7 +13,16 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -64,12 +72,10 @@ public class GiftCertificateController {
                                    @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int pageSize,
                                    @RequestParam Map<String, String> parameters) {
     PageParam pageParam = PageParam.builder().pageSize(pageSize).pageNumber(pageNumber).build();
-
-    Page<GiftCertificateDTO> certificates = certificateService.findAll(parameters, pageParam);
-
-    PageModel<GiftCertificateModel> model = modelCreator.createModel(certificates, certificateAssembler);
-    modelLink.addLinks(model, linkTo(GiftCertificateController.class), parameters);
-    return new ResponseEntity<>(model, HttpStatus.OK);
+    Page<GiftCertificateDTO> page = certificateService.findAll(parameters, pageParam);
+    return new ResponseEntity<>(
+        modelCreator.createModel(page, certificateAssembler, linkTo(GiftCertificateController.class)),
+        HttpStatus.OK);
   }
 
   /**
