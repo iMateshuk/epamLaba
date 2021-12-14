@@ -1,20 +1,22 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDAO;
-import com.epam.esm.dao.TagDAO;
+import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.service.GiftCertificateService;
-import com.epam.esm.service.dto.ErrorDto;
-import com.epam.esm.service.dto.GiftCertificateConverter;
+import com.epam.esm.service.dto.ErrorDTO;
 import com.epam.esm.service.dto.GiftCertificateDTO;
-import com.epam.esm.service.dto.TagConverter;
 import com.epam.esm.service.exception.ServiceConflictException;
 import com.epam.esm.service.exception.ServiceException;
-import com.epam.esm.service.exception.ServiceValidationException;
+import com.epam.esm.service.page.Page;
+import com.epam.esm.service.page.PageParam;
+import com.epam.esm.service.util.Mapper;
 import com.epam.esm.service.util.RequestedParameter;
 import com.epam.esm.service.util.Validator;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -27,175 +29,94 @@ import java.util.stream.Collectors;
  * @author Ivan Matsiashuk
  * @version 1.0
  */
+@AllArgsConstructor
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
-  private final GiftCertificateDAO giftCertificateDAO;
-  private final TagDAO tagDAO;
+  private final GiftCertificateDAO certificateDAO;
   private final Validator validator;
+  private final Mapper mapper;
 
-  public GiftCertificateServiceImpl(GiftCertificateDAO giftCertificateDAO, TagDAO tagDAO, Validator validator) {
-    this.giftCertificateDAO = giftCertificateDAO;
-    this.tagDAO = tagDAO;
-    this.validator = validator;
-  }
-
-  /**
-   * @param requestGiftCertificateDTO DTO object
-   * @return GiftCertificateDTO
-   * <p>
-   * The method can throw ServiceConflictException extends RuntimeException<p>
-   */
   @Transactional
   @Override
-  public GiftCertificateDTO createGiftCertificate(GiftCertificateDTO requestGiftCertificateDTO) {
-    validator.matchField(requestGiftCertificateDTO.getName(), requestGiftCertificateDTO.getDescription());
-    String certificateName = requestGiftCertificateDTO.getName();
-    if (giftCertificateDAO.isExistGiftCertificate(certificateName)) {
-      throw new ServiceConflictException(new ErrorDto("certificate.name.create.error", certificateName), 101);
+  public GiftCertificateDTO insert(GiftCertificateDTO certificateDTO) {
+    String certificateName = certificateDTO.getName();
+    validator.matchField(certificateName, certificateDTO.getDescription());
+    if (certificateDAO.isExistByName(certificateName)) {
+      throw new ServiceConflictException(new ErrorDTO("certificate.name.create.error", certificateName), 101);
     }
-
-    GiftCertificateDTO createdGiftCertificateDTO = GiftCertificateConverter
-        .toDto(giftCertificateDAO.createGiftCertificate(GiftCertificateConverter.toEntity(requestGiftCertificateDTO)));
-
-    checkTagNameAndBundleWithGiftCertificate(requestGiftCertificateDTO, createdGiftCertificateDTO.getId());
-    addTagToDTO(createdGiftCertificateDTO);
-    return createdGiftCertificateDTO;
-  }
-
-  /**
-   * @return List of GiftCertificateDTO
-   */
-  @Transactional
-  @Override
-  public List<GiftCertificateDTO> searchGiftCertificates() {
-    List<GiftCertificateDTO> createdGiftCertificateDTOs = GiftCertificateConverter
-        .toDto(giftCertificateDAO.getGiftCertificates());
-
-    addTagToDTO(createdGiftCertificateDTOs);
-    return createdGiftCertificateDTOs;
-  }
-
-  /**
-   * @param id positive int
-   * @return GiftCertificateDTO
-   * <p>
-   * The method can throw ServiceException extends RuntimeException
-   */
-  @Transactional
-  @Override
-  public GiftCertificateDTO searchGiftCertificate(int id) {
-    if (!giftCertificateDAO.isExistGiftCertificate(id)) {
-      throw new ServiceException(new ErrorDto("certificate.search.error", id), 103);
+    if (certificateDTO.getTags() == null) {
+      certificateDTO.setTags(new ArrayList<>());
     }
-    GiftCertificateDTO createdGiftCertificateDTO = GiftCertificateConverter
-        .toDto(giftCertificateDAO.getGiftCertificate(id));
-
-    addTagToDTO(createdGiftCertificateDTO);
-    return createdGiftCertificateDTO;
+    return mapper.toTarget(
+        certificateDAO.insert(mapper.toTarget(certificateDTO, GiftCertificateEntity.class)),
+        GiftCertificateDTO.class
+    );
   }
 
-  /**
-   * @param allParameters Map of parameters
-   * @return List of GiftCertificateDTO
-   * <p>
-   * The method can throw ServiceValidationException or ServiceException extends RuntimeException
-   */
-  @Transactional
   @Override
-  public List<GiftCertificateDTO> searchGiftCertificates(Map<String, String> allParameters) {
+  public GiftCertificateDTO findById(Integer id) {
+    GiftCertificateEntity certificateEntity = certificateDAO.findById(id);
+    if (certificateEntity == null) {
+      throw new ServiceException(new ErrorDTO("certificate.search.error", id), 103);
+    }
+    return mapper.toTarget(certificateEntity, GiftCertificateDTO.class);
+  }
+
+  @Override
+  public Page<GiftCertificateDTO> findAll(Map<String, String> allParameters, PageParam pageParam) {
     Map<String, String> parameters = createMapParameter(allParameters);
-    if (parameters.isEmpty()) {
-      throw new ServiceValidationException(new ErrorDto("certificate.parameters.error"), 105);
-    }
+    int pageNumber = pageParam.getPageNumber();
+    int pageSize = pageParam.getPageSize();
 
-    List<GiftCertificateDTO> createdGiftCertificateDTOs = GiftCertificateConverter
-        .toDto(giftCertificateDAO.getGiftCertificates(parameters));
-    if (createdGiftCertificateDTOs.isEmpty()) {
-      throw new ServiceException(new ErrorDto("dao.empty.result.error"), 115);
-    }
+    List<GiftCertificateEntity> certificates =
+        certificateDAO.findAll(parameters, pageNumber, pageSize);
+    Long count = certificateDAO.count(parameters);
 
-    addTagToDTO(createdGiftCertificateDTOs);
-    return createdGiftCertificateDTOs;
+    return Page.<GiftCertificateDTO>builder()
+        .pageSize(pageSize)
+        .pageNumber(pageNumber)
+        .totalElements(count)
+        .lastPage(count / pageParam.getPageSize())
+        .list(mapper.toTarget(certificates, GiftCertificateDTO.class))
+        .build();
   }
 
-  /**
-   * @param requestGiftCertificateDTO DTO object
-   * @return GiftCertificateDTO
-   * <p>
-   * The method can throw ServiceException extends RuntimeException<p>
-   * The method uses a transaction
-   */
   @Transactional
   @Override
-  public GiftCertificateDTO patchGiftCertificate(GiftCertificateDTO requestGiftCertificateDTO) {
-    int id = requestGiftCertificateDTO.getId();
-    if (!giftCertificateDAO.isExistGiftCertificate(id)) {
-      throw new ServiceException(new ErrorDto("certificate.search.error", id), 106);
+  public GiftCertificateDTO update(GiftCertificateDTO certificateDTO) {
+    int id = certificateDTO.getId();
+    if (!certificateDAO.isExistById(id)) {
+      throw new ServiceException(new ErrorDTO("certificate.search.error", id), 106);
     }
 
-    String certificateName = requestGiftCertificateDTO.getName();
+    String certificateName = certificateDTO.getName();
     if (certificateName != null) {
       validator.matchField(certificateName);
     }
 
-    String certificateDescription = requestGiftCertificateDTO.getDescription();
+    String certificateDescription = certificateDTO.getDescription();
     if (certificateDescription != null) {
       validator.matchField(certificateDescription);
     }
-
-    GiftCertificateDTO updatedGiftCertificateDTO = updateGiftCertificate(requestGiftCertificateDTO);
-    if (!requestGiftCertificateDTO.getTags().isEmpty()) {
-      giftCertificateDAO.delGiftCertificateAndTagBundle(id);
-      checkTagNameAndBundleWithGiftCertificate(requestGiftCertificateDTO, id);
-    }
-
-    addTagToDTO(updatedGiftCertificateDTO);
-    return updatedGiftCertificateDTO;
-  }
-
-  /**
-   * @param id positive int
-   * <p>
-   * The method can throw ServiceException extends RuntimeException
-   */
-  @Transactional
-  @Override
-  public void delGiftCertificate(int id) {
-    if (!giftCertificateDAO.isExistGiftCertificate(id)) {
-      throw new ServiceException(new ErrorDto("certificate.delete.error", id), 104);
-    }
-    giftCertificateDAO.delGiftCertificate(id);
-  }
-
-  private GiftCertificateDTO updateGiftCertificate(GiftCertificateDTO requestGiftCertificateDTO) {
-    return GiftCertificateConverter.toDto(giftCertificateDAO
-        .updateGiftCertificate(GiftCertificateConverter.toEntity(requestGiftCertificateDTO)));
-  }
-
-  private void addTagToDTO(List<GiftCertificateDTO> giftCertificateDTOs) {
-    giftCertificateDTOs.forEach(this::addTagToDTO);
-  }
-
-  private void addTagToDTO(GiftCertificateDTO giftCertificateDTO) {
-    tagDAO.getListTag(giftCertificateDTO.getId())
-        .stream().filter((tagEntity) -> tagEntity.getName() != null)
-        .forEach((tagEntity) -> giftCertificateDTO.getTags().add(TagConverter.toDto(tagEntity)));
-  }
-
-  private void checkTagNameAndBundleWithGiftCertificate(GiftCertificateDTO requestGiftCertificateDTO, int id) {
-    requestGiftCertificateDTO.getTags().forEach((tagDTO) -> {
-          String tagName = tagDTO.getName();
-          if (!tagDAO.isTagExist(tagName)) {
-            tagDAO.createTag(tagName);
-          }
-          giftCertificateDAO.addGiftCertificateTag(id, tagName);
-        }
+    return mapper.toTarget(
+        certificateDAO.update(mapper.toTarget(certificateDTO, GiftCertificateEntity.class)),
+        GiftCertificateDTO.class
     );
   }
 
+  @Transactional
+  @Override
+  public void deleteById(Integer id) {
+    if (!certificateDAO.isExistById(id)) {
+      throw new ServiceException(new ErrorDTO("certificate.delete.error", id), 104);
+    }
+    certificateDAO.deleteById(id);
+  }
+
   private Map<String, String> createMapParameter(Map<String, String> allRequestParams) {
-    return Arrays.stream(RequestedParameter.class.getEnumConstants())
+    return Arrays.stream(RequestedParameter.values())
         .filter((parameter) -> allRequestParams.get(parameter.getParameterKey()) != null)
-        .collect(Collectors.toMap(RequestedParameter::toString, (parameter) -> (allRequestParams.get(parameter.getParameterKey()))));
+        .collect(Collectors.toMap(RequestedParameter::toString,
+            (parameter) -> (allRequestParams.get(parameter.getParameterKey()))));
   }
 }

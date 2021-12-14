@@ -1,34 +1,32 @@
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.TagDAO;
-import com.epam.esm.dao.entity.GiftCertificateEntity;
-import com.epam.esm.dao.impl.GiftCertificateDB;
-import com.epam.esm.dao.impl.TagDB;
 import com.epam.esm.dao.config.DaoConfig;
-import com.epam.esm.dao.util.GiftCertificateTagSQL;
+import com.epam.esm.dao.config.DaoConfigProperties;
+import com.epam.esm.dao.entity.GiftCertificateEntity;
+import com.epam.esm.dao.impl.GiftCertificateDaoImpl;
+import com.epam.esm.dao.impl.TagDaoImpl;
+import com.epam.esm.dao.page.PageData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles(value = "dev")
-@ContextConfiguration(classes = {GiftCertificateDB.class, DaoConfig.class, TagDB.class})
+@SpringBootTest(classes = {GiftCertificateDaoImpl.class, DaoConfig.class, DaoConfigProperties.class, TagDaoImpl.class})
 public class GiftCertificateDbTest {
-
-  private static final GiftCertificateEntity giftCertificateEntity = new GiftCertificateEntity();
+  private static final GiftCertificateEntity GIFT_CERTIFICATE = new GiftCertificateEntity();
 
   private static final String testTagName = "forTestOnly";
-  private static final String existTagName = "sky";
 
   private static final int giftCertificateId = 1;
   private static final int giftCertificateDelId = 2;
@@ -36,10 +34,10 @@ public class GiftCertificateDbTest {
   @BeforeAll
   public static void setupData() {
 
-    giftCertificateEntity.setName("Test name");
-    giftCertificateEntity.setDescription("Test description");
-    giftCertificateEntity.setPrice(99.99f);
-    giftCertificateEntity.setDuration(99);
+    GIFT_CERTIFICATE.setName("Test name");
+    GIFT_CERTIFICATE.setDescription("Test description");
+    GIFT_CERTIFICATE.setPrice(99.99f);
+    GIFT_CERTIFICATE.setDuration(99);
   }
 
   @Autowired
@@ -49,89 +47,41 @@ public class GiftCertificateDbTest {
   private TagDAO tagDAO;
 
   @Test
-  public void createGiftCertificateTest() {
-    assertNotEquals(0, giftCertificateDAO.createGiftCertificate(giftCertificateEntity).getId());
+  public void insertTest() {
+    assertNotEquals(0, giftCertificateDAO.insert(GIFT_CERTIFICATE).getId());
   }
 
   @Test
-  public void getGiftCertificatesTest() {
-    Assertions.assertNotNull(giftCertificateDAO.getGiftCertificates());
+  public void findAllTest() {
+    PageData pageData = PageData.builder().size(20).number(0).build();
+    Assertions.assertNotNull(giftCertificateDAO.findAll(new HashMap<>(), pageData));
   }
 
   @Test
-  public void getGiftCertificateTest() {
-    Assertions.assertEquals(giftCertificateId, giftCertificateDAO.getGiftCertificate(giftCertificateId).getId());
+  public void findByIdTest() {
+    Assertions.assertEquals(1, giftCertificateDAO.findById(giftCertificateId).getId());
   }
 
   @Test
-  public void getGiftCertificatesByTagNameTest() {
-    Assertions.assertAll(
-        () -> assertTrue(giftCertificateDAO.getGiftCertificates(testTagName).isEmpty()),
-        () -> assertNotNull(giftCertificateDAO.getGiftCertificates(existTagName)),
-        () -> assertFalse(giftCertificateDAO.getGiftCertificates(existTagName).isEmpty())
-    );
-  }
-
-  @Test
-  public void getGiftCertificatesByMapValue() {
-    Map<String, String> parameters = new HashMap<>();
-    Map<String, String> notExistValues = new HashMap<>();
-
-    parameters.put(GiftCertificateTagSQL.SEARCH_TAG_NAME.toString(), existTagName);
-    notExistValues.put(GiftCertificateTagSQL.SEARCH_TAG_NAME.toString(), testTagName);
-
-    Assertions.assertAll(
-        () -> assertDoesNotThrow(() -> giftCertificateDAO.getGiftCertificates(parameters)),
-        () -> assertNotNull(giftCertificateDAO.getGiftCertificates(parameters)),
-        () -> assertFalse(giftCertificateDAO.getGiftCertificates(parameters).isEmpty()),
-
-        () -> assertDoesNotThrow(() -> giftCertificateDAO.getGiftCertificates(notExistValues)),
-        () -> assertNotNull(giftCertificateDAO.getGiftCertificates(notExistValues)),
-        () -> assertTrue(giftCertificateDAO.getGiftCertificates(notExistValues).isEmpty())
-    );
-  }
-
-  @Test
-  public void updateGiftCertificateTest() {
-    giftCertificateEntity.setId(1);
-    assertNotEquals(giftCertificateDAO.getGiftCertificate(giftCertificateEntity.getId()),
-        giftCertificateDAO.updateGiftCertificate(giftCertificateEntity));
-  }
-
-  @Test
-  public void delGiftCertificateAndTagBundleTest() {
-    Assertions.assertAll(
-        () -> assertDoesNotThrow(() -> tagDAO.createTag(testTagName)),
-        () -> assertDoesNotThrow(() -> giftCertificateDAO
-            .delGiftCertificateAndTagBundle(tagDAO.searchTag(testTagName).getId())),
-
-        () -> assertThrows(EmptyResultDataAccessException.class, () -> giftCertificateDAO
-            .getGiftCertificate(tagDAO.searchTag(testTagName).getId())),
-
-        () -> assertDoesNotThrow(() -> tagDAO.deleteTag(tagDAO.searchTag(testTagName).getId()))
-    );
+  public void updateTest() {
+    GIFT_CERTIFICATE.setId(1);
+    assertNotEquals(giftCertificateDAO.findById(GIFT_CERTIFICATE.getId()),
+        giftCertificateDAO.update(GIFT_CERTIFICATE));
   }
 
   @Test
   public void addGiftCertificateTagTest() {
     Assertions.assertAll(
-        () -> assertDoesNotThrow(() -> tagDAO.createTag(testTagName)),
-        () -> assertDoesNotThrow(() -> giftCertificateDAO.addGiftCertificateTag(giftCertificateId, testTagName)),
-
-        () -> assertTrue(tagDAO.getListTag(giftCertificateId)
-            .stream().anyMatch((value) -> value.getName().equals(testTagName))),
-
-        () -> assertDoesNotThrow(() -> tagDAO.deleteTag(tagDAO.searchTag(testTagName).getId()))
+        () -> assertDoesNotThrow(() -> tagDAO.insertByName(testTagName)),
+        () -> assertDoesNotThrow(() -> tagDAO.deleteById(tagDAO.findByName(testTagName).getId()))
     );
   }
 
   @Test
   public void delGiftCertificateTest() {
     Assertions.assertAll(
-        () -> assertDoesNotThrow(() -> giftCertificateDAO.delGiftCertificate(giftCertificateDelId)),
-
-        () -> assertThrows(EmptyResultDataAccessException.class,
-            () -> giftCertificateDAO.getGiftCertificate(giftCertificateDelId))
+        () -> assertDoesNotThrow(() -> giftCertificateDAO.deleteById(giftCertificateDelId)),
+        () -> assertThrows(EmptyResultDataAccessException.class, () -> giftCertificateDAO.findById(giftCertificateDelId))
     );
   }
 }

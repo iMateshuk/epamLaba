@@ -1,11 +1,13 @@
 package com.epam.esm.service.util;
 
 public enum RequestedParameter {
-  SEARCH_TAG_NAME("tagName"),
-  SEARCH_NAME("searchName"),
-  SEARCH_DESCRIPTION("searchDescription"),
-  SORT_NAME("sortName"),
-  SORT_DATE("sortDate"),
+  JOIN_TAG_NAME("tagName"),
+
+  SEARCH_CERT_NAME("certName"),
+  SEARCH_CERT_DESC("certDesc"),
+
+  SORT_CERT_NAME("sortName"),
+  SORT_CERT_DATE("sortDate"),
 
   ;
 

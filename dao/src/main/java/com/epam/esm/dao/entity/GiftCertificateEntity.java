@@ -1,105 +1,69 @@
 package com.epam.esm.dao.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.envers.Audited;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Objects;
+import java.util.List;
 
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity(name = "Certificate")
+@Table(name = "gift_certificate", schema = "gc")
+@Audited
 public class GiftCertificateEntity implements Serializable {
 
-  private int id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
+  private Integer id;
+
+  @Column(nullable = false)
   private String name;
+
+  @Column(nullable = false)
   private String description;
-  private float price;
-  private int duration;
-  private Timestamp createDate;
-  private Timestamp lastUpdateDate;
 
-  public GiftCertificateEntity() {
-  }
+  @Column(nullable = false)
+  private Float price;
 
-  public int getId() {
-    return id;
-  }
+  @Column(nullable = false)
+  private Integer duration;
 
-  public void setId(int id) {
-    this.id = id;
-  }
+  @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
+  @JoinTable(name = "gc_tag", schema = "gc",
+      joinColumns = @JoinColumn(name = "gc_id", referencedColumnName = "id"),
+      inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
+  private List<TagEntity> tags;
 
-  public String getName() {
-    return name;
-  }
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "certificate", cascade = CascadeType.MERGE, orphanRemoval = true)
+  private List<OrderEntity> orders;
 
-  public void setName(String name) {
-    this.name = name;
-  }
+  @CreationTimestamp
+  @Column(name = "created_date", nullable = false, updatable = false)
+  private Timestamp createdDate;
 
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public float getPrice() {
-    return price;
-  }
-
-  public void setPrice(float price) {
-    this.price = price;
-  }
-
-  public int getDuration() {
-    return duration;
-  }
-
-  public void setDuration(int duration) {
-    this.duration = duration;
-  }
-
-  public Timestamp getCreateDate() {
-    return createDate;
-  }
-
-  public void setCreateDate(Timestamp createDate) {
-    this.createDate = createDate;
-  }
-
-  public Timestamp getLastUpdateDate() {
-    return lastUpdateDate;
-  }
-
-  public void setLastUpdateDate(Timestamp lastUpdateDate) {
-    this.lastUpdateDate = lastUpdateDate;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    GiftCertificateEntity giftCert = (GiftCertificateEntity) o;
-    return id == giftCert.id && Float.compare(giftCert.price, price) == 0 && duration == giftCert.duration && Objects.equals(name, giftCert.name) && Objects.equals(description, giftCert.description) && Objects.equals(createDate, giftCert.createDate) && Objects.equals(lastUpdateDate, giftCert.lastUpdateDate);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, name, description, price, duration, createDate, lastUpdateDate);
-  }
-
-  @Override
-  public String toString() {
-    return getClass().getName() + "{" +
-        "id=" + id +
-        ", name='" + name +
-        ", description='" + description +
-        ", price=" + price +
-        ", duration=" + duration +
-        ", createDate=" + createDate +
-        ", lastUpdateDate=" + lastUpdateDate +
-        '}';
-  }
+  @UpdateTimestamp
+  @Column(name = "modified_date", nullable = false)
+  private Timestamp modifiedDate;
 }

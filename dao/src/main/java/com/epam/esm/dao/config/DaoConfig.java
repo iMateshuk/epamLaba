@@ -1,52 +1,43 @@
 package com.epam.esm.dao.config;
 
-import com.epam.esm.dao.util.GiftCertificateSQL;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import org.springframework.transaction.TransactionManager;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource("classpath:db.properties")
+@AllArgsConstructor
 public class DaoConfig {
-  private final Environment environment;
-
-  public DaoConfig(Environment environment) {
-    this.environment = environment;
-  }
+  private final DaoConfigProperties configProperties;
 
   @Bean
   @Profile("prod")
   public DataSource dataSource() {
-    final String DRIVER = "driver";
-    final String URL = "url";
-    final String USER = "user";
-    final String PASSWORD = "password";
-    final String POOL_SIZE = "poolsize";
-
     ComboPooledDataSource dataSource = new ComboPooledDataSource();
-
     try {
-      dataSource.setDriverClass(environment.getProperty(DRIVER));
-      dataSource.setJdbcUrl(environment.getProperty(URL));
-      dataSource.setUser(environment.getProperty(USER));
-      dataSource.setPassword(environment.getProperty(PASSWORD));
-      dataSource.setInitialPoolSize(Integer.parseInt(Objects.requireNonNull(environment.getProperty(POOL_SIZE))));
+      dataSource.setDriverClass(configProperties.getDriver());
+      dataSource.setJdbcUrl(configProperties.getUrl());
+      dataSource.setUser(configProperties.getUser());
+      dataSource.setPassword(configProperties.getPassword());
+
+      dataSource.setInitialPoolSize(configProperties.getInitialPoolSize());
+      dataSource.setMinPoolSize(configProperties.getMinPoolSize());
+      dataSource.setMaxPoolSize(configProperties.getMaxPoolSize());
+      dataSource.setMaxIdleTime(configProperties.getMaxIdleTime());
 
     } catch (PropertyVetoException e) {
       throw new ExceptionInInitializerError(e);
@@ -57,52 +48,36 @@ public class DaoConfig {
   @Bean
   @Profile("dev")
   public DataSource embeddedDataSource() {
-
     return new EmbeddedDatabaseBuilder()
         .setType(EmbeddedDatabaseType.H2)
-        .setName("test;MODE=MySQL;IGNORECASE=TRUE;DATABASE_TO_UPPER=false;INIT=CREATE SCHEMA IF NOT EXISTS gc")
-        .addScript("classpath:sql/gc-dev.sql")
-        .addScript("classpath:sql/fill-gc.sql")
+        .setName(configProperties.getEmbUrl())
+        .addScript(configProperties.getEmbDev())
+        .addScript(configProperties.getEmbFill())
         .build();
   }
 
   @Bean
-  @Profile("prod")
-  public Map<GiftCertificateSQL, String> giftCertificateProd() {
-    Map<GiftCertificateSQL, String> giftCertificateSQLs = new HashMap<>();
+  public EntityManagerFactory entityManagerFactory(DataSource dataSource) {
+    Properties properties = new Properties();
+    properties.put("hibernate.hbm2ddl.auto", configProperties.getEmbHbmDdl());
+    properties.put("hibernate.show_sql", configProperties.getShowSql());
+    properties.put("hibernate.ddl-auto", configProperties.getDdlAuto());
+    properties.put("hibernate.naming-strategy", configProperties.getNameStrategy());
 
-    giftCertificateSQLs.put(GiftCertificateSQL.INSERT_GIFT_CERT, GiftCertificateSQL.INSERT_GIFT_CERT.getSQL());
-    giftCertificateSQLs.put(GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY, GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY.getSQL());
-    return giftCertificateSQLs;
+    LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+    factory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+    factory.setPackagesToScan(configProperties.getPackagesToScan());
+    factory.setDataSource(dataSource);
+    factory.setJpaProperties(properties);
+    factory.afterPropertiesSet();
+
+    return factory.getObject();
   }
 
   @Bean
-  @Profile("dev")
-  public Map<GiftCertificateSQL, String> giftCertificateDev() {
-    Map<GiftCertificateSQL, String> giftCertificateSQLs = new HashMap<>();
-
-    giftCertificateSQLs.put(GiftCertificateSQL.INSERT_GIFT_CERT, GiftCertificateSQL.INSERT_GIFT_CERT_TST.getSQL());
-    giftCertificateSQLs.put(GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY, GiftCertificateSQL.UPDATE_DATA_IF_NOT_NULL_EMPTY_TST.getSQL());
-    return giftCertificateSQLs;
-  }
-
-  @Bean
-  public JdbcTemplate jdbcTemplate(DataSource dataSource) {
-    return new JdbcTemplate(dataSource);
-  }
-
-  @Bean
-  public GiftCertificateMapper giftCertificateMapper() {
-    return new GiftCertificateMapper();
-  }
-
-  @Bean
-  public TagMapper tagMapper() {
-    return new TagMapper();
-  }
-
-  @Bean
-  public TransactionManager transactionManager(DataSource dataSource) {
-    return new DataSourceTransactionManager(dataSource);
+  public PlatformTransactionManager transactionManager(DataSource dataSource) {
+    JpaTransactionManager transactionManager = new JpaTransactionManager();
+    transactionManager.setEntityManagerFactory(entityManagerFactory(dataSource));
+    return transactionManager;
   }
 }

@@ -1,13 +1,17 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.TagDAO;
+import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.service.TagService;
-import com.epam.esm.service.dto.ErrorDto;
-import com.epam.esm.service.dto.TagConverter;
+import com.epam.esm.service.dto.ErrorDTO;
 import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.exception.ServiceConflictException;
 import com.epam.esm.service.exception.ServiceException;
+import com.epam.esm.service.page.Page;
+import com.epam.esm.service.page.PageParam;
+import com.epam.esm.service.util.Mapper;
 import com.epam.esm.service.util.Validator;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,67 +24,55 @@ import java.util.List;
  * @author Ivan Matsiashuk
  * @version 1.0
  */
+@AllArgsConstructor
 @Service
 public class TagServiceImpl implements TagService {
   private final TagDAO tagDAO;
   private final Validator validator;
+  private final Mapper mapper;
 
-  public TagServiceImpl(TagDAO tagDAO, Validator validator) {
-    this.tagDAO = tagDAO;
-    this.validator = validator;
-  }
-
-  /**
-   * @param name of new Tag.
-   * @return TagDTO
-   * <p>
-   * The method can throw ServiceConflictException extends RuntimeException
-   */
   @Transactional
   @Override
-  public TagDTO createTag(String name) {
+  public TagDTO insertByName(String name) {
     validator.matchField(name);
-    if (tagDAO.isTagExist(name)) {
-      throw new ServiceConflictException(new ErrorDto("tag.create.error", name), 201);
+    if (tagDAO.isExistByName(name)) {
+      throw new ServiceConflictException(new ErrorDTO("tag.create.error", name), 201);
     }
-    return TagConverter.toDto(tagDAO.createTag(name));
+    return mapper.toTarget(tagDAO.insertByName(name), TagDTO.class);
   }
 
-  /**
-   * @return List of TagDTO
-   */
-  @Transactional
   @Override
-  public List<TagDTO> searchTags() {
-    return TagConverter.toDto(tagDAO.searchTags());
+  public Page<TagDTO> findAll(PageParam pageParam) {
+    int pageNumber = pageParam.getPageNumber();
+    int pageSize = pageParam.getPageSize();
+
+    List<TagEntity> tags = tagDAO.findAll(pageNumber, pageSize);
+    Long count = tagDAO.count();
+
+    return Page.<TagDTO>builder()
+        .pageSize(pageSize)
+        .pageNumber(pageNumber)
+        .totalElements(count)
+        .lastPage(count / pageParam.getPageSize())
+        .list(mapper.toTarget(tags, TagDTO.class))
+        .build();
   }
 
-  /**
-   * @param id Tag field.
-   * @return TagDTO
-   * <p>
-   * The method can throw ServiceException extends RuntimeException
-   */
-  @Transactional
   @Override
-  public TagDTO searchTag(int id) {
-    if (!tagDAO.isTagExist(id)) {
-      throw new ServiceException(new ErrorDto("tag.search.error", id), 203);
+  public TagDTO findById(Integer id) {
+    TagEntity tagEntity = tagDAO.findById(id);
+    if (tagEntity == null) {
+      throw new ServiceException(new ErrorDTO("tag.search.error", id), 203);
     }
-    return TagConverter.toDto(tagDAO.searchTag(id));
+    return mapper.toTarget(tagEntity, TagDTO.class);
   }
 
-  /**
-   * @param id Tag field.
-   * <p>
-   * The method can throw ServiceException extends RuntimeException
-   */
   @Transactional
   @Override
-  public void deleteTag(int id) {
-    if (!tagDAO.isTagExist(id)) {
-      throw new ServiceException(new ErrorDto("tag.delete.error", id), 204);
+  public void deleteById(Integer id) {
+    if (!tagDAO.isExistById(id)) {
+      throw new ServiceException(new ErrorDTO("tag.delete.error", id), 204);
     }
-    tagDAO.deleteTag(id);
+    tagDAO.deleteById(id);
   }
 }

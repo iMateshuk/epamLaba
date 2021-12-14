@@ -5,19 +5,58 @@ import com.epam.esm.dao.entity.TagEntity;
 import java.util.List;
 
 public interface TagDAO {
-  TagEntity createTag(String tagName);
+  /**
+   *
+   * @param tagName
+   * @return new tagEntity
+   */
+  TagEntity insertByName(String tagName);
 
-  List<TagEntity> searchTags();
+  /**
+   *
+   * @param pageNumber
+   * @param pageSize
+   * @return list of tagEntity
+   */
+  List<TagEntity> findAll(int pageNumber, int pageSize);
 
-  List<TagEntity> getListTag(int giftCertificateId);
+  /**
+   *
+   * @return count of all tagEntity records
+   */
+  long count();
 
-  TagEntity searchTag(int id);
+  /**
+   *
+   * @param id
+   * @return tagEntity found by id
+   */
+  TagEntity findById(int id);
 
-  TagEntity searchTag(String tagName);
+  /**
+   *
+   * @param tagName
+   * @return tagEntity found by name
+   */
+  TagEntity findByName(String tagName);
 
-  boolean isTagExist(String tagName);
+  /**
+   *
+   * @param tagName
+   * @return true if tagEntity exist
+   */
+  boolean isExistByName(String tagName);
 
-  boolean isTagExist(int id);
+  /**
+   *
+   * @param id
+   * @return true if tagEntity exist
+   */
+  boolean isExistById(int id);
 
-  void deleteTag(int id);
+  /**
+   *
+   * @param id
+   */
+  void deleteById(int id);
 }

@@ -26,24 +26,24 @@ CREATE TABLE IF NOT EXISTS `gc`.`gift_certificate` (
   `description` VARCHAR(200) NOT NULL,
   `price` FLOAT UNSIGNED NOT NULL,
   `duration` INT NOT NULL,
-  `create_date` DATETIME NOT NULL,
-  `last_update_date` DATETIME NOT NULL,
+  `created_date` DATETIME NOT NULL,
+  `modified_date` DATETIME NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 15
+AUTO_INCREMENT = 162
 DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `gc`.`tag`
+-- Table `gc`.`tags`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `gc`.`tag` (
+CREATE TABLE IF NOT EXISTS `gc`.`tags` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 17
+AUTO_INCREMENT = 162
 DEFAULT CHARACTER SET = utf8mb3;
 
 
@@ -62,9 +62,46 @@ CREATE TABLE IF NOT EXISTS `gc`.`gc_tag` (
     ON DELETE CASCADE,
   CONSTRAINT `fk_tag_has_gift_certificate_tag`
     FOREIGN KEY (`tag_id`)
-    REFERENCES `gc`.`tag` (`id`)
+    REFERENCES `gc`.`tags` (`id`)
     ON DELETE CASCADE)
 ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `gc`.`users`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `gc`.`users` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_name` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `user_name_UNIQUE` (`user_name` ASC) VISIBLE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 11
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `gc`.`orders`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `gc`.`orders` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` INT UNSIGNED NOT NULL,
+  `cert_id` INT UNSIGNED NOT NULL,
+  `cost` FLOAT NOT NULL,
+  `created_date` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_order_user1_idx` (`user_id` ASC) VISIBLE,
+  INDEX `cert_id_idx` (`cert_id` ASC) VISIBLE,
+  CONSTRAINT `fk_cert_id`
+    FOREIGN KEY (`cert_id`)
+    REFERENCES `gc`.`gift_certificate` (`id`),
+  CONSTRAINT `fk_order_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `gc`.`users` (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 41
 DEFAULT CHARACTER SET = utf8mb3;
 
 

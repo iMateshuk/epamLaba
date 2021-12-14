@@ -6,25 +6,60 @@ import java.util.List;
 import java.util.Map;
 
 public interface GiftCertificateDAO {
-  GiftCertificateEntity createGiftCertificate(GiftCertificateEntity giftCertificateEntity);
+  /**
+   *
+   * @param giftCertificate
+   * @return new entity of certificate
+   */
+  GiftCertificateEntity insert(GiftCertificateEntity giftCertificate);
 
-  List<GiftCertificateEntity> getGiftCertificates();
+  /**
+   *
+   * @param id
+   * @return entity equal id
+   */
+  GiftCertificateEntity findById(int id);
 
-  GiftCertificateEntity getGiftCertificate(int id);
+  /**
+   *
+   * @param certificateName
+   * @return true if certificateName exist
+   */
+  boolean isExistByName(String certificateName);
 
-  boolean isExistGiftCertificate(String certificateName);
+  /**
+   *
+   * @param id
+   * @return true if certificate whith id exist
+   */
+  boolean isExistById(int id);
 
-  List<GiftCertificateEntity> getGiftCertificates(String tagName);
+  /**
+   *
+   * @param parameters
+   * @param pageNumber
+   * @param pageSize
+   * @return list of entity
+   */
+  List<GiftCertificateEntity> findAll(Map<String, String> parameters, int pageNumber, int pageSize);
 
-  boolean isExistGiftCertificate(int id);
+  /**
+   *
+   * @param parameters
+   * @return (Long) count
+   */
+  long count(Map<String, String> parameters);
 
-  List<GiftCertificateEntity> getGiftCertificates(Map<String, String> requestedParameters);
+  /**
+   *
+   * @param giftCertificate
+   * @return updated entity
+   */
+  GiftCertificateEntity update(GiftCertificateEntity giftCertificate);
 
-  GiftCertificateEntity updateGiftCertificate(GiftCertificateEntity giftCertificateEntity);
-
-  void delGiftCertificate(int id);
-
-  void delGiftCertificateAndTagBundle(int id);
-
-  void addGiftCertificateTag(int GiftCertificateId, String tagName);
+  /**
+   *
+   * @param id
+   */
+  void deleteById(int id);
 }
