@@ -1,8 +1,12 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.hateoas.OrderAssembler;
+import com.epam.esm.hateoas.OrderModel;
+import com.epam.esm.hateoas.PageModel;
 import com.epam.esm.hateoas.TagAssembler;
+import com.epam.esm.hateoas.TagModel;
 import com.epam.esm.hateoas.UserAssembler;
+import com.epam.esm.hateoas.UserModel;
 import com.epam.esm.page.PageModelCreator;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.dto.OrderDTO;
@@ -36,8 +40,10 @@ public class UserController {
   private final PageModelCreator modelCreator;
 
   @GetMapping
-  public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int pageNumber,
-                                   @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int pageSize) {
+  public ResponseEntity<PageModel<UserModel>> findAll(
+      @RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int pageNumber,
+      @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int pageSize) {
+
     PageParam pageParam = PageParam.builder().pageNumber(pageNumber).pageSize(pageSize).build();
     Page<UserDTO> page = userService.findAll(pageParam);
     return new ResponseEntity<>(
@@ -46,14 +52,16 @@ public class UserController {
   }
 
   @GetMapping("/{userId}")
-  public ResponseEntity<?> findById(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int userId) {
+  public ResponseEntity<UserModel> findById(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int userId) {
     return new ResponseEntity<>(userAssembler.toModel(userService.findById(userId)), HttpStatus.OK);
   }
 
   @GetMapping("/{userId}/orders")
-  public ResponseEntity<?> findOrdersByUserId(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int userId,
-                                              @RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int pageNumber,
-                                              @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int pageSize) {
+  public ResponseEntity<PageModel<OrderModel>> findOrdersByUserId(
+      @PathVariable @Min(1) @Max(Integer.MAX_VALUE) int userId,
+      @RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int pageNumber,
+      @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int pageSize) {
+
     PageParam pageParam = PageParam.builder().pageNumber(pageNumber).pageSize(pageSize).build();
     Page<OrderDTO> page = userService.findOrdersByUserId(userId, pageParam);
     linkTo(UserController.class).slash(userId).slash("orders");
@@ -65,15 +73,17 @@ public class UserController {
   }
 
   @GetMapping("/{userId}/orders/{orderId}")
-  public ResponseEntity<?> findUserOrderById(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int userId,
-                                             @PathVariable @Min(1) @Max(Integer.MAX_VALUE) int orderId) {
+  public ResponseEntity<OrderModel> findUserOrderById(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int userId,
+                                                      @PathVariable @Min(1) @Max(Integer.MAX_VALUE) int orderId) {
     return new ResponseEntity<>(orderAssembler.toModel(userService.findUserOrderById(userId, orderId)), HttpStatus.OK);
   }
 
   @GetMapping("/{userId}/orders/tags")
-  public ResponseEntity<?> findMostUsedTagWithCost(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int userId,
-                                                   @RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int pageNumber,
-                                                   @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int pageSize) {
+  public ResponseEntity<PageModel<TagModel>> findMostUsedTagWithCost(
+      @PathVariable @Min(1) @Max(Integer.MAX_VALUE) int userId,
+      @RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int pageNumber,
+      @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int pageSize) {
+
     PageParam pageParam = PageParam.builder().pageNumber(pageNumber).pageSize(pageSize).build();
     Page<TagDTO> page = userService.findTagWithCost(userId, pageParam);
     return new ResponseEntity<>(

@@ -27,7 +27,7 @@ public class OrderController {
   private final OrderAssembler orderAssembler;
 
   @GetMapping("/{id}")
-  public ResponseEntity<?> findById(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int id) {
+  public ResponseEntity<OrderModel> findById(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int id) {
     OrderModel orderModel = orderAssembler.toModel(orderService.findById(id));
     return new ResponseEntity<>(orderModel, HttpStatus.OK);
   }
