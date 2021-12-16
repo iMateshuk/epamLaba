@@ -2,10 +2,12 @@ package com.epam.esm.service.util;
 
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.entity.UserEntity;
+import com.epam.esm.service.dto.AuthRequest;
 import com.epam.esm.service.dto.ErrorDTO;
 import com.epam.esm.service.dto.GiftCertificateDTO;
 import com.epam.esm.service.exception.ValidationException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -15,6 +17,8 @@ import java.util.stream.Stream;
 @Component
 @AllArgsConstructor
 public class Validator {
+  private PasswordEncoder passwordEncoder;
+
   private static final int MIN_VALUE = 0;
   private static final int MIN_LEN_NAME = 3;
   private static final String RE_MATCH = "[\\w+( )?]+";
@@ -72,6 +76,17 @@ public class Validator {
     }
     if (!errors.isEmpty()) {
       throw new ValidationException(errors, 4);
+    }
+  }
+
+  public void validateLogin(AuthRequest authRequest, UserEntity userEntity) {
+    List<ErrorDTO> errors = new ArrayList<>();
+
+    if (userEntity == null || !passwordEncoder.matches(authRequest.getPassword(), userEntity.getPassword())) {
+      errors.add(new ErrorDTO("user.login.error"));
+    }
+    if (!errors.isEmpty()) {
+      throw new ValidationException(errors, 5);
     }
   }
 }

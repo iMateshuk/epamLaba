@@ -50,7 +50,7 @@ public class GiftCertificateController {
 
   /**
    * @param giftCertificateDTO with Tags
-   * @return GiftCertificateDTO
+   * @return GiftCertificateModel
    * <p>
    * The method can throw ValidationException extends RuntimeException
    */
@@ -62,7 +62,7 @@ public class GiftCertificateController {
 
   /**
    * @param parameters Map of parameters
-   * @return List of GiftCertificateDTO
+   * @return List of PageModel<GiftCertificateModel>
    * <p>
    * The method can throw ServiceException extends RuntimeException
    */
@@ -81,7 +81,7 @@ public class GiftCertificateController {
 
   /**
    * @param id must be positive
-   * @return GiftCertificateDTO
+   * @return GiftCertificateModel
    * <p>
    * The method can throw ValidationException extends RuntimeException
    */
@@ -94,7 +94,7 @@ public class GiftCertificateController {
   /**
    * @param giftCertificateDTO from @RequestBody
    * @param id                 positive int
-   * @return GiftCertificateDTO
+   * @return GiftCertificateModel
    * <p>
    * The method can throw ValidationException extends RuntimeException
    */

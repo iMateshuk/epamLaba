@@ -1,4 +1,6 @@
 dependencies{
 
     implementation project(':dao')
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
 }

@@ -1,12 +1,29 @@
 package com.epam.esm.service;
 
+import com.epam.esm.service.dto.AuthRequest;
+import com.epam.esm.service.dto.AuthResponse;
 import com.epam.esm.service.dto.OrderDTO;
 import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.dto.UserDTO;
 import com.epam.esm.service.page.Page;
 import com.epam.esm.service.page.PageParam;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public interface UserService {
+
+  /**
+   *
+   * @param authRequest
+   * @return
+   */
+  UserDTO save(AuthRequest authRequest);
+
+  /**
+   *
+   * @param authRequest
+   * @return
+   */
+  AuthResponse login(AuthRequest authRequest);
 
   /**
    *
@@ -21,6 +38,13 @@ public interface UserService {
    * @return userDTO found by id
    */
   UserDTO findById(Integer id);
+
+  /**
+   *
+   * @param login
+   * @return
+   */
+  UserDetails findByLogin(String login);
 
   /**
    *

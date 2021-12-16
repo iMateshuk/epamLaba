@@ -20,6 +20,12 @@ public class UserDaoImpl implements UserDAO {
   private final static String ID = "id";
 
   @Override
+  public UserEntity save(UserEntity userEntity) {
+    entityManager.persist(userEntity);
+    return findById(userEntity.getId());
+  }
+
+  @Override
   public List<UserEntity> findAll(int pageNumber, int pageSize) {
     return entityManager.createQuery(UserSQL.SELECT_ALL.getSQL(), UserEntity.class)
         .setFirstResult(pageNumber * pageSize)
@@ -35,6 +41,18 @@ public class UserDaoImpl implements UserDAO {
   @Override
   public UserEntity findById(Integer id) {
     return entityManager.find(UserEntity.class, id);
+  }
+
+  @Override
+  public UserEntity findByLogin(String login) {
+    final String LOGIN = "login";
+    return entityManager.createQuery(UserSQL.SELECT_USER_BY_LOGIN.getSQL(), UserEntity.class)
+        .setParameter(LOGIN, login).getResultList().stream().findFirst().orElse(null);
+  }
+
+  @Override
+  public boolean isUserExist(String login) {
+    return findByLogin(login) != null;
   }
 
   @Override

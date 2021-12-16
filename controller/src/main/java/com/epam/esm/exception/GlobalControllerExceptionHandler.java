@@ -1,7 +1,10 @@
 package com.epam.esm.exception;
 
 import com.epam.esm.service.dto.ErrorDTO;
-import com.epam.esm.service.exception.*;
+import com.epam.esm.service.exception.ServiceConflictException;
+import com.epam.esm.service.exception.ServiceException;
+import com.epam.esm.service.exception.ServiceValidationException;
+import com.epam.esm.service.exception.ValidationException;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,6 +20,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import javax.persistence.NoResultException;
 import javax.validation.ConstraintViolationException;
+import java.util.Arrays;
 
 @RestControllerAdvice
 @AllArgsConstructor
@@ -107,6 +111,9 @@ public class GlobalControllerExceptionHandler {
   @ExceptionHandler(Exception.class)
   @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
   public GlobalExceptionDTO handleException(Exception e) {
+    Arrays.stream(e.getStackTrace()).forEach(System.out::println);
+    System.out.println();
+    System.out.println(e.getMessage());
     return exceptionUtil.createDto(HttpStatus.SERVICE_UNAVAILABLE.value(), e.getClass().getSimpleName());
   }
 }
