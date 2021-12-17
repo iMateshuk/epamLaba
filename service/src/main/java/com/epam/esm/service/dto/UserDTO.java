@@ -16,5 +16,4 @@ public class UserDTO {
   private Integer id;
   private String login;
   private List<OrderDTO> orders;
-  private List<RoleDTO> roles;
 }

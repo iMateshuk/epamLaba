@@ -9,8 +9,6 @@ import com.epam.esm.hateoas.UserAssembler;
 import com.epam.esm.hateoas.UserModel;
 import com.epam.esm.page.PageModelCreator;
 import com.epam.esm.service.UserService;
-import com.epam.esm.service.dto.AuthRequest;
-import com.epam.esm.service.dto.AuthResponse;
 import com.epam.esm.service.dto.OrderDTO;
 import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.dto.UserDTO;
@@ -22,13 +20,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
@@ -45,16 +40,6 @@ public class UserController {
   private final OrderAssembler orderAssembler;
   private final TagAssembler tagAssembler;
   private final PageModelCreator modelCreator;
-
-  @PostMapping("/signup")
-  public ResponseEntity<UserModel> save(@Valid @RequestBody AuthRequest authRequest) {
-    return new ResponseEntity<>(userAssembler.toModel(userService.save(authRequest)), HttpStatus.CREATED);
-  }
-
-  @PostMapping("/login")
-  public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest authRequest) {
-    return new ResponseEntity<>(userService.login(authRequest), HttpStatus.OK);
-  }
 
   @GetMapping
   public ResponseEntity<PageModel<UserModel>> findAll(

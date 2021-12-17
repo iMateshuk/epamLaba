@@ -1,6 +1,6 @@
 package com.epam.esm.config;
 
-import com.epam.esm.service.security.JwtFilter;
+import com.epam.esm.filter.JwtFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -30,8 +30,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         ).permitAll()
         .antMatchers(
             HttpMethod.POST,
-            "/users/signup",
-            "/users/login"
+            "/signup",
+            "/login"
         ).permitAll()
         .antMatchers(
             HttpMethod.GET,

@@ -1,6 +1,7 @@
-package com.epam.esm.service.security;
+package com.epam.esm.filter;
 
-import com.epam.esm.service.UserService;
+import com.epam.esm.service.AuthService;
+import com.epam.esm.service.security.JwtProvider;
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,7 +27,7 @@ public class JwtFilter extends OncePerRequestFilter {
   private static final int SUBSTRING = 7;
 
   private final JwtProvider jwtProvider;
-  private final UserService userService;
+  private final AuthService authService;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -36,7 +37,7 @@ public class JwtFilter extends OncePerRequestFilter {
     if (token != null && jwtProvider.validateToken(token)) {
 
       String userLogin = jwtProvider.getLoginFromToken(token);
-      UserDetails userDetails = userService.findByLogin(userLogin);
+      UserDetails userDetails = authService.findByLogin(userLogin);
 
       UsernamePasswordAuthenticationToken auth =
           new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
