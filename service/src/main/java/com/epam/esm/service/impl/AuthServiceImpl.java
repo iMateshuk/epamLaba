@@ -9,13 +9,9 @@ import com.epam.esm.service.dto.AuthRequest;
 import com.epam.esm.service.dto.AuthResponse;
 import com.epam.esm.service.dto.ErrorDTO;
 import com.epam.esm.service.exception.ServiceConflictException;
-import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.security.JwtProvider;
-import com.epam.esm.service.security.UserDetailsImpl;
-import com.epam.esm.service.util.Mapper;
 import com.epam.esm.service.util.Validator;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,11 +25,9 @@ import java.util.stream.Collectors;
 public class AuthServiceImpl implements AuthService {
   private final UserDAO userDAO;
   private final RoleDAO roleDAO;
-  private final Mapper mapper;
   private final Validator validator;
   private final JwtProvider jwtProvider;
   private final PasswordEncoder passwordEncoder;
-  private final UserDetailsImpl userDetails;
 
   private final static String ROLE_USER = "ROLE_USER";
   private final static String EMPTY = "";
@@ -61,15 +55,6 @@ public class AuthServiceImpl implements AuthService {
     UserEntity userEntity = userDAO.findByLogin(authRequest.getLogin());
     validator.validateLogin(authRequest, userEntity);
     return buildAuthResponse(userEntity, jwtProvider.generateToken(userEntity));
-  }
-
-  @Override
-  public UserDetails findByLogin(String login) {
-    UserEntity userEntity = userDAO.findByLogin(login);
-    if (userEntity == null) {
-      throw new ServiceException(new ErrorDTO("user.search.error", login), 502);
-    }
-    return userDetails.toUserDetails(userEntity);
   }
 
   private AuthResponse buildAuthResponse(UserEntity userEntity, String token) {

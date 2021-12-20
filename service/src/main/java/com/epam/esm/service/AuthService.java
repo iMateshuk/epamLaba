@@ -2,7 +2,6 @@ package com.epam.esm.service;
 
 import com.epam.esm.service.dto.AuthRequest;
 import com.epam.esm.service.dto.AuthResponse;
-import org.springframework.security.core.userdetails.UserDetails;
 
 public interface AuthService {
 
@@ -19,11 +18,4 @@ public interface AuthService {
    * @return
    */
   AuthResponse login(AuthRequest authRequest);
-
-  /**
-   *
-   * @param login
-   * @return
-   */
-  UserDetails findByLogin(String login);
 }

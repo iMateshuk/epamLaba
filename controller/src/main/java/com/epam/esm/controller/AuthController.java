@@ -28,6 +28,6 @@ public class AuthController {
 
   @PostMapping("/login")
   public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest authRequest) {
-    return new ResponseEntity<>(authService.login(authRequest), HttpStatus.OK);
+    return ResponseEntity.ok(authService.login(authRequest));
   }
 }
