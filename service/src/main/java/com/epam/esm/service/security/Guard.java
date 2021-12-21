@@ -1,6 +1,6 @@
-package com.epam.esm.filter;
+package com.epam.esm.service.security;
 
-import com.epam.esm.config.Role;
+import com.epam.esm.service.config.Role;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 

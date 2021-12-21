@@ -1,5 +1,6 @@
 package com.epam.esm.config;
 
+import com.epam.esm.exception.FilterChainExceptionHandler;
 import com.epam.esm.filter.JwtFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -21,10 +23,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   private final JwtFilter jwtFilter;
+  private FilterChainExceptionHandler filterChainExceptionHandler;
 
   @Override
   protected void configure(HttpSecurity httpSecurity) throws Exception {
     httpSecurity
+        .addFilterBefore(filterChainExceptionHandler, LogoutFilter.class)
         .httpBasic().disable()
         .csrf().disable()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

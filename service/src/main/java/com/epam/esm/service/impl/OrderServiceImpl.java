@@ -10,12 +10,16 @@ import com.epam.esm.service.OrderService;
 import com.epam.esm.service.dto.ErrorDTO;
 import com.epam.esm.service.dto.OrderDTO;
 import com.epam.esm.service.dto.PurchaseDTO;
+import com.epam.esm.service.exception.ServiceAccessException;
 import com.epam.esm.service.exception.ServiceException;
+import com.epam.esm.service.security.Guard;
 import com.epam.esm.service.util.Mapper;
 import com.epam.esm.service.util.Validator;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 /**
  * Service Order
@@ -32,12 +36,16 @@ public class OrderServiceImpl implements OrderService {
   private final UserDAO userDAO;
   private final Validator validator;
   private final Mapper mapper;
+  private final Guard guard;
 
   @Override
   public OrderDTO findById(Integer id) {
     OrderEntity orderEntity = orderDAO.findById(id);
     if (orderEntity == null) {
       throw new ServiceException(new ErrorDTO("order.search.error", id), 401);
+    }
+    if (!guard.checkUserId(SecurityContextHolder.getContext().getAuthentication(), orderEntity.getUser().getId().toString())) {
+      throw new ServiceAccessException(new ErrorDTO("order.access.error", id), 402);
     }
     return mapper.toTarget(orderEntity, OrderDTO.class);
   }

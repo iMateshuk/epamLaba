@@ -1,6 +1,7 @@
 package com.epam.esm.exception;
 
 import com.epam.esm.service.dto.ErrorDTO;
+import com.epam.esm.service.exception.ServiceAccessException;
 import com.epam.esm.service.exception.ServiceConflictException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.exception.ServiceValidationException;
@@ -10,6 +11,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -20,7 +22,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import javax.persistence.NoResultException;
 import javax.validation.ConstraintViolationException;
-import java.util.Arrays;
 
 @RestControllerAdvice
 @AllArgsConstructor
@@ -50,6 +51,12 @@ public class GlobalControllerExceptionHandler {
   @ResponseStatus(HttpStatus.CONFLICT)
   public GlobalExceptionDTO handle(ServiceConflictException exception) {
     return exceptionUtil.createDto(exception.getErrorCode(), HttpStatus.CONFLICT, exception.getErrorDto());
+  }
+
+  @ExceptionHandler(value = {ServiceAccessException.class})
+  @ResponseStatus(HttpStatus.FORBIDDEN)
+  public GlobalExceptionDTO handle(ServiceAccessException exception) {
+    return exceptionUtil.createDto(exception.getErrorCode(), HttpStatus.FORBIDDEN, exception.getErrorDto());
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -108,12 +115,15 @@ public class GlobalControllerExceptionHandler {
     return exceptionUtil.createDto(HttpStatus.METHOD_NOT_ALLOWED.value(), e.getClass().getSimpleName());
   }
 
+  @ExceptionHandler(AccessDeniedException.class)
+  @ResponseStatus(HttpStatus.FORBIDDEN)
+  public GlobalExceptionDTO handleException(AccessDeniedException e) {
+    return exceptionUtil.createDto(HttpStatus.FORBIDDEN.value(), e.getClass().getSimpleName());
+  }
+
   @ExceptionHandler(Exception.class)
   @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
   public GlobalExceptionDTO handleException(Exception e) {
-    Arrays.stream(e.getStackTrace()).forEach(System.out::println);
-    System.out.println();
-    System.out.println(e.getMessage());
     return exceptionUtil.createDto(HttpStatus.SERVICE_UNAVAILABLE.value(), e.getClass().getSimpleName());
   }
 }
