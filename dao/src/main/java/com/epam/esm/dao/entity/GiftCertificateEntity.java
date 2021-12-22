@@ -5,7 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.CascadeType;
@@ -31,6 +33,8 @@ import java.util.List;
 @Entity(name = "Certificate")
 @Table(name = "gift_certificate", schema = "gc")
 @Audited
+@SQLDelete(sql = "UPDATE gc.gift_certificate SET deleted = true WHERE id=?")
+@Where(clause = "deleted = false")
 public class GiftCertificateEntity implements Serializable {
 
   @Id
@@ -56,7 +60,7 @@ public class GiftCertificateEntity implements Serializable {
       inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
   private List<TagEntity> tags;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "certificate", cascade = CascadeType.MERGE, orphanRemoval = true)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "certificate", cascade = CascadeType.MERGE)
   private List<OrderEntity> orders;
 
   @CreationTimestamp
@@ -66,4 +70,7 @@ public class GiftCertificateEntity implements Serializable {
   @UpdateTimestamp
   @Column(name = "modified_date", nullable = false)
   private Timestamp modifiedDate;
+
+  @Column(name = "deleted", nullable = false)
+  private boolean deleted = Boolean.FALSE;
 }

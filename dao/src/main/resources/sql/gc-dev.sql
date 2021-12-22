@@ -9,7 +9,8 @@ create table gift_certificate(
 	price float unsigned not null,
 	duration int not null,
 	created_date datetime not null,
-	modified_date datetime not null
+	modified_date datetime not null,
+	deleted bit not null  
 );
 
 -- tags

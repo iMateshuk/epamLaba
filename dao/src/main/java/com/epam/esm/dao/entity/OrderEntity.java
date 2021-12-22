@@ -39,7 +39,7 @@ public class OrderEntity implements Serializable {
   @JoinColumn(name = "user_id", nullable = false)
   private UserEntity user;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "cert_id", nullable = false)
   private GiftCertificateEntity certificate;
 
