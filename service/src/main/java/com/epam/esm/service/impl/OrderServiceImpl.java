@@ -46,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
       throw new ServiceException(new ErrorDTO("order.search.error", id), 401);
     }
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    if (!(guard.checkUserId(auth, orderEntity.getUser().getId().toString()) || guard.checkUserRole(auth))) {
+    if (!(guard.checkUserId(auth, orderEntity.getUser().getId().toString()) || guard.isAdmin(auth))) {
       throw new ServiceAccessException(new ErrorDTO("order.access.error", id), 402);
     }
     return mapper.toTarget(orderEntity, OrderDTO.class);

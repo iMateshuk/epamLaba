@@ -1,6 +1,5 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.service.security.Role;
 import com.epam.esm.hateoas.OrderAssembler;
 import com.epam.esm.hateoas.OrderModel;
 import com.epam.esm.hateoas.PageModel;
@@ -15,6 +14,7 @@ import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.dto.UserDTO;
 import com.epam.esm.service.page.Page;
 import com.epam.esm.service.page.PageParam;
+import com.epam.esm.service.security.Role;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

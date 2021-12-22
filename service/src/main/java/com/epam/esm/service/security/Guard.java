@@ -11,7 +11,7 @@ public class Guard {
     return id.equals(auth.getCredentials().toString());
   }
 
-  public boolean checkUserRole(Authentication auth) {
+  public boolean isAdmin(Authentication auth) {
     return auth.getAuthorities().toString().matches(ROLE_ADMIN_REG_EX);
   }
 }

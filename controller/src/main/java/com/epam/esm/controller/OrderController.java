@@ -33,7 +33,7 @@ public class OrderController {
     return new ResponseEntity<>(orderModel, HttpStatus.OK);
   }
 
-  @PreAuthorize("@guard.checkUserId(authentication,#purchaseDTO.userId) or @guard.checkUserRole(authentication)")
+  @PreAuthorize("@guard.checkUserId(authentication, #purchaseDTO.userId)")
   @PostMapping
   public ResponseEntity<OrderModel> insert(@Validated @RequestBody PurchaseDTO purchaseDTO) {
     OrderModel orderModel = orderAssembler.toModel(orderService.insert(purchaseDTO));
