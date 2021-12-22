@@ -1,4 +1,4 @@
-package com.epam.esm.service.config;
+package com.epam.esm.service.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

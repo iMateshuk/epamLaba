@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Getter
@@ -22,4 +24,9 @@ import javax.validation.constraints.NotNull;
 public class ServiceProperties {
   @NotNull
   private String jwtSecret;
+
+  @NotNull
+  @Min(1)
+  @Max(30)
+  private Integer jwtDuration;
 }

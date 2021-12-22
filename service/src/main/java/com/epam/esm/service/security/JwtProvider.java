@@ -27,13 +27,16 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Component
 public class JwtProvider {
-  private final ServiceProperties serviceProperties;
+  private final ServiceProperties properties;
 
   private final static String ROLES = "roles";
-  private final static int DAYS = 1;
 
   public String generateToken(UserEntity userEntity) {
-    Date date = Date.from(LocalDate.now().plusDays(DAYS).atStartOfDay(ZoneId.systemDefault()).toInstant());
+    Date date = Date.from(LocalDate.now()
+        .plusDays(properties.getJwtDuration())
+        .atStartOfDay(ZoneId.systemDefault())
+        .toInstant()
+    );
     return Jwts.builder()
         .setId(userEntity.getId().toString())
         .setSubject(userEntity.getLogin())
@@ -42,7 +45,7 @@ public class JwtProvider {
             .map(RoleEntity::getName)
             .collect(Collectors.toList())
         )
-        .signWith(SignatureAlgorithm.HS512, serviceProperties.getJwtSecret())
+        .signWith(SignatureAlgorithm.HS512, properties.getJwtSecret())
         .compact();
   }
 
@@ -86,6 +89,6 @@ public class JwtProvider {
   }
 
   private Jws<Claims> extractAllClaims(String token) {
-    return Jwts.parser().setSigningKey(serviceProperties.getJwtSecret()).parseClaimsJws(token);
+    return Jwts.parser().setSigningKey(properties.getJwtSecret()).parseClaimsJws(token);
   }
 }

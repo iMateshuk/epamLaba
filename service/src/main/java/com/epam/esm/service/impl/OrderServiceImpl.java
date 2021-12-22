@@ -16,6 +16,7 @@ import com.epam.esm.service.security.Guard;
 import com.epam.esm.service.util.Mapper;
 import com.epam.esm.service.util.Validator;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +45,8 @@ public class OrderServiceImpl implements OrderService {
     if (orderEntity == null) {
       throw new ServiceException(new ErrorDTO("order.search.error", id), 401);
     }
-    if (!guard.checkUserId(SecurityContextHolder.getContext().getAuthentication(), orderEntity.getUser().getId().toString())) {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (!(guard.checkUserId(auth, orderEntity.getUser().getId().toString()) || guard.checkUserRole(auth))) {
       throw new ServiceAccessException(new ErrorDTO("order.access.error", id), 402);
     }
     return mapper.toTarget(orderEntity, OrderDTO.class);
@@ -62,7 +64,10 @@ public class OrderServiceImpl implements OrderService {
     validator.validateEntitiesOfPurchaseDto(certificateEntity, certId, userEntity, userId);
 
     OrderEntity orderEntity = OrderEntity.builder()
-        .certificate(certificateEntity).cost(certificateEntity.getPrice()).user(userEntity).build();
+        .certificate(certificateEntity)
+        .cost(certificateEntity.getPrice())
+        .user(userEntity)
+        .build();
     return mapper.toTarget(orderDAO.insert(orderEntity), OrderDTO.class);
   }
 }

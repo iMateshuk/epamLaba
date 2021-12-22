@@ -45,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         ).permitAll()
         .antMatchers(
             "/users/{id}/**"
-        ).access("@guard.checkUserId(authentication,#id)")
+        ).access("@guard.checkUserId(authentication,#id) or @guard.checkUserRole(authentication)")
         .antMatchers(
             HttpMethod.GET,
             "/**"

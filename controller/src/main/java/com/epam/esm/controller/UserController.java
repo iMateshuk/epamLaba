@@ -1,6 +1,6 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.service.config.Role;
+import com.epam.esm.service.security.Role;
 import com.epam.esm.hateoas.OrderAssembler;
 import com.epam.esm.hateoas.OrderModel;
 import com.epam.esm.hateoas.PageModel;
