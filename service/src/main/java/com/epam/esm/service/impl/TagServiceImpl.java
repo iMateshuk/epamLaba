@@ -10,7 +10,6 @@ import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.page.Page;
 import com.epam.esm.service.page.PageParam;
 import com.epam.esm.service.util.Mapper;
-import com.epam.esm.service.util.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,13 +27,11 @@ import java.util.List;
 @Service
 public class TagServiceImpl implements TagService {
   private final TagDAO tagDAO;
-  private final Validator validator;
   private final Mapper mapper;
 
   @Transactional
   @Override
   public TagDTO insertByName(String name) {
-    validator.matchField(name);
     if (tagDAO.isExistByName(name)) {
       throw new ServiceConflictException(new ErrorDTO("tag.create.error", name), 201);
     }

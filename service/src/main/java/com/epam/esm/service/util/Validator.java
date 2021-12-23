@@ -5,17 +5,21 @@ import com.epam.esm.dao.entity.UserEntity;
 import com.epam.esm.service.dto.AuthRequest;
 import com.epam.esm.service.dto.ErrorDTO;
 import com.epam.esm.service.dto.GiftCertificateDTO;
+import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.exception.ValidationException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 @Component
 @AllArgsConstructor
+@Validated
 public class Validator {
   private PasswordEncoder passwordEncoder;
 
@@ -51,12 +55,15 @@ public class Validator {
     }
   }
 
+  public void validateTagDTO(@Valid TagDTO tagDTO) {
+  }
+
   public void matchField(String... fields) {
     List<ErrorDTO> errors = new ArrayList<>();
 
     Stream.of(fields).forEach((field) -> {
       if (!field.matches(RE_MATCH)) {
-        errors.add(new ErrorDTO("field.match.error", field));
+        errors.add(new ErrorDTO("field.validator.match.error", field));
       }
     });
     if (!errors.isEmpty()) {

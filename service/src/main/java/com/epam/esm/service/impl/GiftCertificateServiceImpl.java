@@ -5,6 +5,7 @@ import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.ErrorDTO;
 import com.epam.esm.service.dto.GiftCertificateDTO;
+import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.exception.ServiceConflictException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.page.Page;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -40,11 +42,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
   @Override
   public GiftCertificateDTO insert(GiftCertificateDTO certificateDTO) {
     String certificateName = certificateDTO.getName();
-    validator.matchField(certificateName, certificateDTO.getDescription());
     if (certificateDAO.isExistByName(certificateName)) {
       throw new ServiceConflictException(new ErrorDTO("certificate.name.create.error", certificateName), 101);
     }
-    if (certificateDTO.getTags() == null) {
+    List<TagDTO> tags = certificateDTO.getTags();
+    if (tags != null && !tags.isEmpty()) {
+      tags.forEach(validator::validateTagDTO);
+    }
+    if (tags == null) {
       certificateDTO.setTags(new ArrayList<>());
     }
     return mapper.toTarget(
@@ -88,16 +93,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     if (!certificateDAO.isExistById(id)) {
       throw new ServiceException(new ErrorDTO("certificate.search.error", id), 106);
     }
+    List<String> fields = new ArrayList<>();
+    fields.add(certificateDTO.getName());
+    fields.add(certificateDTO.getDescription());
 
-    String certificateName = certificateDTO.getName();
-    if (certificateName != null) {
-      validator.matchField(certificateName);
-    }
-
-    String certificateDescription = certificateDTO.getDescription();
-    if (certificateDescription != null) {
-      validator.matchField(certificateDescription);
-    }
+    validator.matchField(fields.stream().filter(Objects::nonNull).toArray(String[]::new));
     return mapper.toTarget(
         certificateDAO.update(mapper.toTarget(certificateDTO, GiftCertificateEntity.class)),
         GiftCertificateDTO.class

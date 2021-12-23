@@ -1,4 +1,4 @@
-package com.epam.esm.exception;
+package com.epam.esm.filter;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.annotation.Order;

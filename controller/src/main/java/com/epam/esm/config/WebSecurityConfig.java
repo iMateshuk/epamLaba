@@ -1,6 +1,6 @@
 package com.epam.esm.config;
 
-import com.epam.esm.exception.FilterChainExceptionHandler;
+import com.epam.esm.filter.FilterChainExceptionHandler;
 import com.epam.esm.filter.JwtFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;

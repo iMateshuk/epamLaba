@@ -30,40 +30,40 @@ public class GlobalControllerExceptionHandler {
 
   @ExceptionHandler(value = {ValidationException.class})
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public GlobalExceptionDTO handle(ValidationException exception) {
-    return exceptionUtil.createDto(exception.getErrorCode(), HttpStatus.BAD_REQUEST,
-        exception.getValidationErrors().toArray(new ErrorDTO[0]));
+  public GlobalExceptionDTO handle(ValidationException ex) {
+    return exceptionUtil.createDto(ex.getErrorCode(), HttpStatus.BAD_REQUEST,
+        ex.getValidationErrors().toArray(ErrorDTO[]::new));
   }
 
   @ExceptionHandler(value = {ServiceValidationException.class})
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public GlobalExceptionDTO handle(ServiceValidationException exception) {
-    return exceptionUtil.createDto(exception.getErrorCode(), HttpStatus.BAD_REQUEST, exception.getErrorDto());
+  public GlobalExceptionDTO handle(ServiceValidationException ex) {
+    return exceptionUtil.createDto(ex.getErrorCode(), HttpStatus.BAD_REQUEST, ex.getErrorDto());
   }
 
   @ExceptionHandler(value = {ServiceException.class})
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  public GlobalExceptionDTO handle(ServiceException exception) {
-    return exceptionUtil.createDto(exception.getErrorCode(), HttpStatus.NOT_FOUND, exception.getErrorDto());
+  public GlobalExceptionDTO handle(ServiceException ex) {
+    return exceptionUtil.createDto(ex.getErrorCode(), HttpStatus.NOT_FOUND, ex.getErrorDto());
   }
 
   @ExceptionHandler(value = {ServiceConflictException.class})
   @ResponseStatus(HttpStatus.CONFLICT)
-  public GlobalExceptionDTO handle(ServiceConflictException exception) {
-    return exceptionUtil.createDto(exception.getErrorCode(), HttpStatus.CONFLICT, exception.getErrorDto());
+  public GlobalExceptionDTO handle(ServiceConflictException ex) {
+    return exceptionUtil.createDto(ex.getErrorCode(), HttpStatus.CONFLICT, ex.getErrorDto());
   }
 
   @ExceptionHandler(value = {ServiceAccessException.class})
   @ResponseStatus(HttpStatus.FORBIDDEN)
-  public GlobalExceptionDTO handle(ServiceAccessException exception) {
-    return exceptionUtil.createDto(exception.getErrorCode(), HttpStatus.FORBIDDEN, exception.getErrorDto());
+  public GlobalExceptionDTO handle(ServiceAccessException ex) {
+    return exceptionUtil.createDto(ex.getErrorCode(), HttpStatus.FORBIDDEN, ex.getErrorDto());
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public GlobalExceptionDTO handle(MethodArgumentNotValidException exception) {
-    return exceptionUtil.createDto(exception.getErrorCount(), HttpStatus.BAD_REQUEST,
-        exception.getBindingResult().getAllErrors());
+  public GlobalExceptionDTO handle(MethodArgumentNotValidException ex) {
+    return exceptionUtil.createDto(ex.getErrorCount(), HttpStatus.BAD_REQUEST,
+        ex.getBindingResult().getAllErrors());
   }
 
   @ExceptionHandler(value = {EmptyResultDataAccessException.class})
@@ -92,15 +92,18 @@ public class GlobalControllerExceptionHandler {
 
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public GlobalExceptionDTO handleException(MethodArgumentTypeMismatchException e) {
-    return exceptionUtil.createDto(HttpStatus.BAD_REQUEST.value(), e.getClass().getSimpleName());
-  }
+  public GlobalExceptionDTO handleException(MethodArgumentTypeMismatchException ex) {
 
+    return exceptionUtil.createDto(
+        HttpStatus.BAD_REQUEST.value(),
+        HttpStatus.BAD_REQUEST,
+        new ErrorDTO(ex.getClass().getSimpleName(), ex.getParameter().getParameterName(), ex.getValue()));
+  }
 
   @ExceptionHandler(ConstraintViolationException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public GlobalExceptionDTO handleException(ConstraintViolationException e) {
-    return exceptionUtil.createDto(HttpStatus.BAD_REQUEST.value(), e.getClass().getSimpleName());
+  public GlobalExceptionDTO handleException(ConstraintViolationException ex) {
+    return exceptionUtil.createDto(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST, ex);
   }
 
   @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
