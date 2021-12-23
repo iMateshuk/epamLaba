@@ -1,6 +1,7 @@
 package com.epam.esm.filter;
 
 import com.epam.esm.service.security.JwtProvider;
+import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,12 +36,10 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     if (token != null) {
-      jwtProvider.validateToken(token);
+      Claims claims = jwtProvider.validateToken(token);
 
       UsernamePasswordAuthenticationToken auth =
-          new UsernamePasswordAuthenticationToken(
-              jwtProvider.getLogin(token), jwtProvider.getUserId(token), jwtProvider.getAuthorities(token)
-          );
+          new UsernamePasswordAuthenticationToken(claims.getSubject(), claims.getId(), jwtProvider.getAuthorities(claims));
       SecurityContextHolder.getContext().setAuthentication(auth);
     }
     filterChain.doFilter(request, response);

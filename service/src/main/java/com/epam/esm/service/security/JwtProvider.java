@@ -29,8 +29,6 @@ import java.util.stream.Collectors;
 public class JwtProvider {
   private final ServiceProperties properties;
 
-  private final static String ROLES = "roles";
-
   public String generateToken(UserEntity userEntity) {
     Date date = Date.from(LocalDate.now()
         .plusDays(properties.getJwtDuration())
@@ -41,7 +39,7 @@ public class JwtProvider {
         .setId(userEntity.getId().toString())
         .setSubject(userEntity.getLogin())
         .setExpiration(date)
-        .claim(ROLES, userEntity.getRoles().stream()
+        .claim(Role.ROLES, userEntity.getRoles().stream()
             .map(RoleEntity::getName)
             .collect(Collectors.toList())
         )
@@ -49,9 +47,10 @@ public class JwtProvider {
         .compact();
   }
 
-  public void validateToken(String token) {
+  public Claims validateToken(String token) {
+    Claims claims;
     try {
-      extractAllClaims(token);
+      claims = extractAllClaims(token).getBody();
     } catch (ExpiredJwtException expEx) {
       throw new ServiceAccessException(new ErrorDTO("jwt.token.expired", token), 701);
     } catch (UnsupportedJwtException unsEx) {
@@ -63,29 +62,18 @@ public class JwtProvider {
     } catch (IllegalArgumentException e) {
       throw new ServiceAccessException(new ErrorDTO("jwt.invalid.token", token), 705);
     }
-  }
-
-  public String getLogin(String token) {
-    return extractClaimsBody(token).getSubject();
-  }
-
-  public String getUserId(String token) {
-    return extractClaimsBody(token).getId();
+    return claims;
   }
 
   @SuppressWarnings("unchecked")
-  public List<SimpleGrantedAuthority> getAuthorities(String token) {
-    List<String> roles = (List<String>) extractClaimsBody(token).get(ROLES);
+  public List<SimpleGrantedAuthority> getAuthorities(Claims claims) {
+    List<String> roles = (List<String>) claims.get(Role.ROLES);
     if (roles == null) {
       roles = new ArrayList<>();
     }
     return roles.stream()
         .map(SimpleGrantedAuthority::new)
         .collect(Collectors.toList());
-  }
-
-  private Claims extractClaimsBody(String token) {
-    return extractAllClaims(token).getBody();
   }
 
   private Jws<Claims> extractAllClaims(String token) {
