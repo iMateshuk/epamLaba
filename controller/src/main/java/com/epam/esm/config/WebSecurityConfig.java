@@ -29,42 +29,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity httpSecurity) throws Exception {
     httpSecurity
         .addFilterBefore(filterChainExceptionHandler, LogoutFilter.class)
+        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
         .httpBasic().disable()
         .csrf().disable()
+        .headers().cacheControl().disable()
+        .and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
         .authorizeRequests()
-        .antMatchers("/").permitAll()
-        .antMatchers("/h2-console/**").permitAll()
-        .antMatchers(
-            HttpMethod.GET,
-            "/certificates/**"
-        ).permitAll()
-        .antMatchers(
-            HttpMethod.POST,
-            "/signup",
-            "/login"
-        ).permitAll()
         .antMatchers(
             "/users/{id}/**"
         ).access("@guard.checkUserId(authentication, #id) or @guard.isAdmin(authentication)")
-        .antMatchers(
-            HttpMethod.GET,
-            "/**"
-        ).hasRole("USER")
-        .antMatchers(
-            HttpMethod.POST,
-            "/orders"
-        ).hasRole("USER")
-        .antMatchers(
-            "/**"
-        ).hasRole("ADMIN")
-        .and()
-        .headers().cacheControl().disable()
-        .and()
-        .headers().frameOptions().disable()
-        .and()
-        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+        .antMatchers(HttpMethod.GET, "/certificates/**").permitAll()
+        .antMatchers(HttpMethod.POST, "/signup", "/login").permitAll()
+        .antMatchers(HttpMethod.GET, "/**").hasRole("USER")
+        .antMatchers(HttpMethod.POST, "/orders").hasRole("USER")
+        .antMatchers("/**").hasRole("ADMIN")
     ;
   }
 }
