@@ -4,6 +4,7 @@ import com.epam.esm.filter.FilterChainExceptionHandler;
 import com.epam.esm.filter.JwtFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -15,20 +16,33 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 
+import java.util.Arrays;
+
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(
-    securedEnabled = true,
-    jsr250Enabled = true,
-    prePostEnabled = true
-)
+@EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 @AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   private final JwtFilter jwtFilter;
   private final FilterChainExceptionHandler filterChainExceptionHandler;
+  private final Environment env;
+
+  private static final String DEV_PROFILE = "dev";
 
   @Override
   protected void configure(HttpSecurity httpSecurity) throws Exception {
+
+    if (Arrays.asList(env.getActiveProfiles()).contains(DEV_PROFILE)) {
+      httpSecurity = httpSecurity
+          .authorizeRequests()
+          .antMatchers("/").permitAll()
+          .antMatchers("/h2-console/**").permitAll()
+          .and()
+          .headers().frameOptions().disable()
+          .and()
+      ;
+    }
+
     httpSecurity
         .addFilterBefore(filterChainExceptionHandler, LogoutFilter.class)
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -50,6 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .exceptionHandling()
         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+        .and()
     ;
   }
 }
