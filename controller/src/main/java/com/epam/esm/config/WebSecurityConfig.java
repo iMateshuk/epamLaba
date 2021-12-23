@@ -23,7 +23,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 @AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   private final JwtFilter jwtFilter;
-  private FilterChainExceptionHandler filterChainExceptionHandler;
+  private final FilterChainExceptionHandler filterChainExceptionHandler;
 
   @Override
   protected void configure(HttpSecurity httpSecurity) throws Exception {
