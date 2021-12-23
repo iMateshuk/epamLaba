@@ -34,6 +34,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
         .authorizeRequests()
+        .antMatchers("/").permitAll()
+        .antMatchers("/h2-console/**").permitAll()
         .antMatchers(
             HttpMethod.GET,
             "/certificates/**"
@@ -59,6 +61,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         ).hasRole("ADMIN")
         .and()
         .headers().cacheControl().disable()
+        .and()
+        .headers().frameOptions().disable()
         .and()
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
     ;

@@ -1,11 +1,8 @@
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.TagDAO;
-import com.epam.esm.dao.config.DaoConfig;
-import com.epam.esm.dao.config.DaoConfigProperties;
 import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.dao.impl.GiftCertificateDaoImpl;
 import com.epam.esm.dao.impl.TagDaoImpl;
-import com.epam.esm.dao.page.PageData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -18,11 +15,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles(value = "dev")
-@SpringBootTest(classes = {GiftCertificateDaoImpl.class, DaoConfig.class, DaoConfigProperties.class, TagDaoImpl.class})
+@SpringBootTest(classes = {GiftCertificateDaoImpl.class, TagDaoImpl.class})
 public class GiftCertificateDbTest {
   private static final GiftCertificateEntity GIFT_CERTIFICATE = new GiftCertificateEntity();
 
@@ -53,8 +52,7 @@ public class GiftCertificateDbTest {
 
   @Test
   public void findAllTest() {
-    PageData pageData = PageData.builder().size(20).number(0).build();
-    Assertions.assertNotNull(giftCertificateDAO.findAll(new HashMap<>(), pageData));
+    Assertions.assertNotNull(giftCertificateDAO.findAll(new HashMap<>(), 0, 20));
   }
 
   @Test
