@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
@@ -35,7 +36,7 @@ public class OrderController {
 
   @PreAuthorize("@guard.checkUserId(authentication, #purchaseDTO.userId)")
   @PostMapping
-  public ResponseEntity<OrderModel> insert(@Validated @RequestBody PurchaseDTO purchaseDTO) {
+  public ResponseEntity<OrderModel> insert(@Valid @RequestBody PurchaseDTO purchaseDTO) {
     OrderModel orderModel = orderAssembler.toModel(orderService.insert(purchaseDTO));
     return new ResponseEntity<>(orderModel, HttpStatus.CREATED);
   }
