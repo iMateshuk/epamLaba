@@ -55,7 +55,7 @@ public class Validator {
     }
   }
 
-  public void validateTagDTO(@Valid TagDTO tagDTO) {
+  public void validateTagDTOs(@Valid List<TagDTO> tags) {
   }
 
   public void matchField(String... fields) {

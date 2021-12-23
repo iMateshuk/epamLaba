@@ -46,9 +46,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
       throw new ServiceConflictException(new ErrorDTO("certificate.name.create.error", certificateName), 101);
     }
     List<TagDTO> tags = certificateDTO.getTags();
-    if (tags != null && !tags.isEmpty()) {
-      tags.forEach(validator::validateTagDTO);
-    }
+    checkTags(tags);
     if (tags == null) {
       certificateDTO.setTags(new ArrayList<>());
     }
@@ -96,8 +94,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     List<String> fields = new ArrayList<>();
     fields.add(certificateDTO.getName());
     fields.add(certificateDTO.getDescription());
-
     validator.matchField(fields.stream().filter(Objects::nonNull).toArray(String[]::new));
+
+    checkTags(certificateDTO.getTags());
     return mapper.toTarget(
         certificateDAO.update(mapper.toTarget(certificateDTO, GiftCertificateEntity.class)),
         GiftCertificateDTO.class
@@ -118,5 +117,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         .filter((parameter) -> allRequestParams.get(parameter.getParameterKey()) != null)
         .collect(Collectors.toMap(RequestedParameter::toString,
             (parameter) -> (allRequestParams.get(parameter.getParameterKey()))));
+  }
+
+  private void checkTags(List<TagDTO> tags) {
+    if (tags != null && !tags.isEmpty()) {
+      validator.validateTagDTOs(tags);
+    }
   }
 }
