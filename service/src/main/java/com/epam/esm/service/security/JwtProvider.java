@@ -47,7 +47,7 @@ public class JwtProvider {
         .compact();
   }
 
-  public Claims validateTokenAndGetClaims(String token) {
+  public Claims extractClaims(String token) {
     Claims claims;
     try {
       claims = extractAllClaims(token).getBody();
