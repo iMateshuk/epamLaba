@@ -19,9 +19,10 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -67,11 +68,10 @@ public class JwtProvider {
 
   @SuppressWarnings("unchecked")
   public List<SimpleGrantedAuthority> getAuthorities(Claims claims) {
-    List<String> roles = (List<String>) claims.get(Role.ROLES);
-    if (roles == null) {
-      roles = new ArrayList<>();
-    }
-    return roles.stream()
+    return Optional.ofNullable(claims.get(Role.ROLES))
+        .map(claim -> (List<String>) claim)
+        .orElseGet(Collections::emptyList)
+        .stream()
         .map(SimpleGrantedAuthority::new)
         .collect(Collectors.toList());
   }

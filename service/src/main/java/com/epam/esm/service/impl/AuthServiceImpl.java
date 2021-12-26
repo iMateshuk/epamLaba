@@ -10,7 +10,7 @@ import com.epam.esm.service.dto.AuthResponse;
 import com.epam.esm.service.dto.ErrorDTO;
 import com.epam.esm.service.exception.ServiceConflictException;
 import com.epam.esm.service.security.JwtProvider;
-import com.epam.esm.service.util.Validator;
+import com.epam.esm.service.validation.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

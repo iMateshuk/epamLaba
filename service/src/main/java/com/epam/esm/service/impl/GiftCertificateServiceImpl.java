@@ -5,14 +5,12 @@ import com.epam.esm.dao.entity.GiftCertificateEntity;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.ErrorDTO;
 import com.epam.esm.service.dto.GiftCertificateDTO;
-import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.exception.ServiceConflictException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.page.Page;
 import com.epam.esm.service.page.PageParam;
 import com.epam.esm.service.util.Mapper;
 import com.epam.esm.service.util.RequestedParameter;
-import com.epam.esm.service.util.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -35,7 +32,6 @@ import java.util.stream.Collectors;
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
   private final GiftCertificateDAO certificateDAO;
-  private final Validator validator;
   private final Mapper mapper;
 
   @Transactional
@@ -45,9 +41,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     if (certificateDAO.isExistByName(certificateName)) {
       throw new ServiceConflictException(new ErrorDTO("certificate.name.create.error", certificateName), 101);
     }
-    List<TagDTO> tags = certificateDTO.getTags();
-    checkTags(tags);
-    if (tags == null) {
+    if (certificateDTO.getTags() == null) {
       certificateDTO.setTags(new ArrayList<>());
     }
     return mapper.toTarget(
@@ -91,12 +85,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     if (!certificateDAO.isExistById(id)) {
       throw new ServiceException(new ErrorDTO("certificate.search.error", id), 106);
     }
-    List<String> fields = new ArrayList<>();
-    fields.add(certificateDTO.getName());
-    fields.add(certificateDTO.getDescription());
-    validator.matchField(fields.stream().filter(Objects::nonNull).toArray(String[]::new));
-
-    checkTags(certificateDTO.getTags());
     return mapper.toTarget(
         certificateDAO.update(mapper.toTarget(certificateDTO, GiftCertificateEntity.class)),
         GiftCertificateDTO.class
@@ -117,11 +105,5 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         .filter((parameter) -> allRequestParams.get(parameter.getParameterKey()) != null)
         .collect(Collectors.toMap(RequestedParameter::toString,
             (parameter) -> (allRequestParams.get(parameter.getParameterKey()))));
-  }
-
-  private void checkTags(List<TagDTO> tags) {
-    if (tags != null && !tags.isEmpty()) {
-      validator.validateTagDTOs(tags);
-    }
   }
 }

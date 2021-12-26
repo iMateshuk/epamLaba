@@ -9,7 +9,7 @@ import com.epam.esm.service.page.Page;
 import com.epam.esm.service.page.PageParam;
 import com.epam.esm.service.util.RequestedParameter;
 import com.epam.esm.service.util.Mapper;
-import com.epam.esm.service.util.Validator;
+import com.epam.esm.service.validation.Validator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

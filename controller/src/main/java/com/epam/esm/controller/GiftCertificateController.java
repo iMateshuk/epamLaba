@@ -8,7 +8,7 @@ import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.dto.GiftCertificateDTO;
 import com.epam.esm.service.page.Page;
 import com.epam.esm.service.page.PageParam;
-import com.epam.esm.service.util.Validator;
+import com.epam.esm.service.validation.OnCertificateCreate;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +44,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @RequestMapping("/certificates")
 public class GiftCertificateController {
   private final GiftCertificateService certificateService;
-  private final Validator validator;
   private final GiftCertificateAssembler certificateAssembler;
   private final PageModelCreator modelCreator;
 
@@ -54,6 +53,7 @@ public class GiftCertificateController {
    * <p>
    * The method can throw ValidationException extends RuntimeException
    */
+  @Validated(OnCertificateCreate.class)
   @PostMapping
   public ResponseEntity<GiftCertificateModel> insert(@Valid @RequestBody GiftCertificateDTO giftCertificateDTO) {
     GiftCertificateModel certificateModel = certificateAssembler.toModel(certificateService.insert(giftCertificateDTO));
@@ -101,9 +101,8 @@ public class GiftCertificateController {
   @PatchMapping("/{id}")
   @ResponseStatus()
   public ResponseEntity<GiftCertificateModel> update(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int id,
-                                                     @RequestBody GiftCertificateDTO giftCertificateDTO) {
+                                                     @Valid @RequestBody GiftCertificateDTO giftCertificateDTO) {
     giftCertificateDTO.setId(id);
-    validator.validateCertificateForUpdate(giftCertificateDTO);
     certificateService.update(giftCertificateDTO);
     GiftCertificateModel certificateModel = certificateAssembler.toModel(certificateService.findById(id));
     return new ResponseEntity<>(certificateModel, HttpStatus.OK);

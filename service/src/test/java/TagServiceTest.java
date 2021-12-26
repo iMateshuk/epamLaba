@@ -7,7 +7,7 @@ import com.epam.esm.service.impl.TagServiceImpl;
 import com.epam.esm.service.page.Page;
 import com.epam.esm.service.page.PageParam;
 import com.epam.esm.service.util.Mapper;
-import com.epam.esm.service.util.Validator;
+import com.epam.esm.service.validation.Validator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,8 +20,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doThrow;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -73,7 +74,6 @@ public class TagServiceTest {
     assertEquals(tagDTO01, mockTagService.insertByName("123_ABC"));
     assertEquals(2, mockTagService.insertByName("123_ABC").getId());
 
-    doThrow(ValidationException.class).when(mockValidator).matchField("123!_*@");
     assertThrows(ValidationException.class, () -> mockTagService.insertByName("123!_*@"));
   }
 

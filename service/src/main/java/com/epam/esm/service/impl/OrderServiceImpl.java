@@ -14,7 +14,7 @@ import com.epam.esm.service.exception.ServiceAccessException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.security.Guard;
 import com.epam.esm.service.util.Mapper;
-import com.epam.esm.service.util.Validator;
+import com.epam.esm.service.validation.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
