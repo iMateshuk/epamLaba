@@ -5,6 +5,7 @@ import com.epam.esm.service.exception.ServiceAccessException;
 import com.epam.esm.service.exception.ServiceConflictException;
 import com.epam.esm.service.exception.ServiceException;
 import com.epam.esm.service.exception.ServiceValidationException;
+import com.epam.esm.service.exception.UnauthorizedException;
 import com.epam.esm.service.exception.ValidationException;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
@@ -57,6 +58,12 @@ public class GlobalControllerExceptionHandler {
   @ResponseStatus(HttpStatus.FORBIDDEN)
   public GlobalExceptionDTO handle(ServiceAccessException ex) {
     return exceptionUtil.createDto(ex.getErrorCode(), HttpStatus.FORBIDDEN, ex.getErrorDto());
+  }
+
+  @ExceptionHandler(value = {UnauthorizedException.class})
+  @ResponseStatus(HttpStatus.UNAUTHORIZED)
+  public GlobalExceptionDTO handle(UnauthorizedException ex) {
+    return exceptionUtil.createDto(ex.getErrorCode(), HttpStatus.UNAUTHORIZED, ex.getErrorDto());
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)

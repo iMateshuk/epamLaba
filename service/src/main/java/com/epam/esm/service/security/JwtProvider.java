@@ -4,7 +4,7 @@ import com.epam.esm.dao.entity.RoleEntity;
 import com.epam.esm.dao.entity.UserEntity;
 import com.epam.esm.service.config.ServiceProperties;
 import com.epam.esm.service.dto.ErrorDTO;
-import com.epam.esm.service.exception.ServiceAccessException;
+import com.epam.esm.service.exception.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -53,15 +53,15 @@ public class JwtProvider {
     try {
       claims = extractAllClaims(token).getBody();
     } catch (ExpiredJwtException expEx) {
-      throw new ServiceAccessException(new ErrorDTO("jwt.token.expired", token), 701);
+      throw new UnauthorizedException(new ErrorDTO("jwt.token.expired", token), 701);
     } catch (UnsupportedJwtException unsEx) {
-      throw new ServiceAccessException(new ErrorDTO("jwt.unsupported", token), 702);
+      throw new UnauthorizedException(new ErrorDTO("jwt.unsupported", token), 702);
     } catch (MalformedJwtException mjEx) {
-      throw new ServiceAccessException(new ErrorDTO("jwt.malformed", token), 703);
+      throw new UnauthorizedException(new ErrorDTO("jwt.malformed", token), 703);
     } catch (SignatureException sEx) {
-      throw new ServiceAccessException(new ErrorDTO("jwt.invalid.signature", token), 704);
+      throw new UnauthorizedException(new ErrorDTO("jwt.invalid.signature", token), 704);
     } catch (IllegalArgumentException e) {
-      throw new ServiceAccessException(new ErrorDTO("jwt.invalid.token", token), 705);
+      throw new UnauthorizedException(new ErrorDTO("jwt.invalid.token", token), 705);
     }
     return claims;
   }
