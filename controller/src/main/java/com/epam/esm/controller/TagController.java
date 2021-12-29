@@ -1,5 +1,6 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.hateoas.PageModel;
 import com.epam.esm.hateoas.TagAssembler;
 import com.epam.esm.hateoas.TagModel;
 import com.epam.esm.page.PageModelCreator;
@@ -48,7 +49,7 @@ public class TagController {
    * @return TagDTO
    */
   @PostMapping
-  public ResponseEntity<?> insert(@Valid @RequestBody TagDTO tagDTO) {
+  public ResponseEntity<TagModel> insert(@Valid @RequestBody TagDTO tagDTO) {
     TagModel tagModel = tagAssembler.toModel(tagService.insertByName(tagDTO.getName()));
     return new ResponseEntity<>(tagModel, HttpStatus.CREATED);
   }
@@ -57,8 +58,10 @@ public class TagController {
    * @return List of TagDTO
    */
   @GetMapping
-  public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int pageNumber,
-                                   @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int pageSize) {
+  public ResponseEntity<PageModel<TagModel>> findAll(
+      @RequestParam(required = false, defaultValue = "0") @Min(0) @Max(Integer.MAX_VALUE) int pageNumber,
+      @RequestParam(required = false, defaultValue = "20") @Min(2) @Max(50) int pageSize) {
+
     PageParam pageParam = PageParam.builder().pageNumber(pageNumber).pageSize(pageSize).build();
     Page<TagDTO> page = tagService.findAll(pageParam);
     return new ResponseEntity<>(
@@ -73,7 +76,7 @@ public class TagController {
    * The method can throw ValidationException extends RuntimeException
    */
   @GetMapping("/{id}")
-  public ResponseEntity<?> findById(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int id) {
+  public ResponseEntity<TagModel> findById(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int id) {
     TagModel tagModel = tagAssembler.toModel(tagService.findById(id));
     return new ResponseEntity<>(tagModel, HttpStatus.OK);
   }
@@ -84,7 +87,7 @@ public class TagController {
    *           The method can throw ValidationException extends RuntimeException
    */
   @DeleteMapping("/{id}")
-  public ResponseEntity<HttpStatus> deleteById(@PathVariable  @Min(1) @Max(Integer.MAX_VALUE) int id) {
+  public ResponseEntity<HttpStatus> deleteById(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int id) {
     tagService.deleteById(id);
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }

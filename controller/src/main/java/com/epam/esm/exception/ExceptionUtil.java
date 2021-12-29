@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -40,5 +41,18 @@ public class ExceptionUtil {
         })
         .collect(Collectors.toList());
     return new GlobalExceptionDTO(validationErrors, status.value() * MULTIPLIER + errorCode);
+  }
+
+  public GlobalExceptionDTO createDto(Integer errorCode, HttpStatus status, ConstraintViolationException ex) {
+    return createDto(errorCode, status,
+        ex.getConstraintViolations().stream()
+            .map(error -> {
+              var errorPath = error.getPropertyPath().toString();
+
+              return new ErrorDTO(error.getMessage(),
+                  errorPath.substring(errorPath.lastIndexOf(".") + 1), error.getInvalidValue());
+            })
+            .collect(Collectors.toList())
+            .toArray(ErrorDTO[]::new));
   }
 }

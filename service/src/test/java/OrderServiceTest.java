@@ -9,7 +9,7 @@ import com.epam.esm.service.dto.OrderDTO;
 import com.epam.esm.service.dto.PurchaseDTO;
 import com.epam.esm.service.impl.OrderServiceImpl;
 import com.epam.esm.service.util.Mapper;
-import com.epam.esm.service.util.Validator;
+import com.epam.esm.service.validation.Validator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

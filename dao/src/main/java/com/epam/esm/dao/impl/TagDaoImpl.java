@@ -41,7 +41,7 @@ public class TagDaoImpl implements TagDAO {
   @Override
   public TagEntity findByName(String tagName) {
     final String NAME = "name";
-    return entityManager.createQuery(TagSQL.SELECT_ALL_BY_NAME.getSQL(), TagEntity.class)
+    return entityManager.createQuery(TagSQL.SELECT_TAG_BY_NAME.getSQL(), TagEntity.class)
         .setParameter(NAME, tagName).getResultList().stream().findFirst().orElse(null);
   }
 

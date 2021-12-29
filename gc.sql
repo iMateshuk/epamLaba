@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS `gc`.`gift_certificate` (
   `duration` INT NOT NULL,
   `created_date` DATETIME NOT NULL,
   `modified_date` DATETIME NOT NULL,
+  `deleted` BIT(1) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 162
@@ -73,12 +74,12 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `gc`.`users` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_name` VARCHAR(45) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
+  `login` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(500) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `user_name_UNIQUE` (`user_name` ASC) VISIBLE)
+  UNIQUE INDEX `user_name_UNIQUE` (`login` ASC) VISIBLE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 11
+AUTO_INCREMENT = 34
 DEFAULT CHARACTER SET = utf8mb3;
 
 
@@ -102,6 +103,38 @@ CREATE TABLE IF NOT EXISTS `gc`.`orders` (
     REFERENCES `gc`.`users` (`id`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 41
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `gc`.`roles`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `gc`.`roles` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `role_UNIQUE` (`name` ASC) VISIBLE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 3
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `gc`.`users_roles`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `gc`.`users_roles` (
+  `users_id` INT UNSIGNED NOT NULL,
+  `roles_id` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`users_id`, `roles_id`),
+  INDEX `fk_users_has_roles_roles1_idx` (`roles_id` ASC) VISIBLE,
+  INDEX `fk_users_has_roles_users1_idx` (`users_id` ASC) VISIBLE,
+  CONSTRAINT `fk_users_has_roles_roles1`
+    FOREIGN KEY (`roles_id`)
+    REFERENCES `gc`.`roles` (`id`),
+  CONSTRAINT `fk_users_has_roles_users1`
+    FOREIGN KEY (`users_id`)
+    REFERENCES `gc`.`users` (`id`))
+ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
 

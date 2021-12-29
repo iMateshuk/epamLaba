@@ -1,4 +1,4 @@
-package com.epam.esm.config;
+package com.epam.esm.service.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,8 +6,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Getter
@@ -15,11 +18,15 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Configuration
-@ConfigurationProperties(prefix = "main")
+@PropertySource("classpath:jwt.properties")
+@ConfigurationProperties(prefix = "srv")
 @Validated
-public class MainConfigProperties {
+public class ServiceProperties {
   @NotNull
-  private String classpath;
+  private String jwtSecret;
+
   @NotNull
-  private String encoding;
+  @Min(1)
+  @Max(30)
+  private Integer jwtDuration;
 }

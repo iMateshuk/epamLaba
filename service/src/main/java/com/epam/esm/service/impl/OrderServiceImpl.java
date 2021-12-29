@@ -10,12 +10,17 @@ import com.epam.esm.service.OrderService;
 import com.epam.esm.service.dto.ErrorDTO;
 import com.epam.esm.service.dto.OrderDTO;
 import com.epam.esm.service.dto.PurchaseDTO;
+import com.epam.esm.service.exception.ServiceAccessException;
 import com.epam.esm.service.exception.ServiceException;
+import com.epam.esm.service.security.Guard;
 import com.epam.esm.service.util.Mapper;
-import com.epam.esm.service.util.Validator;
+import com.epam.esm.service.validation.Validator;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 /**
  * Service Order
@@ -32,12 +37,17 @@ public class OrderServiceImpl implements OrderService {
   private final UserDAO userDAO;
   private final Validator validator;
   private final Mapper mapper;
+  private final Guard guard;
 
   @Override
   public OrderDTO findById(Integer id) {
     OrderEntity orderEntity = orderDAO.findById(id);
     if (orderEntity == null) {
       throw new ServiceException(new ErrorDTO("order.search.error", id), 401);
+    }
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (!(guard.checkUserId(auth, orderEntity.getUser().getId().toString()) || guard.isAdmin(auth))) {
+      throw new ServiceAccessException(new ErrorDTO("order.access.error", id), 402);
     }
     return mapper.toTarget(orderEntity, OrderDTO.class);
   }
@@ -54,7 +64,10 @@ public class OrderServiceImpl implements OrderService {
     validator.validateEntitiesOfPurchaseDto(certificateEntity, certId, userEntity, userId);
 
     OrderEntity orderEntity = OrderEntity.builder()
-        .certificate(certificateEntity).cost(certificateEntity.getPrice()).user(userEntity).build();
+        .certificate(certificateEntity)
+        .cost(certificateEntity.getPrice())
+        .user(userEntity)
+        .build();
     return mapper.toTarget(orderDAO.insert(orderEntity), OrderDTO.class);
   }
 }

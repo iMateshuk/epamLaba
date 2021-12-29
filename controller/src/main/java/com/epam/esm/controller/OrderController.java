@@ -7,6 +7,7 @@ import com.epam.esm.service.dto.PurchaseDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
@@ -27,13 +29,14 @@ public class OrderController {
   private final OrderAssembler orderAssembler;
 
   @GetMapping("/{id}")
-  public ResponseEntity<?> findById(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int id) {
+  public ResponseEntity<OrderModel> findById(@PathVariable @Min(1) @Max(Integer.MAX_VALUE) int id) {
     OrderModel orderModel = orderAssembler.toModel(orderService.findById(id));
     return new ResponseEntity<>(orderModel, HttpStatus.OK);
   }
 
+  @PreAuthorize("@guard.checkUserId(authentication, #purchaseDTO.userId)")
   @PostMapping
-  public ResponseEntity<OrderModel> insert(@Validated @RequestBody PurchaseDTO purchaseDTO) {
+  public ResponseEntity<OrderModel> insert(@Valid @RequestBody PurchaseDTO purchaseDTO) {
     OrderModel orderModel = orderAssembler.toModel(orderService.insert(purchaseDTO));
     return new ResponseEntity<>(orderModel, HttpStatus.CREATED);
   }

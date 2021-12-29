@@ -18,6 +18,6 @@ import java.util.List;
 @Relation(collectionRelation = "users")
 public class UserModel extends RepresentationModel<UserModel> {
   private Integer id;
-  private String userName;
+  private String login;
   private List<OrderModel> orders;
 }

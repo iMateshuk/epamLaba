@@ -11,7 +11,6 @@ import com.epam.esm.service.page.Page;
 import com.epam.esm.service.page.PageParam;
 import com.epam.esm.service.util.Mapper;
 import com.epam.esm.service.util.RequestedParameter;
-import com.epam.esm.service.util.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,14 +32,12 @@ import java.util.stream.Collectors;
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
   private final GiftCertificateDAO certificateDAO;
-  private final Validator validator;
   private final Mapper mapper;
 
   @Transactional
   @Override
   public GiftCertificateDTO insert(GiftCertificateDTO certificateDTO) {
     String certificateName = certificateDTO.getName();
-    validator.matchField(certificateName, certificateDTO.getDescription());
     if (certificateDAO.isExistByName(certificateName)) {
       throw new ServiceConflictException(new ErrorDTO("certificate.name.create.error", certificateName), 101);
     }
@@ -87,16 +84,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     int id = certificateDTO.getId();
     if (!certificateDAO.isExistById(id)) {
       throw new ServiceException(new ErrorDTO("certificate.search.error", id), 106);
-    }
-
-    String certificateName = certificateDTO.getName();
-    if (certificateName != null) {
-      validator.matchField(certificateName);
-    }
-
-    String certificateDescription = certificateDTO.getDescription();
-    if (certificateDescription != null) {
-      validator.matchField(certificateDescription);
     }
     return mapper.toTarget(
         certificateDAO.update(mapper.toTarget(certificateDTO, GiftCertificateEntity.class)),

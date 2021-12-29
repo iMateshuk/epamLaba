@@ -41,6 +41,7 @@ public class UserAssembler implements RepresentationModelAssembler<UserDTO, User
   }
 
   private List<OrderModel> toOrderModel(List<OrderDTO> orders, UserModel userModel) {
+
     return orders.stream()
         .map(order -> {
           OrderModel orderModel = mapper.toTarget(order, OrderModel.class);
