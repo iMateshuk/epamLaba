@@ -11,6 +11,9 @@ allprojects {
     group = 'com.epam.esm'
     version = '1.0-SNAPSHOT'
 
+    apply plugin: 'application'
+    mainClassName = 'com.epam.esm.certificates'
+
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'java'
@@ -84,7 +87,6 @@ allprojects {
         implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
         annotationProcessor group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'
-
     }
 }
 

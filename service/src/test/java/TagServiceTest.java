@@ -2,7 +2,6 @@ import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.entity.TagEntity;
 import com.epam.esm.service.dto.TagDTO;
 import com.epam.esm.service.exception.ServiceException;
-import com.epam.esm.service.exception.ValidationException;
 import com.epam.esm.service.impl.TagServiceImpl;
 import com.epam.esm.service.page.Page;
 import com.epam.esm.service.page.PageParam;
@@ -71,10 +70,9 @@ public class TagServiceTest {
     when(mockTagDAO.isExistByName("123_ABC")).thenReturn(false);
     when(mockTagDAO.insertByName("123_ABC")).thenReturn(tagEntity01);
     when(mockMapper.toTarget(tagEntity01, TagDTO.class)).thenReturn(tagDTO01);
+
     assertEquals(tagDTO01, mockTagService.insertByName("123_ABC"));
     assertEquals(2, mockTagService.insertByName("123_ABC").getId());
-
-    assertThrows(ValidationException.class, () -> mockTagService.insertByName("123!_*@"));
   }
 
   @Test
