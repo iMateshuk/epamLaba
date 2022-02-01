@@ -72,5 +72,5 @@ public class GiftCertificateEntity implements Serializable {
   private Timestamp modifiedDate;
 
   @Column(name = "deleted", nullable = false)
-  private boolean deleted = Boolean.FALSE;
+  private final boolean deleted = Boolean.FALSE;
 }

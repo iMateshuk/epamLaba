@@ -8,6 +8,7 @@ import com.epam.esm.service.dto.GiftCertificateDTO;
 import com.epam.esm.service.dto.OrderDTO;
 import com.epam.esm.service.dto.PurchaseDTO;
 import com.epam.esm.service.impl.OrderServiceImpl;
+import com.epam.esm.service.security.Guard;
 import com.epam.esm.service.util.Mapper;
 import com.epam.esm.service.validation.Validator;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -29,7 +31,7 @@ import static org.mockito.Mockito.when;
 public class OrderServiceTest {
 
   @Autowired
-  private OrderServiceImpl mockOrderService;
+  private OrderServiceImpl orderService;
 
   @MockBean
   private OrderDAO mockOrderDAO;
@@ -46,13 +48,16 @@ public class OrderServiceTest {
   @MockBean
   private Validator mockValidator;
 
+  @MockBean
+  private Guard mockGuard;
+
   @Test
   public void insertByNameTest() {
     PurchaseDTO purchaseDTO = PurchaseDTO.builder().certId(1).userId(1).build();
     GiftCertificateEntity certificateEntity = GiftCertificateEntity.builder().id(1).price(99F).build();
     UserEntity userEntity = UserEntity.builder()
         .id(1)
-        .userName("name")
+        .login("name")
         .password("password")
         .orders(new ArrayList<>())
         .build();
@@ -66,10 +71,14 @@ public class OrderServiceTest {
 
     when(mockCertificateDAO.findById(purchaseDTO.getCertId())).thenReturn(certificateEntity);
     when(mockUserDAO.findById(purchaseDTO.getUserId())).thenReturn(userEntity);
+
+    doNothing().when(mockValidator)
+        .validateEntitiesOfPurchaseDto(certificateEntity, certificateEntity.getId(), userEntity, userEntity.getId());
+
     when(mockOrderDAO.insert(orderEntity)).thenReturn(orderEntity);
     when(mockMapper.toTarget(orderEntity, OrderDTO.class)).thenReturn(orderDTO);
 
-    assertEquals(orderDTO.getId(), mockOrderService.insert(purchaseDTO).getId());
-    assertEquals(orderDTO.getCost(), mockOrderService.insert(purchaseDTO).getCost());
+    assertEquals(1, orderService.insert(purchaseDTO).getId());
+    assertEquals(99F, orderService.insert(purchaseDTO).getCost());
   }
 }
