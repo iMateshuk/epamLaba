@@ -1,42 +1,32 @@
 import java.text.SimpleDateFormat
 
+rootProject.name = 'gift-certificate-app'
+file('subprojects').eachDir { dir ->
+    include dir.name
+    project(":${dir.name}").projectDir = dir
+}
+
 plugins {
     id 'org.springframework.boot' version '2.6.0'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'war'
     id 'application'
-    id "org.sonarqube" version "3.3"
 }
 
 allprojects {
-
-    ext.baseVersion = "1.0"
-    ext.snapshotVersion = true
-
-    group = "com.epam.esm"
-    version = "$baseVersion" + (snapshotVersion ? "-SNAPSHOT" : "")
-
-    mainClassName = 'com.epam.esm.CertificateApp'
-
-    sourceCompatibility = '11'
-    targetCompatibility = '11'
-}
-
-sonarqube {
-    properties {
-        property "sonar.projectName", "GiftCertificates-app"
-        property "sonar.projectKey", "org.sonarqube:gradle-multimodule"
-        property "sonar.sourceEncoding", "UTF-8"
-    }
-}
-
-subprojects {
 
     apply plugin: 'application'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'java'
+
+    group = 'com.epam.esm'
+    version = '1.0-SNAPSHOT'
+    mainClassName = 'com.epam.esm.CertificateApp'
+
+    sourceCompatibility = '11'
+    targetCompatibility = '11'
 
     repositories {
         mavenCentral()
@@ -102,13 +92,13 @@ subprojects {
 
         annotationProcessor group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'
     }
+}
 
-    sonarqube {
-        properties {
-            property "sonar.sources", "src"
-        }
-    }
+dependencies{
+    implementation project(':controller')
+}
+
+subprojects {
 
     task allDeps(type: DependencyReportTask) {}
 }
-
