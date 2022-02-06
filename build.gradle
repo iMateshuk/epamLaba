@@ -80,12 +80,6 @@ allprojects {
 
         annotationProcessor group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'
     }
-
-    sonarqube {
-        properties {
-            property "sonar.sources", "src"
-        }
-    }
 }
 
 sonarqube {
@@ -93,6 +87,7 @@ sonarqube {
         property "sonar.projectName", "GiftCertificates-app"
         property "sonar.projectKey", "org.sonarqube:gradle-multimodule"
         property "sonar.sourceEncoding", "UTF-8"
+        property "sonar.sources", "src"
     }
 }
 
