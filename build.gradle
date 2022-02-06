@@ -16,6 +16,7 @@ allprojects {
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'java'
+    apply plugin: 'jacoco'
 
     ext.baseVersion = "1.0"
     ext.snapshotVersion = true
@@ -27,6 +28,10 @@ allprojects {
     targetCompatibility = '11'
 
     mainClassName = 'com.epam.esm.CertificateApp'
+
+    jacoco {
+        toolVersion = "0.8.7"
+    }
 
     configurations {
         compileOnly {
@@ -81,15 +86,7 @@ allprojects {
 
         annotationProcessor group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'
     }
-}
 
-jacocoTestReport {
-    dependsOn test
-    reports {
-        xml.required = false
-        csv.required = false
-        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
-    }
 }
 
 sonarqube {
@@ -109,9 +106,14 @@ subprojects {
         testLogging {
             events "passed", "skipped", "failed"
         }
-        finalizedBy jacocoTestReport
     }
 
     task allDeps(type: DependencyReportTask) {}
+}
+
+jacocoTestReport {
+    reports {
+        xml.required=true
+    }
 }
 
