@@ -31,6 +31,16 @@ allprojects {
 
     jacoco {
         toolVersion = "0.8.7"
+        reportsDirectory = layout.buildDirectory.dir('jacoco')
+    }
+
+    jacocoTestReport {
+        reports {
+            xml.required=true
+            csv.required=false
+            html.required=false
+            xml.destination file("${buildDir}/jacoco/jacoco.xml")
+        }
     }
 
     configurations {
@@ -95,6 +105,8 @@ sonarqube {
         property "sonar.projectKey", "org.sonarqube:gradle-multimodule"
         property "sonar.sourceEncoding", "UTF-8"
         property "sonar.sources", "src"
+        property "sonar.core.codeCoveragePlugin", "jacoco"
+        property "sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/jacoco/jacoco.xml"
     }
 }
 
@@ -109,11 +121,5 @@ subprojects {
     }
 
     task allDeps(type: DependencyReportTask) {}
-}
-
-jacocoTestReport {
-    reports {
-        xml.required=true
-    }
 }
 
