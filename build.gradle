@@ -1,9 +1,15 @@
 import java.text.SimpleDateFormat
 
+
+
 plugins {
     id 'org.springframework.boot' version '2.6.0'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'war'
+    id 'application'
+    id 'org.sonarqube' version '3.3'
+    id 'jacoco'
 }
 
 allprojects {
@@ -12,16 +18,32 @@ allprojects {
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'java'
+    apply plugin: 'jacoco'
+    apply plugin: 'war'
 
-    group = 'com.epam.esm'
-    version = '1.0-SNAPSHOT'
-    mainClassName = 'com.epam.esm.CertificateApp'
+    ext.baseVersion = "1.0"
+    ext.snapshotVersion = true
+
+    group = "com.epam.esm"
+    version = "$baseVersion" + (snapshotVersion ? "-SNAPSHOT" : "")
 
     sourceCompatibility = '11'
     targetCompatibility = '11'
 
-    repositories {
-        mavenCentral()
+    mainClassName = 'com.epam.esm.CertificateApp'
+
+    jacoco {
+        toolVersion = "0.8.7"
+        reportsDirectory = layout.buildDirectory.dir('jacoco')
+    }
+
+    jacocoTestReport {
+        reports {
+            xml.required=true
+            csv.required=false
+            html.required=false
+            xml.destination file("${buildDir}/jacoco/jacoco.xml")
+        }
     }
 
     configurations {
@@ -30,15 +52,8 @@ allprojects {
         }
     }
 
-    test {
-        useJUnitPlatform()
-
-        dependsOn 'cleanTest'
-
-        testLogging {
-
-            events "passed", "skipped", "failed"
-        }
+    repositories {
+        mavenCentral()
     }
 
     ext.sharedManifest = manifest {
@@ -65,6 +80,12 @@ allprojects {
         }
     }
 
+    war {
+        manifest = project.manifest {
+            from sharedManifest
+        }
+    }
+
     dependencies {
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
         implementation 'org.springframework.boot:spring-boot-starter-hateoas'
@@ -83,10 +104,34 @@ allprojects {
         implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
         annotationProcessor group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'
+
+        providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    }
+
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectName", "GiftCertificates-app"
+        property "sonar.projectKey", "org.sonarqube:gradle-multimodule"
+        property "sonar.sourceEncoding", "UTF-8"
+        property "sonar.sources", "src"
+        property "sonar.core.codeCoveragePlugin", "jacoco"
+        property "sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/jacoco/jacoco.xml"
     }
 }
 
+
 subprojects {
+
+    test {
+        useJUnitPlatform()
+        dependsOn 'cleanTest'
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+    }
 
     task allDeps(type: DependencyReportTask) {}
 }
+
