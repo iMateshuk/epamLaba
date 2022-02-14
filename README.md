@@ -6,3 +6,4 @@ task_4
 task_5
 task_6
 jenkins.dev.dev
+task_7
