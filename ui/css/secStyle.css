@@ -1,0 +1,46 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: rgba(255, 255, 255, 0.73);
+    font-family: 'Arial', sans-serif;
+}
+
+.floatedTable {
+    float: left;
+}
+#CategoryName {
+    width:100%
+}
+#date{
+    width:97%
+}
+.nav {
+    text-align: center;
+}
+
+h2 {
+    left: 25%;
+    color: #ffffff;
+    background-color: #707070;
+    padding: 20px;
+}
+
+footer {
+    text-align: center;
+    background-color: white;
+}
+
+#Save {
+    border: none;
+    color: #ffffff;
+    background-color: green;
+}
+
+.tbl {
+
+    position: absolute;
+    left: 50%;
+    top: 26%;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+}
