@@ -4,47 +4,93 @@ body{
     background-color: rgba(255, 255, 255, 0.73);
     font-family: 'Arial', sans-serif;
 }
+nav {
+    color: #ffffff;
+    background-color: #707070;
+    padding: 5px;
+}
+.main{
+    width: 90%;
+    min-width: 800px;
+    margin: 0 auto;
+}
+
+.line{
+    margin: 0 auto;
+    display: flex;
+    flex: 100%;
+}
+
 .headTable{
     background-color: #707070;
     color: #000000;
     width:100%;
+    text-align: center;
 }
-.floatedTable {
+
+.box{
+    width: 50px;
+    height: 50px;
+    background-color: white;
+    margin: 0 auto;
+}
+
+.coupon {
+    width: 80%;
+    max-width: 235px;
+}
+
+
+.container {
+    padding: 2px 16px;
+    background-color: #f1f1f1;
+}
+
+.description{
+    font-size: 11px;
+}
+
+.expire{
+    font-size: 10px;
+    color: #6e6e6e;
+    text-align: right;
+}
+
+.icons{
+    text-align: right;
+}
+
+.bigBox{
+    width: 200px;
+    height: 200px;
+    background-color: #7a7a7a;
+    margin: 0 auto;
+}
+
+header{
+    padding-left: 1%;
+    padding-top: 1%;
+    padding-right: 1%;
+    width:98%;
+    text-align:center;
+}
+.left{
     float: left;
 }
-#CategoryName {
-    width:100%
-}
-#date{
-    width:97%
-}
-.nav {
+.center{
+    margin:0 auto;
     text-align: center;
 }
-
-h2 {
-    left: 25%;
-    color: #ffffff;
-    background-color: #707070;
-    padding: 20px;
+.right{
+    float: right;
+}
+a{
+    text-decoration: none;
 }
 
-footer {
-    text-align: center;
-    background-color: white;
+.search{
+    width: 300px;
 }
-
-#Save {
-    border: none;
-    color: #ffffff;
-    background-color: green;
-}
-
-.tbl {
-
-    position: absolute;
-    left: 50%;
-    top: 26%;
-    transform: translate(-50%, -50%);
-    padding: 10px;
+.search, .categories{
+    height: 40px;
 }

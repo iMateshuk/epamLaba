@@ -5,21 +5,35 @@
 
     <title>User Login</title>
     <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/headerStyle.css"/>
+    <link rel="stylesheet" type="text/css" href="css/footerStyle.css"/>
 </head>
 
 <body>
 
-<nav class="nav">
-    <form>
-        <input type="search" name="q" placeholder="Search by item name">
-        <select name="Categories">
+<header>
+    <div class="left">
+        <b>Logo</b>
+    </div>
+
+    <div class="right"><a href="#">Sign Up</a></div>
+    <div class="right"><b>|</b></div>
+    <div class="right"><a href="#">Login</a></div>
+
+    <div class="center">
+        <input type="search" name="q" placeholder="Search by item name" class="search">
+        <select name="Categories" class="categories">
             <option value="rigatoni">All Categories</option>
         </select>
-    </form>
-</nav>
-<main>
+    </div>
 
-    <h2>Logo</h2><br>
+</header>
+
+<main>
+    <div class="logo">
+        <span class="dot"> <h1>Logo</h1></span>
+    </div>
+
     <div class="login">
         <form method="post" action="login">
             <input type="text" name="Login" id="Login" placeholder="Login">

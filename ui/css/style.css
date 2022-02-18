@@ -1,71 +1,110 @@
-body{
+body {
     margin: 0;
     padding: 0;
-    background-color: rgba(154, 154, 154, 0.73);
     font-family: 'Arial', sans-serif;
+    background-color: rgba(154, 154, 154, 0.73);
 }
-.nav{
+
+.logo {
+    padding-top: 75px;
     text-align: center;
 }
-.reg{
+
+.dot {
+    height: 150px;
+    width: 150px;
+    line-height: 100px;
+    background-color: #707070;
+    border-radius: 50%;
+    text-align: center;
+    display: inline-block;
+}
+
+.circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 100px;
+    font-size: 20px;
+    color: #fff;
+    line-height: 150px;
+    text-align: center;
+    background: #7a7a7a;
+}
+
+.reg {
     background: #6e6e6e;
     text-align: left;
     color: #ffffff;
 }
-.table{
+
+.table {
     background: #ffffff;
+    margin-left: auto;
+    margin-right: auto;
+
 }
-.tbl{
-    margin: auto;
-    overflow: hidden;
-    width: 300px;
-    padding: 80px;
+#LoginName, #Name, #Password, #RepeatPass, #Email, #Address {
+    width: 200px;
+    height: 30px;
 }
-.login{
+.reg {
+    height: 50px;
+    font-size: 20px;
+    line-height: 50px;
+}
+
+.tbl {
+    padding-top: 150px;
+}
+
+.login {
     width: 382px;
     overflow: hidden;
-    padding: 80px;
+    padding: 50px;
     margin: auto;
-    background: #abaaaa;
+    background: white;
     text-align: center;
 }
-h2{
+
+h2 {
     text-align: center;
     color: #ffffff;
     padding: 20px;
 }
-#Login{
+
+#Login {
     width: 300px;
     height: 30px;
-    border: none;
-}
-#Pass{
-    width: 300px;
-    height: 30px;
-    border: none;
-}
-#log{
-    width: 300px;
-    height: 30px;
-    border: none;
-    color: #ffffff;
-    background-color: green;
-}
-#Sgn{
-    border: none;
-    color: #ffffff;
-    background-color: green;
-}
-span{
-    color: white;
-    font-size: 17px;
-}
-a{
-    float: right;
-    background-color: grey;
+    text-align: center;
 }
 
-footer{
+#Pass {
+    width: 300px;
+    height: 30px;
     text-align: center;
-    background-color: white;
+}
+
+#log {
+    width: 300px;
+    height: 30px;
+    border: none;
+    color: #ffffff;
+    background-color: green;
+}
+
+#Cancel {
+    width: 100px;
+    height: 30px;
+}
+
+#Sgn {
+    width: 100px;
+    height: 30px;
+    color: #ffffff;
+    background-color: green;
+}
+
+span {
+    color: white;
+    font-size: 17px;
 }

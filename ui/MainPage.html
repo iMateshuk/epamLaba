@@ -4,94 +4,208 @@
     <meta charset="utf-8">
 
     <title>Main Page</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" type="text/css" href="css/mainStyle.css"/>
 </head>
 
 <body>
 
-<nav class="nav">
-    <form>
-        <input type="search" name="q" placeholder="Search by item name">
-        <select name="Categories">
+<header>
+    <div class="left">
+        <b>Logo</b>
+    </div>
+
+    <div class="right"><a href="#">Sign Up</a></div>
+    <div class="right"><b>|</b></div>
+    <div class="right"><a href="#">Login</a></div>
+
+    <div class="center">
+        <input type="search" name="q" placeholder="Search by item name" class="search">
+        <select name="Categories" class="categories">
             <option value="rigatoni">All Categories</option>
         </select>
-    </form>
-</nav>
+    </div>
+
+</header>
+<br>
 <main>
-	<nav >
-      <ul class="headTable">
-        <li><a href="#">Category</a></li>
-        <li><a href="#">Category</a></li>
-        <li><a href="#">Category</a></li>
-        <li><a href="#">Category</a></li>
-      </ul>
-	</nav>
-	
-    <div class="tbl">
-        <table class="floatedTable">
+    <nav>
+        <table class="headTable">
             <tr>
-                <td>Company</td>
-            </tr>
-            <tr>
-                <td><input type="text" name="Company" id="Company"></td>
+                <td>
+                    <div class="box"></div>
+                </td>
+                <td>
+                    <div class="box"></div>
+                </td>
+                <td>
+                    <div class="box"></div>
+                </td>
+                <td>
+                    <div class="box"></div>
+                </td>
+                <td>
+                    <div class="box"></div>
+                </td>
+                <td>
+                    <div class="box"></div>
+                </td>
             </tr>
             <tr>
                 <td>Category</td>
-            </tr>
-            <tr>
-                <td><select name="CategoryName" id="CategoryName">
-                    <option value="1">Category Name</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                </select></td>
-            </tr>
-            <tr>
-                <td>Valid to</td>
-            </tr>
-            <tr>
-                <td><input id="date" type="date" value="2022-12-31"></td>
-            </tr>
-            <tr>
-                <td>Price</td>
-            </tr>
-            <tr>
-                <td><input type="text" name="Price" id="Price"></td>
-            </tr>
-            <tr>
-                <td>Images</td>
-            </tr>
-            <tr>
-                <td><input type="text" name="Images" id="Images"></td>
+                <td>Category</td>
+                <td>Category</td>
+                <td>Category</td>
+                <td>Category</td>
+                <td>Category</td>
             </tr>
         </table>
-        <table class="floatedTable">
-            <tr>
-                <td>Item Name</td>
-            </tr>
-            <tr>
-                <td><input type="text" name="ItemName" id="ItemName"></td>
-            </tr>
-            <tr>
-                <td>Short Description</td>
-            </tr>
-            <tr>
-                <td><textarea id="txtshort" name="txtshort" rows="4" cols="21"></textarea></td>
-            </tr>
-            <tr>
-                <td>Long Description</td>
-            </tr>
-            <tr>
-                <td><textarea id="txtlong" name="txtlong" rows="4" cols="21"></textarea></td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="submit" name="Back" id="Back" value="Back">
-                    <input type="submit" name="Save" id="Save" value="Save">
-                </td>
-            </tr>
-        </table>
+    </nav>
+    <br>
+    <div class="main">
+        <div class="line">
+            <div class="coupon">
+                <div class="bigBox"></div>
+                <div class="container" style="background-color:white">
+
+                    <table>
+                        <tr>
+                            <td><b>Coupon name</b></td>
+                            <td class="icons"><span class="material-icons">favorite</span></td>
+                        </tr>
+                        <tr>
+                            <td class="description">Some brief description</td>
+                            <td class="expire">Expires in 3 days</td>
+                        </tr>
+                        <tr>
+                            <td>$235</td>
+                            <td>
+                                <input type="submit" name="Cart" value="Add to Cart">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="coupon">
+                <div class="bigBox"></div>
+                <div class="container" style="background-color:white">
+
+                    <table>
+                        <tr>
+                            <td><b>Coupon name</b></td>
+                            <td class="icons"><span class="material-icons">favorite</span></td>
+                        </tr>
+                        <tr>
+                            <td class="description">Some brief description</td>
+                            <td class="expire">Expires in 3 days</td>
+                        </tr>
+                        <tr>
+                            <td>$235</td>
+                            <td>
+                                <input type="submit" name="Cart" value="Add to Cart">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="coupon">
+                <div class="bigBox"></div>
+                <div class="container" style="background-color:white">
+
+                    <table>
+                        <tr>
+                            <td><b>Coupon name</b></td>
+                            <td class="icons"><span class="material-icons">favorite</span></td>
+                        </tr>
+                        <tr>
+                            <td class="description">Some brief description</td>
+                            <td class="expire">Expires in 3 days</td>
+                        </tr>
+                        <tr>
+                            <td>$235</td>
+                            <td>
+                                <input type="submit" name="Cart" value="Add to Cart">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="line">
+            <div class="coupon">
+                <div class="bigBox"></div>
+                <div class="container" style="background-color:white">
+
+                    <table>
+                        <tr>
+                            <td><b>Coupon name</b></td>
+                            <td class="icons"><span class="material-icons">favorite</span></td>
+                        </tr>
+                        <tr>
+                            <td class="description">Some brief description</td>
+                            <td class="expire">Expires in 3 days</td>
+                        </tr>
+                        <tr>
+                            <td>$235</td>
+                            <td>
+                                <input type="submit" name="Cart" value="Add to Cart">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="coupon">
+                <div class="bigBox"></div>
+                <div class="container" style="background-color:white">
+
+                    <table>
+                        <tr>
+                            <td><b>Coupon name</b></td>
+                            <td class="icons"><span class="material-icons">favorite</span></td>
+                        </tr>
+                        <tr>
+                            <td class="description">Some brief description</td>
+                            <td class="expire">Expires in 3 days</td>
+                        </tr>
+                        <tr>
+                            <td>$235</td>
+                            <td>
+                                <input type="submit" name="Cart" value="Add to Cart">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="coupon">
+                <div class="bigBox"></div>
+                <div class="container" style="background-color:white">
+
+                    <table>
+                        <tr>
+                            <td><b>Coupon name</b></td>
+                            <td class="icons"><span class="material-icons">favorite</span></td>
+                        </tr>
+                        <tr>
+                            <td class="description">Some brief description</td>
+                            <td class="expire">Expires in 3 days</td>
+                        </tr>
+                        <tr>
+                            <td>$235</td>
+                            <td>
+                                <input type="submit" name="Cart" value="Add to Cart">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
+
 </main>
 
 </body>
