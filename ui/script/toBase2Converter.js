@@ -10,7 +10,7 @@
  *      5 -> "101"
  *      10 -> "1010"
  */
- function toBase2Converter(decimal) {
+function toBase2Converter(decimal) {
     if (decimal >= 1024) decimal = 1023;
     return (decimal >>> 0).toString(2);
 }

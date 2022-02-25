@@ -65,11 +65,11 @@ function substringOccurrencesCounter(substring, text) {
 function repeatingLitters(string) {
     var n = 2;
     let res = '';
-    for(let i = 0; i < string.length; i++){
+    for (let i = 0; i < string.length; i++) {
         if ((string.split(string[i]).length - 1) > 1) {
             res += string[i];
         } else {
-           res += string[i].repeat(n);
+            res += string[i].repeat(n);
         };
     };
     return res;
@@ -93,7 +93,7 @@ function repeatingLitters(string) {
  *      f3() ➞ ""
  */
 function redundant(str) {
-    return () => {return str};
+    return () => { return str };
 }
 
 /**
@@ -104,17 +104,17 @@ function redundant(str) {
  */
 function towerHanoi(disks) {
 
-    var x=0;
+    var x = 0;
     stepsToSolveHanoi(disks, "A", "C", "B");
     return x;
-    
+
     function stepsToSolveHanoi(disks, srcP, desP, bufferP) {
         if (disks >= 1) {
-      
+
             stepsToSolveHanoi(disks - 1, srcP, bufferP, desP);
-      
-          //console.log('Move disk from Tower ', srcP, ' to Tower ', desP);
-      
+
+            //console.log('Move disk from Tower ', srcP, ' to Tower ', desP);
+
             stepsToSolveHanoi(disks - 1, bufferP, desP, srcP);
 
             x++;
@@ -135,10 +135,10 @@ function matrixMultiplication(matrix1, matrix2) {
     let result = [];
 
     for (let X = 0; X < matrix1.length; X++) {
-  
+
         let newRow = [];
         for (let Y = 0; Y < matrix2[0].length; Y++) {
-          
+
             let newDotProd = 0;
             for (let i = 0; i < matrix1[X].length; i++) {
                 newDotProd += matrix1[X][i] * matrix2[i][Y];
@@ -165,25 +165,25 @@ function matrixMultiplication(matrix1, matrix2) {
  *      gather("a")("b")("c").order(2)(1)(0).get() ➞ "cba"
  *      gather("e")("l")("o")("l")("!")("h").order(5)(0)(1)(3)(2)(4).get()  ➞ "hello"
  */
- gather.words = [];
- function gather(word) {
-     gather.words.push(word);
-     return gather;
- }
- 
- gather.nums = [];
- gather.order = function(num) {
-     gather.nums.push(num);
-     return gather.order;
- }
- 
- gather.order.get = function() {
- 
-     var string = gather.nums
-         .map(num => gather.words[num])
-         .join('');
-     gather.nums = [];
-     gather.words = [];
-     
-     return string;
- }
+gather.words = [];
+function gather(word) {
+    gather.words.push(word);
+    return gather;
+}
+
+gather.nums = [];
+gather.order = function (num) {
+    gather.nums.push(num);
+    return gather.order;
+}
+
+gather.order.get = function () {
+
+    var string = gather.nums
+        .map(num => gather.words[num])
+        .join('');
+    gather.nums = [];
+    gather.words = [];
+
+    return string;
+}

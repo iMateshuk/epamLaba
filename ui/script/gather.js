@@ -22,20 +22,20 @@ function gather(str) {
 }
 
 gather.nums = [];
-gather.order = function(num) {
+gather.order = function (num) {
     gather.nums.push(num);
     return gather.order;
 }
 
-gather.order.get = function() {
+gather.order.get = function () {
 
     var string = gather.nums
         .map(num => gather.words[num])
         .join('');
-        
+
     gather.nums = [];
     gather.words = [];
-    
+
     return string;
 }
 module.exports = gather;

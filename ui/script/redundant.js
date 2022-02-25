@@ -17,7 +17,7 @@
  *      const f3 = redundant("")
  *      f3() ➞ ""
  */
- function redundant(str) {
-    return () => {return str};
+function redundant(str) {
+    return () => { return str };
 }
 module.exports = redundant;

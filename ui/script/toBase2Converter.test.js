@@ -5,7 +5,7 @@ test('5 -> 101', () => {
 });
 
 test('10 -> 1010', () => {
-    expect(toBase2Converter(10)).toBe('1010');
+  expect(toBase2Converter(10)).toBe('1010');
 });
 
 test('1024 -> 1111111111', () => {

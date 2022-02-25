@@ -12,7 +12,7 @@
  *      't', 'test it' -> 2
  *      'T', 'test it' -> 2
  */
- function substringOccurrencesCounter(substring, text) {
+function substringOccurrencesCounter(substring, text) {
     return text.toLowerCase().split(substring.toLowerCase()).length - 1;
 }
 module.exports = substringOccurrencesCounter;

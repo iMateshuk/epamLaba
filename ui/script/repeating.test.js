@@ -5,5 +5,5 @@ test('Hello -> HHeelloo', () => {
 });
 
 test('Hello world -> HHeello  wworrldd', () => {
-    expect(repeating('Hello world')).toBe('HHeello  wworrldd');
+  expect(repeating('Hello world')).toBe('HHeello  wworrldd');
 });
