@@ -67,23 +67,6 @@ nav {
     margin: 0 auto;
 }
 
-header{
-    padding-left: 1%;
-    padding-top: 1%;
-    padding-right: 1%;
-    width:98%;
-    text-align:center;
-}
-.left{
-    float: left;
-}
-.center{
-    margin:0 auto;
-    text-align: center;
-}
-.right{
-    float: right;
-}
 a{
     text-decoration: none;
 }
