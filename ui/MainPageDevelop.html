@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <title>Main Page</title>
+    <link rel="stylesheet" type="text/css" href="css/mainStyle.css"/>
+    <link rel="stylesheet" type="text/css" href="css/headerStyle.css"/>
+</head>
+
+<body>
+
+<header id="header">
+    <p class="left">
+        <b>Logo</b>
+    </p>
+
+    <p class="center">
+        <input type="txt" id="searchbar" onkeyup="myFunction()" name="search" placeholder="Search by item name"
+               class="search">
+        <select name="Categories" class="categories">
+            <option value="rigatoni">All Categories</option>
+        </select>
+    </p>
+
+    <p class="right">
+        <table>
+            <tr>
+                <td><a href="#" class="material-icons">favorite</a></td>
+                <td><a href="#" class="material-icons">shopping_cart</a></td>
+                <td><a href="#">Sign Up</a></td>
+                <td><b>|</b></td>
+                <td><a href="#">Login</a></td>
+            </tr>
+        </table>
+    </p>
+</header>
+<br>
+<main>
+    <nav id="nav">
+        <div class="inBox">
+            <div class="box"></div>
+            <button class="btn active" onclick="filterSelection('all')"> Show all</button>
+        </div>
+        <div class="inBox">
+            <div class="box"></div>
+            <button class="btn" onclick="filterSelection('yoga')"> Yoga</button>
+        </div>
+        <div class="inBox">
+            <div class="box"></div>
+            <button class="btn" onclick="filterSelection('tourism')"> Tourism</button>
+        </div>
+        <div class="inBox">
+            <div class="box"></div>
+            <button class="btn" onclick="filterSelection('sport')"> Sport</button>
+        </div>
+        <div class="inBox">
+            <div class="box"></div>
+            <button class="btn" onclick="filterSelection('rent')"> Rent</button>
+        </div>
+        <div class="inBox">
+            <div class="box"></div>
+            <button class="btn" onclick="filterSelection('book')"> Book</button>
+        </div>
+        <div class="inBox">
+            <div class="box"></div>
+            <button class="btn" onclick="filterSelection('entertainment')"> Entertainment</button>
+        </div>
+        <div class="inBox">
+            <div class="box"></div>
+            <button class="btn" onclick="filterSelection('puzzle')"> Puzzle</button>
+        </div>
+    </nav>
+    <br>
+
+    <div class="flexContainer"></div>
+
+</main>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+<button onclick="posFunction()" id="posBtn" title="Go to last position">Pos</button>
+
+<script type="text/javascript" src="js/main.js"></script>
+
+</body>
+</html>

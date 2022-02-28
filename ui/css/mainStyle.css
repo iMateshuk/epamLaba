@@ -1,79 +1,137 @@
-body{
+body {
     margin: 0;
     padding: 0;
     background-color: rgba(255, 255, 255, 0.73);
     font-family: 'Arial', sans-serif;
 }
+
 nav {
     color: #ffffff;
     background-color: #707070;
     padding: 5px;
-}
-.main{
-    width: 90%;
-    min-width: 800px;
-    margin: 0 auto;
-}
-
-.line{
-    margin: 0 auto;
-    display: flex;
-    flex: 100%;
-}
-
-.headTable{
-    background-color: #707070;
-    color: #000000;
-    width:100%;
+    width: 100%;
     text-align: center;
 }
 
-.box{
-    width: 50px;
-    height: 50px;
-    background-color: white;
-    margin: 0 auto;
+.inBox {
+    width: 7%;
 }
-
-.coupon {
-    width: 80%;
-    max-width: 235px;
-}
-
 
 .container {
-    padding: 2px 16px;
-    background-color: #f1f1f1;
+    width: 14%;
+    display: inline-block;
+    margin: 10px;
 }
 
-.description{
-    font-size: 11px;
+.inBox, .container {
+    text-align: center;
+    display: inline-block;
+    /*border-style: solid;
+    border-color: green;*/
 }
 
-.expire{
-    font-size: 10px;
-    color: #6e6e6e;
-    text-align: right;
+.box {
+    width: 75px;
+    height: 75px;
+    background-color: white;
 }
 
-.icons{
-    text-align: right;
-}
-
-.bigBox{
+.bigBox {
     width: 200px;
     height: 200px;
     background-color: #7a7a7a;
+}
+
+.box, .bigBox {
+    position: relative;
     margin: 0 auto;
 }
 
-a{
+.btn {
+    background: none;
+    color: black;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+}
+
+.btn:hover {
+    color: #733000;
+}
+
+/*.btn.active {
+    color: #4d0000;
+}*/
+
+.flexContainer {
+    margin-left: 10%;
+    width: 80%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.description {
+    font-size: 11px;
+}
+
+.expire, .tag {
+    font-size: 10px;
+    color: #6e6e6e;
+}
+
+.table {
+    width: 98%;
+}
+
+.price, .name, .description {
+    text-align: left;
+    width: 50%;
+}
+
+.icons, .expire, td {
+    text-align: right;
+}
+
+a {
     text-decoration: none;
 }
 
-.search{
+.search {
     width: 300px;
 }
-.search, .categories{
+
+.categories {
     height: 40px;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+#myBtn, #posBtn {
+    display: none; /* Hidden by default */
+    position: fixed; /* Fixed/sticky position */
+    bottom: 20px; /* Place the button at the bottom of the page */
+    right: 30px; /* Place the button 30px from the right */
+    z-index: 99; /* Make sure it does not overlap */
+    border: none; /* Remove borders */
+    outline: none; /* Remove outline */
+    background-color: red; /* Set a background color */
+    color: white; /* Text color */
+    cursor: pointer; /* Add a mouse pointer on hover */
+    padding: 15px; /* Some padding */
+    border-radius: 10px; /* Rounded corners */
+    font-size: 18px; /* Increase font size */
+}
+
+#posBtn {
+    background-color: #00bbff; /* Set a background color */
+}
+
+#myBtn:hover, #posBtn:hover  {
+    background-color: #555; /* Add a dark-grey background on hover */
 }
