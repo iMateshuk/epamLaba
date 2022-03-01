@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: rgba(255, 255, 255, 0.73);
+    background-color: #e0e0e0;
     font-family: 'Arial', sans-serif;
 }
 
@@ -13,6 +13,9 @@ nav {
     text-align: center;
 }
 
+main{
+
+}
 .inBox {
     width: 7%;
 }
@@ -21,23 +24,34 @@ nav {
     width: 14%;
     display: inline-block;
     margin: 10px;
+    background-color: white;
+    border-style: solid;
+    border-color: #707070;
+    overflow:hidden;
 }
 
 .inBox, .container {
     text-align: center;
     display: inline-block;
-    /*border-style: solid;
-    border-color: green;*/
 }
 
 .box {
-    width: 75px;
-    height: 75px;
+    width: 100px;
+    height: 100px;
     background-color: white;
+}
+img{
+    width: 100px;
+    height: 100px;
+    transition: transform .2s;
+}
+
+img:hover {
+    transform: scale(1.05);
 }
 
 .bigBox {
-    width: 200px;
+    width: 100%;
     height: 200px;
     background-color: #7a7a7a;
 }
@@ -83,9 +97,13 @@ nav {
 }
 
 .table {
-    width: 98%;
+    width: 100%;
+    border-collapse: collapse;
 }
 
+.trMarkBottomLine{
+    border-bottom: 1pt dashed #707070;
+}
 .price, .name, .description {
     text-align: left;
     width: 50%;

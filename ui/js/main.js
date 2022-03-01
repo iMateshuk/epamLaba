@@ -34,17 +34,21 @@ function createPost() {
     name = name.charAt(0).toUpperCase() + name.substr(1);
     let description = descriptions[Math.floor(Math.random() * descriptions.length)];
     let tag = tags[Math.floor(Math.random() * tags.length)];
+    let img = Math.floor(Math.random() * 9);
 
     const post = document.createElement('div');
     post.className = 'container';
     post.innerHTML = `
-            <div class="bigBox"></div>
+            <img src="../../img/${img}.jpg" alt="no imh" class="bigBox">
             <table class="table">
                 <tr>
                     <td class="name"><b>${name}</b></td>
-                    <td class="icons"> <span class="material-icons">favorite</span> <div class="tag">${tag}</div></td>
+                    <td class="icons"> 
+                        <span class="material-icons">favorite</span> 
+                        <div class="tag">${tag}</div>
+                    </td>
                 </tr>
-                <tr>
+                <tr class="trMarkBottomLine">
                     <td class="description">${description}</td>
                     <td class="expire">Expires in ${expire} days</td>
                 </tr>
