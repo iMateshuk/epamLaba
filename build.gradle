@@ -99,7 +99,7 @@ allprojects {
         annotationProcessor 'org.projectlombok:lombok'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-        implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.5'
+        implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.0.0'
 
         implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
