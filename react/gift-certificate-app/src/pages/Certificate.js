@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { Button, ButtonGroup, Container, Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
-import { isRoleAdmin, getUserToken } from '../components/UtilUserData'
+import { isRoleAdmin } from '../components/UtilUserData'
+import { deleteCert, getCerts } from '../components/UtilCert'
+import { CertViewModel, CertDeleteModel } from '../components/UtilModal'
 
 export default class Certificate extends Component {
 
@@ -13,20 +15,12 @@ export default class Certificate extends Component {
     }
 
     componentDidMount() {
-        fetch("/gift-certificate-app/certificates")
-            .then(async response => response.json())
+        getCerts()
             .then(data => this.setState({ allCertData: data, certificates: data.list }));
     }
 
-    async remove(id) {
-        await fetch(`/gift-certificate-app/certificates/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getUserToken()}`
-            }
-        }).then(() => {
+    remove(id) {
+        deleteCert(id).then(() => {
             let updatedCertificates = [...this.state.certificates].filter(i => i.id !== id);
             this.setState({ certificates: updatedCertificates });
         });
@@ -51,15 +45,9 @@ export default class Certificate extends Component {
                 <td>{cert.tags.map(tag => <div>{tag.name}</div>)} </td>
                 <td>
                     <ButtonGroup>
-                        <Button size="sm" variant="primary" tag={Link} to={"/gift-certificate-app/certificates/" + cert.id}>View</Button>
-                        {isAdmin ?
-                            <Button size="sm" variant="warning" href={"/gift-certificate-app/certificates/" + cert.id} >Edit</Button>
-                            : ''
-                        }
-                        {isAdmin ?
-                            <Button size="sm" variant="danger" onClick={() => this.remove(cert.id)}>Delete</Button>
-                            : ''
-                        }
+                        <CertViewModel cert={cert} />
+                        {isAdmin ? <Button size="sm" variant="warning" href={"/gift-certificate-app/certificates/" + cert.id} >Edit</Button> : ''}
+                        {isAdmin ? <CertDeleteModel cert={cert} onClick={() => this.remove(cert.id)} /> : ''}
                     </ButtonGroup>
                 </td>
             </tr>
@@ -70,12 +58,7 @@ export default class Certificate extends Component {
             <div className='default'>
                 <Header />
                 <Container fluid>
-                    {isAdmin ?
-                        <div className="float-right">
-                            <Button variant="primary" tag={Link} to="/gift-certificate-app/certificates/new">Add new</Button>
-                        </div>
-                        : ''
-                    }
+                    {isAdmin ? <div className="float-right"> <Button variant="primary" tag={Link} to="/gift-certificate-app/certificates/new">Add new</Button> </div> : ''}
 
                     <Table className="mt-4">
                         <thead>
