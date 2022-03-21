@@ -7,7 +7,7 @@ public enum PredicateParameter {
   SEARCH_CERT_DESC("description"),
 
   SORT_CERT_NAME("name"),
-  SORT_CERT_DATE("lastUpdateDate"),
+  SORT_CERT_DATE("modifiedDate"),
 
   ORDER_DESC("desc"),
   ORDER_ASC("asc"),

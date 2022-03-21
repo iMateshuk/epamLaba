@@ -1,7 +1,5 @@
 import {useState} from 'react';
 import {Button, Modal} from 'react-bootstrap';
-import {deleteCert} from './UtilCert'
-
 
 export const CertViewModel = (props) => {
 
@@ -16,16 +14,24 @@ export const CertViewModel = (props) => {
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Certificate id={props.cert.id} </Modal.Title>
+                    <Modal.Title>Certificate id={props.cert.key} </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <tr>Name: {props.cert.name}</tr>
-                    <tr>Description: {props.cert.description}</tr>
-                    <tr>Price: {props.cert.price}</tr>
-                    <tr>Duration: {props.cert.duration}</tr>
-                    <tr>Created Date: {props.cert.createdDate}</tr>
-                    <tr>Modified Date: {props.cert.modifiedDate}</tr>
-                    <tr>Tags: {props.cert.tags.map(tag => <div>{tag.name}</div>)}</tr>
+                    <table>
+                        <tbody>
+                        <tr key={props.cert.key}>
+                            <td>
+                                <div key={props.cert.name}>Name: {props.cert.name}</div>
+                                <div key={props.cert.description}>Description: {props.cert.description}</div>
+                                <div key={props.cert.price}>Price: {props.cert.price}</div>
+                                <div key={props.cert.duration}>Duration: {props.cert.duration}</div>
+                                <div key={props.cert.key + 1}>Created Date: {props.cert.createdDate}</div>
+                                <div key={props.cert.modifiedDate}>Modified Date: {props.cert.modifiedDate}</div>
+                                <div key={props.cert.key + 2}>Tags: {props.cert.tags.map(tag => <div key={tag.name}>{tag.name}</div>)}</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}> Close </Button>
@@ -48,13 +54,16 @@ export const CertDeleteModel = (props) => {
 
             <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Delete confirmation </Modal.Title>
+                    <Modal.Title>Delete confirmation</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Do you really want delete Certificate with id = {props.cert.id}?
+                    Do you really want delete Certificate with id = {props.cert.key}?
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="danger" onClick={props.onClick} type="submit"> Yes </Button>
+                    <Button variant="danger" onClick={() => {
+                        props.onClick();
+                        handleClose()
+                    }} type="submit"> Yes </Button>
                     <Button variant="secondary" onClick={handleClose}> Cancel </Button>
                 </Modal.Footer>
             </Modal>

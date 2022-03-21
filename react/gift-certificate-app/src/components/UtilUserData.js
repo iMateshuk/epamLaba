@@ -26,7 +26,7 @@ export const isRoleAdmin = () => {
     return checkUserRole("ROLE_ADMIN");
 }
 
-const getUserData = () => {
+export const getUserData = () => {
     const userDataString = sessionStorage.getItem('userData');
     return JSON.parse(userDataString);
 }

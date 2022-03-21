@@ -1,84 +1,180 @@
-import React, { Component } from 'react';
-import { Button, ButtonGroup, Container, Table } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import React, {Component} from 'react';
+import {message, Space, Tag, Table as AntTable} from "antd";
 import Header from '../components/Header';
-import { isRoleAdmin } from '../components/UtilUserData'
-import { deleteCert, getCerts } from '../components/UtilCert'
-import { CertViewModel, CertDeleteModel } from '../components/UtilModal'
+import {isRoleAdmin} from '../components/UtilUserData'
+import {deleteCert, getCerts} from '../components/UtilCert'
+import {CreatePagination, getCertSearchData, setCertSearchData} from '../components/Pagination'
+import Footer from "../components/Footer";
+import {CreateTable} from "../components/CertTable";
+import {useNavigate, useSearchParams} from "react-router-dom";
+import {CertDeleteModel, CertViewModel} from "../components/UtilModal";
 
-export default class Certificate extends Component {
+export default function Certificate(props) {
+    let navigate = useNavigate();
+    return <Certificates {...props} navigate={navigate}/>
+}
+
+class Certificates extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { allCertData: {}, certificates: [] };
+        this.state = {allCertData: {}, certificates: [], tablePage: 1};
         this.remove = this.remove.bind(this);
+        this.handleTableClick = this.handleTableClick.bind(this);
     }
 
+
     componentDidMount() {
-        getCerts()
-            .then(data => this.setState({ allCertData: data, certificates: data.list }));
+        window.location.search.trim() !== ''
+            ? setCertSearchData(window.location.search)
+            : setCertSearchData({
+                sortDate: 'DESC',
+                pageNumber: 1,
+                pageSize: 20
+            });
+        getCerts().then(data => {
+                if (data?.errorMessage) {
+                    message.error({content: data.errorMessage, style: {marginTop: '30vh',}}, 3)
+                } else {
+                    this.setState({allCertData: data, certificates: data?.list});
+                }
+            }
+        )
     }
 
     remove(id) {
-        deleteCert(id).then(() => {
-            let updatedCertificates = [...this.state.certificates].filter(i => i.id !== id);
-            this.setState({ certificates: updatedCertificates });
+        deleteCert(id).then(data => {
+            if (data?.errorMessage) {
+                message.error({content: data.errorMessage}, 3);
+            } else {
+                message.success({content: 'Delete OK: ' + data.message}, 3)
+                let updatedCertificates = [...this.state.certificates].filter(i => i.id !== id);
+                this.setState({certificates: updatedCertificates});
+            }
+
         });
+    }
+
+    handleTableClick(pagination, filters, sorter, extra) {
+        if (this.state.tablePage !== pagination.current) {
+            this.setState({tablePage: pagination.current})
+        } else {
+            const searchData = getCertSearchData();
+            if (sorter.columnKey === "modifiedDate") {
+                searchData.sortDate = sorter.order === "ascend" ? 'ASC' : sorter.order === "descend" ? 'DESC' : '';
+            }
+            if (sorter.columnKey === "name") {
+                searchData.sortName = sorter.order === "ascend" ? 'ASC' : sorter.order === "descend" ? 'DESC' : '';
+            }
+            setCertSearchData(searchData);
+            this.props.navigate(window.location.pathname + "?" + new URLSearchParams(searchData));
+            window.location.reload();
+        }
     }
 
     render() {
         const certificates = this.state.certificates;
 
-        let isAdmin = false;
-        if (isRoleAdmin()) {
-            isAdmin = true;
-        }
+        const isAdmin = isRoleAdmin();
+        let searchData = getCertSearchData();
 
-        const certificatesList = certificates.map(cert => {
-            return <tr key={cert.id}>
-                <td style={{ whiteSpace: 'nowrap' }}>{cert.name}</td>
-                <td>{cert.description}</td>
-                <td>{cert.price}</td>
-                <td>{cert.duration}</td>
-                <td>{cert.createdDate}</td>
-                <td>{cert.modifiedDate}</td>
-                <td>{cert.tags.map(tag => <div>{tag.name}</div>)} </td>
-                <td>
-                    <ButtonGroup>
-                        <CertViewModel cert={cert} />
-                        {isAdmin ? <Button size="sm" variant="warning" href={"/gift-certificate-app/certificates/" + cert.id} >Edit</Button> : ''}
-                        {isAdmin ? <CertDeleteModel cert={cert} onClick={() => this.remove(cert.id)} /> : ''}
-                    </ButtonGroup>
-                </td>
-            </tr>
+        const columns = [
+            {
+                title: 'Name',
+                dataIndex: 'name',
+                key: 'name',
+                defaultSortOrder: searchData?.sortName === 'ASC' ? "ascend" : searchData?.sortName === 'DESC' ? "descend" : '',
+                sorter: () => {
+                }
+                /*sorter: (a, b) => {
+                    let A = a.name.toUpperCase();
+                    let B = b.name.toUpperCase();
+                    return (A < B) ? -1 : (A > B) ? 1 : 0;
+                }*/,
+            },
+            {
+                title: 'Description',
+                dataIndex: 'description',
+                key: 'description',
+            },
+            {
+                title: 'Price',
+                dataIndex: 'price',
+                key: 'price',
+            },
+            {
+                title: 'Duration',
+                dataIndex: 'duration',
+                key: 'duration',
+            },
+            {
+                title: 'Created Date',
+                dataIndex: 'createdDate',
+                key: 'createdDate',
+            },
+            {
+                title: 'Modified Date',
+                dataIndex: 'modifiedDate',
+                key: 'modifiedDate',
+                defaultSortOrder: searchData?.sortDate === 'ASC' ? "ascend" : searchData?.sortDate === 'DESC' ? "descend" : '',
+                sorter: () => {
+                }
+            },
+            {
+                title: 'Tags',
+                key: 'tags',
+                dataIndex: 'tags',
+                render: tags => (
+                    <>
+                        {tags.map(tag => {
+                            return (
+                                <Tag color={'geekblue'} key={tag}>
+                                    {tag.name}
+                                </Tag>
+                            );
+                        })}
+                    </>
+                ),
+            },
+            {
+                title: 'Action',
+                key: 'action',
+                render: (text, cert) => (
+                    <Space size="middle">
+                        <a><CertViewModel cert={cert}/></a>
+                        {isAdmin ? <a>Edit</a> : ''}
+                        {isAdmin ? <a><CertDeleteModel cert={cert} onClick={() => this.remove(cert.key)}/></a> : ''}
+                    </Space>
+                ),
+            },
+        ];
+
+        const dataSource = certificates?.map(cert => {
+            return {
+                key: cert.id,
+                name: cert.name,
+                description: cert.description,
+                price: cert.price,
+                duration: cert.duration,
+                createdDate: cert.createdDate,
+                modifiedDate: cert.modifiedDate,
+                tags: cert.tags,
+                action: cert
+            }
         });
 
-
         return (
-            <div className='default'>
-                <Header />
-                <Container fluid>
-                    {isAdmin ? <div className="float-right"> <Button variant="primary" tag={Link} to="/gift-certificate-app/certificates/new">Add new</Button> </div> : ''}
-
-                    <Table className="mt-4">
-                        <thead>
-                            <tr>
-                                <th width="12%">Name</th>
-                                <th width="20%">Description</th>
-                                <th width="7%">Price</th>
-                                <th width="7%">Duration</th>
-                                <th width="15%">Created Date</th>
-                                <th width="15%">Modified Date</th>
-                                <th width="10%">Tags</th>
-                                <th width="15%">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {certificatesList}
-                        </tbody>
-                    </Table>
-                </Container>
-            </div>
+            <>
+                <Header isAdmin={isAdmin} error={this.state.error}/>
+                <AntTable dataSource={dataSource} columns={columns} onChange={this.handleTableClick}/>;
+                {/*<CreateTable certs={this.state.certificates}/>*/}
+                <CreatePagination
+                    pages={this.state.allCertData._links} pageNumber={this.state.allCertData.pageNumber}
+                    lastPage={this.state.allCertData.lastPage} pageSize={this.state.allCertData.pageSize}
+                    totalElements={this.state.allCertData.totalElements}
+                />
+                <Footer/>
+            </>
         );
     }
 }

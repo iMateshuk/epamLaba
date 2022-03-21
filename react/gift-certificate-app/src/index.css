@@ -12,20 +12,30 @@ code {
     monospace;
 }
 
-.default {
-    margin-top: 5%;
+.top-sticky{
+    position: sticky;
+    top: 0;
+    width: 100%;
+}
+.header-btn {
+    margin-right: 5px;
+}
+.header-txt {
+    margin-left: 5px;
 }
 
 .form-login {
     width: 100%;
     height: 20%;
     max-width: 20%;
-    padding: 15px;
-    margin: 15% auto 0;
+    position: absolute;
+    top: 25%;
+    left:40%;
     text-align: center;
 }
 
 .form-login .form-control {
+    width: 80%;
     position: relative;
     text-align: center;
     box-sizing: border-box;
@@ -35,7 +45,7 @@ code {
     margin: 10px auto 0;
 }
 
-.form-error{
+.form-error {
     display: block;
     padding: 1.5px;
 }
@@ -56,6 +66,17 @@ code {
 
 span {
     width: 100%;
+}
+
+#table {
+    height: 90%;
+    flex-grow: 1;
+}
+
+.pagination {
+    /*width: 100%;*/
+    position: fixed;
+    bottom: 7%;
 }
 
 .footer {

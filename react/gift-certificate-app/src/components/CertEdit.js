@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { Button, Container, Form, FormGroup, InputGroup as Input, FloatingLabel as Label } from 'react-bootstrap';
+import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
+import {Button, Container, FloatingLabel as Label, Form, FormGroup, InputGroup as Input} from 'react-bootstrap';
 
 class CertEdit extends Component {
 
