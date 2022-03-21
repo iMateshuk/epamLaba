@@ -7,6 +7,9 @@ const sortDate = 'sortDate';
 const sortName = 'sortName';
 const pageNumber = 'pageNumber';
 const pageSize = 'pageSize';
+const certName = 'certName';
+const certDesc = 'certDesc';
+const tagName = 'tagName';
 
 export const setCertSearchData = (certPageSearchData) => {
     let searchData = new URLSearchParams(certPageSearchData);
@@ -15,22 +18,30 @@ export const setCertSearchData = (certPageSearchData) => {
     if (check || check === '') {
         pageData.sortDate = searchData.get(sortDate);
     }
-
     check = searchData.get(sortName);
     if (check || check === '') {
         pageData.sortName = searchData.get(sortName);
     }
-
     check = searchData.get(pageNumber);
     if (check) {
         pageData.pageNumber = searchData.get(pageNumber);
     }
-
     check = searchData.get(pageSize);
     if (check) {
         pageData.pageSize = searchData.get(pageSize);
     }
-
+    check = searchData.get(certName);
+    if (check) {
+        pageData.certName = searchData.get(certName);
+    }
+    check = searchData.get(certDesc);
+    if (check) {
+        pageData.certDesc = searchData.get(certDesc);
+    }
+    check = searchData.get(tagName);
+    if (check) {
+        pageData.tagName = searchData.get(tagName);
+    }
     sessionStorage.setItem('certPageData', JSON.stringify(pageData));
 }
 
@@ -44,16 +55,15 @@ export const getCertSearchData = () => {
 }
 
 export const CreatePagination = (props) => {
-
     const [searchParams, setSearchParams] = useSearchParams();
     const pageSize = props.pageSize;
+
     let searchData = getCertSearchData();
     searchData = searchData ? searchData : {};
 
     const handlePageClick = (page, pageSize) => {
         searchData.pageNumber = page;
         searchData.pageSize = pageSize;
-        setCertSearchData(searchData);
         setSearchParams(searchData);
         window.location.reload();
     }

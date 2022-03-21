@@ -3,7 +3,7 @@ import {message, Space, Tag, Table as AntTable} from "antd";
 import Header from '../components/Header';
 import {isRoleAdmin} from '../components/UtilUserData'
 import {deleteCert, getCerts} from '../components/UtilCert'
-import {CreatePagination, getCertSearchData, setCertSearchData} from '../components/Pagination'
+import {CreatePagination, getCertSearchData, removeCertSearchData, setCertSearchData} from '../components/Pagination'
 import Footer from "../components/Footer";
 import {CreateTable} from "../components/CertTable";
 import {useNavigate, useSearchParams} from "react-router-dom";
@@ -15,7 +15,6 @@ export default function Certificate(props) {
 }
 
 class Certificates extends Component {
-
     constructor(props) {
         super(props);
         this.state = {allCertData: {}, certificates: [], tablePage: 1};
@@ -23,10 +22,9 @@ class Certificates extends Component {
         this.handleTableClick = this.handleTableClick.bind(this);
     }
 
-
     componentDidMount() {
         window.location.search.trim() !== ''
-            ? setCertSearchData(window.location.search)
+            ? removeCertSearchData() || setCertSearchData(window.location.search)
             : setCertSearchData({
                 sortDate: 'DESC',
                 pageNumber: 1,
@@ -51,7 +49,6 @@ class Certificates extends Component {
                 let updatedCertificates = [...this.state.certificates].filter(i => i.id !== id);
                 this.setState({certificates: updatedCertificates});
             }
-
         });
     }
 
@@ -66,7 +63,6 @@ class Certificates extends Component {
             if (sorter.columnKey === "name") {
                 searchData.sortName = sorter.order === "ascend" ? 'ASC' : sorter.order === "descend" ? 'DESC' : '';
             }
-            setCertSearchData(searchData);
             this.props.navigate(window.location.pathname + "?" + new URLSearchParams(searchData));
             window.location.reload();
         }

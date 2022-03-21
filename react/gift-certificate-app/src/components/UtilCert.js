@@ -9,7 +9,6 @@ const headers = {
 }
 
 export const deleteCert = async (id) => {
-
     return await fetch(certURL + `/${id}`, {
             method: 'DELETE',
             headers: {
@@ -20,7 +19,7 @@ export const deleteCert = async (id) => {
     ).then(async response => {
         let data = [];
         if (!response.ok) {
-            data = await response.json() ;
+            data = await response.json();
             throw new Error(data?.errorMessage ? data.errorMessage : response.status);
         }
         data.message = id;
@@ -32,10 +31,8 @@ export const deleteCert = async (id) => {
 }
 
 export const getCerts = async () => {
-
     let dataSearch = getCertSearchData();
-
-    return await fetch(certURL + (dataSearch ?  '?' + new URLSearchParams(dataSearch) : ''),
+    return await fetch(certURL + (dataSearch ? '?' + new URLSearchParams(dataSearch) : ''),
         {
             method: 'GET',
             headers: {headers}
@@ -54,7 +51,6 @@ export const getCerts = async () => {
 }
 
 export const getCert = async (id) => {
-
     return await fetch(certURL + `/${id}`, {
         method: 'GET',
         headers: {headers}
