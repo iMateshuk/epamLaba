@@ -1,16 +1,26 @@
 import {message, Space, Table, Tag} from "antd";
-import {CertDeleteModel, CertViewModel} from "./UtilModal";
+import {CertDeleteModel, CertEditModel, CertViewModel} from "./UtilModal";
 import React, {useState} from "react";
-import {getCertSearchData, setCertSearchData} from "./Pagination";
+import {getCertSearchData} from "./Pagination";
 import {useNavigate, useSearchParams} from "react-router-dom";
 import {isRoleAdmin} from "./UtilUserData";
 import {deleteCert} from "./UtilCert";
 
+const sortName = 'sortName';
+const sortDate = 'sortDate'
+
 export const CreateTable = (props) => {
 
     const [searchParams, setSearchParams] = useSearchParams();
+    const [certs, setCerts] = useState({...props});
+    const [table, setTable] = useState({page: 1});
     const navigate = useNavigate();
     const isAdmin = isRoleAdmin();
+    let searchUrl = new URLSearchParams(window.location.search)
+
+    React.useEffect(() => {
+        setCerts(props);
+    }, [props])
 
     const remove = (id) => {
         deleteCert(id).then(data => {
@@ -18,26 +28,26 @@ export const CreateTable = (props) => {
                 message.error({content: data.errorMessage}, 3);
             } else {
                 message.success({content: 'Delete OK: ' + data.message}, 3)
-                props.certs= [...props.certs].filter(i => i.id !== id);
+                let updatedCertificates = [...certs.certs].filter(i => i.id !== id);
+                setCerts({certs: updatedCertificates});
             }
-
         });
     }
 
     const handleTableClick = (pagination, filters, sorter, extra) => {
-
-        const searchData = getCertSearchData();
-        if (sorter.columnKey === "modifiedDate") {
-            searchData.sortDate = sorter.order === "ascend" ? 'ASC' : sorter.order === "descend" ? 'DESC' : '';
+        if (table.page !== pagination.current) {
+            setTable({page: pagination.current});
+        } else {
+            const searchData = getCertSearchData();
+            if (sorter.columnKey === "modifiedDate") {
+                searchData.sortDate = sorter.order === "ascend" ? 'ASC' : sorter.order === "descend" ? 'DESC' : '';
+            }
+            if (sorter.columnKey === "name") {
+                searchData.sortName = sorter.order === "ascend" ? 'ASC' : sorter.order === "descend" ? 'DESC' : '';
+            }
+            navigate(window.location.pathname + "?" + new URLSearchParams(searchData));
+            window.location.reload();
         }
-        if (sorter.columnKey === "name") {
-            searchData.sortName = sorter.order === "ascend" ? 'ASC' : sorter.order === "descend" ? 'DESC' : '';
-        }
-        setCertSearchData(searchData);
-        setSearchParams(searchData);
-        /*navigate(window.location.pathname + "?" + new URLSearchParams(searchData));*/
-        /*window.location.reload();*/
-        /*console.log('params', pagination, filters, sorter, extra);*/
     }
 
     const columns = [
@@ -45,6 +55,7 @@ export const CreateTable = (props) => {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
+            defaultSortOrder: searchUrl.get(sortName) === 'ASC' ? "ascend" : searchUrl.get(sortName) === 'DESC' ? "descend" : "",
             sorter: () => {
             }
             /*sorter: (a, b) => {
@@ -77,7 +88,7 @@ export const CreateTable = (props) => {
             title: 'Modified Date',
             dataIndex: 'modifiedDate',
             key: 'modifiedDate',
-            defaultSortOrder: 'descend',
+            defaultSortOrder: searchUrl.get(sortDate) === 'ASC' ? "ascend" : searchUrl.get(sortDate) === 'DESC' ? "descend" : "",
             sorter: () => {
             }
         },
@@ -103,14 +114,14 @@ export const CreateTable = (props) => {
             render: (text, cert) => (
                 <Space size="middle">
                     <a><CertViewModel cert={cert}/></a>
-                    {isAdmin ? <a>Edit</a> : ''}
+                    {isAdmin ? <a><CertEditModel cert={cert}/></a> : ''}
                     {isAdmin ? <a><CertDeleteModel cert={cert} onClick={() => remove(cert.key)}/></a> : ''}
                 </Space>
             ),
         },
     ];
 
-    const dataSource = props?.certs?.map(cert => {
+    const dataSource = certs.certs?.map(cert => {
         return {
             key: cert.id,
             name: cert.name,

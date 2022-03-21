@@ -1,4 +1,4 @@
-import {message, Pagination} from "antd";
+import {Pagination} from "antd";
 import React from "react";
 import {useSearchParams} from 'react-router-dom';
 
@@ -42,15 +42,15 @@ export const setCertSearchData = (certPageSearchData) => {
     if (check) {
         pageData.tagName = searchData.get(tagName);
     }
-    sessionStorage.setItem('certPageData', JSON.stringify(pageData));
+    localStorage.setItem('certPageData', JSON.stringify(pageData));
 }
 
 export const removeCertSearchData = () => {
-    sessionStorage.removeItem('certPageData');
+    localStorage.removeItem('certPageData');
 }
 
 export const getCertSearchData = () => {
-    const certPageDataString = sessionStorage.getItem('certPageData');
+    const certPageDataString = localStorage.getItem('certPageData');
     return JSON.parse(certPageDataString);
 }
 

@@ -1,7 +1,13 @@
 import {Button, FormControl, Nav, Navbar} from "react-bootstrap";
-import {getUserLogin, isRoleAdmin, removeUserData, setUserData} from './UtilUserData';
-import {useNavigate} from "react-router-dom";
-import {useState} from "react";
+import {getUserLogin, isRoleAdmin, removeUserData} from './UtilUserData';
+import {useNavigate, useSearchParams} from "react-router-dom";
+import React, {useState} from "react";
+import {CertEditModel} from "./UtilModal";
+import {Form} from "antd";
+import Input from "antd/es/input/Input";
+
+const certName = 'certName';
+const tagName = 'tagName';
 
 function Header(props) {
 
@@ -11,7 +17,14 @@ function Header(props) {
     let userLogin = '';
 
     const [inputs, setInputs] = useState({});
+    const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
+
+    let loadSearchParam = new URLSearchParams(window.location.search);
+    let tagsUrl = loadSearchParam?.get(tagName) ? loadSearchParam.get(tagName).trim().split(',').map(value => '#(' + value + ')') : '';
+    let searchValue = (loadSearchParam?.get(certName) ? loadSearchParam.get(certName) : '') + " " + tagsUrl;
+    searchValue = searchValue.replace(',', " ");
+    const [search, setSearch] = useState({searchValue});
 
     if (isRoleAdmin()) {
         headerName = 'Admin UI';
@@ -33,15 +46,17 @@ function Header(props) {
         const name = event.target.name;
         const value = event.target.value;
         setInputs(values => ({...values, [name]: value}));
+        setSearch({searchValue: ''});
     }
 
     const handleSubmit = (event) => {
         let check = {};
         const tags = [];
         const searchData = {};
+        const searchLine = search.searchValue !== '' ? search.searchValue.trim() : inputs.search;
 
-        if (inputs.search) {
-            inputs.search.split('#').map(element => {
+        if (searchLine) {
+            searchLine.split('#').map(element => {
                 element = element.trim();
                 check = element.match('^\\((\\w|\\d| )+\\)');
                 check
@@ -49,7 +64,11 @@ function Header(props) {
                     : (searchData.certName = element) && (searchData.certDesc = element);
             })
             searchData.tagName = tags;
-            navigate(window.location.pathname + "?" + new URLSearchParams(searchData));
+            setSearchParams(new URLSearchParams(searchData));
+            /*navigate(window.location.pathname + "?" + new URLSearchParams(searchData));*/
+            window.location.reload();
+        } else {
+            setSearchParams({});
             window.location.reload();
         }
     }
@@ -61,19 +80,18 @@ function Header(props) {
                     <Navbar.Brand>{headerName}</Navbar.Brand>
                 </Nav.Item>
                 <Navbar.Text>
-                    {props.isAdmin ?
-                        <Button className="header-txt" variant="outline-success" size="sm">Add
-                            Certificate</Button> : ''}
+                    {props.isAdmin ? <a><CertEditModel/></a> : ''}
                 </Navbar.Text>
 
                 {!window.location.pathname.includes('login') ?
-                    <>
-                        <FormControl onChange={handleChange} name="search" size="sm" type='text' placeholder='Search'
-                                     className='mr-sm-1 header-btn'
-                                     style={{maxWidth: '17%'}}/>
-                        <Button onClick={handleSubmit} className='header-btn' size="sm"
-                                variant='outline-info'>Search</Button>
-                    </>
+                    <Form layout='inline' style={{width: '40%'}} onSubmit={handleSubmit}>
+                        <FormControl onChange={handleChange}
+                                     size="sm" type='text' placeholder='Search'
+                                     className='mr-sm-1 header-btn' style={{maxWidth: '60%'}}
+                                     name="search" value={inputs.search || search.searchValue}
+                        />
+                        <Button onClick={handleSubmit} type="submit" size="sm" variant='outline-info'>Search</Button>
+                    </Form>
                     : ''
                 }
                 <div className='header-btn'

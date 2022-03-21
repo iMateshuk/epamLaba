@@ -8,6 +8,17 @@ const headers = {
     'Content-Type': 'application/json'
 }
 
+export const addOrEditCert = async (id, certData) => {
+    return await fetch(certURL + `/${id}`, {
+        method: id ? 'PATCH' : 'POST',
+        headers: {
+            headers,
+            'Authorization': `Bearer ${getUserToken()}`
+        }
+    })
+        .then(async response => response.json())
+}
+
 export const deleteCert = async (id) => {
     return await fetch(certURL + `/${id}`, {
             method: 'DELETE',
