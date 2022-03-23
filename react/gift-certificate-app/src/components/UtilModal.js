@@ -5,6 +5,7 @@ import Input from "antd/es/input/Input";
 import {WithContext as ReactTags} from 'react-tag-input';
 import {addOrEditCert} from "./UtilCert";
 import {useSearchParams} from "react-router-dom";
+import Text from "antd/es/typography/Text";
 
 export const CertViewModel = (props) => {
 
@@ -62,6 +63,11 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
 export const CertEditModel = (props) => {
 
+    const errorTagLengthMin = 'length must be between min: ';
+    const errorLengthMin = 'must be fill, and length between min: ';
+    const errorLengthMax = ', max: ';
+    const errorZero = 'must be great then 0';
+
     const [show, setShow] = useState(false);
     const [inputs, setInputs] = useState({});
     const [tags, setTags] = useState([]);
@@ -80,25 +86,31 @@ export const CertEditModel = (props) => {
         console.log(isNaN(inputs.price))
         const errors = {};
         if (inputs.name === '' || inputs.name.length < nameMinLen || inputs.name.length > nameMaxLen) {
-            errors.name = 'must be fill, and length between min: ' + nameMinLen + ', max: ' + nameMaxLen;
+            errors.name = errorLengthMin + nameMinLen + errorLengthMax + nameMaxLen;
         }
         if (inputs.description === '' || inputs.description.length < descMinLen || inputs.description.length > descMaxLen) {
-            errors.description = 'must be fill, and length between min: ' + descMinLen + ', max: ' + descMaxLen;
+            errors.description = errorLengthMin + descMinLen + errorLengthMax + descMaxLen;
         }
-        if (isNaN(inputs.price) || parseFloat(inputs.price.toString().replace(",", ".")) <= 0) {
-            errors.price = 'must be great then 0';
+        if (inputs.price === '' || isNaN(inputs.price) || parseFloat(inputs.price.toString().replace(",", ".")) <= 0) {
+            errors.price = errorZero;
         }
-        if (isNaN(inputs.duration) || parseInt(inputs.duration, 10) <= 0) {
-            errors.duration = 'must be great then 0';
+        if (inputs.duration === '' || isNaN(inputs.duration) || parseInt(inputs.duration, 10) < 0) {
+            errors.duration = errorZero;
+        }
+        if (inputs.tags) {
+            inputs.tags = tags.map(tag => {
+                if (tag.name.length < tagMinLen || tag.name.length > tagMaxLen) {
+                    errors.tag = errorTagLengthMin + nameMinLen + errorLengthMax + nameMaxLen;
+                }
+                return {name: tag.name}
+            });
         }
 
         if (Object.keys(errors).length > 0) {
             Object.keys(errors).map((key) => message.error(key + ": " + errors[key], 3));
             return;
         }
-        inputs.tags = tags.map(tag => {
-            return {name: tag.name}
-        });
+
         inputs.action = '';
         addOrEditCert(inputs.id > 0 ? inputs.id : undefined, inputs).then(data => {
             if (data?.errorMessage) {
@@ -200,7 +212,6 @@ export const CertEditModel = (props) => {
                         <Form.Item name='Tags' label='Tags' rules={[{min: tagMinLen, max: tagMaxLen}]}>
                             <ReactTags
                                 name="Tags"
-                                minLength={tagMinLen}
                                 maxLength={tagMaxLen}
                                 minQueryLength={tagMinLen}
                                 tags={tags}
@@ -213,6 +224,7 @@ export const CertEditModel = (props) => {
                                 handleDrag={handleDrag}
                                 handleTagClick={handleTagClick}
                                 inputFieldPosition="top"
+                                allowDeleteFromEmptyInput={false}
                                 autocomplete
                             />
                         </Form.Item>
