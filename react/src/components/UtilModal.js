@@ -97,7 +97,7 @@ export const CertEditModel = (props) => {
         if (inputs.duration === '' || isNaN(inputs.duration) || parseInt(inputs.duration, 10) < 0) {
             errors.duration = errorZero;
         }
-        if (inputs.tags) {
+        if (tags) {
             inputs.tags = tags.map(tag => {
                 if (tag.name.length < tagMinLen || tag.name.length > tagMaxLen) {
                     errors.tag = errorTagLengthMin + nameMinLen + errorLengthMax + nameMaxLen;
