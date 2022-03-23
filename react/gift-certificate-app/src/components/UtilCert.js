@@ -9,23 +9,38 @@ const headers = {
 }
 
 export const addOrEditCert = async (id, certData) => {
-    return await fetch(certURL + `/${id}`, {
-        method: id ? 'PATCH' : 'POST',
-        headers: {
-            headers,
-            'Authorization': `Bearer ${getUserToken()}`
+    let localUrl = certURL;
+    let method = 'POST';
+    if (id) {
+        localUrl = localUrl + `/${id}`;
+        method = 'PATCH';
+    }
+    headers.Authorization = `Bearer ${getUserToken()}`;
+
+    return fetch(localUrl, {
+        method: method,
+        headers: headers,
+        body: JSON.stringify(certData)
+    }).then(async response => {
+        let data = [];
+        if (!response.ok) {
+            data = await response.json();
+            throw new Error(data?.errorMessage ? data.errorMessage : response.status);
         }
-    })
-        .then(async response => response.json())
+        data.message = id;
+        return data;
+    }).catch(error => {
+        error.errorMessage = error.toString();
+        return error;
+    });
 }
 
 export const deleteCert = async (id) => {
+    headers.Authorization = `Bearer ${getUserToken()}`;
+
     return await fetch(certURL + `/${id}`, {
             method: 'DELETE',
-            headers: {
-                headers,
-                'Authorization': `Bearer ${getUserToken()}`
-            }
+            headers: headers
         }
     ).then(async response => {
         let data = [];
@@ -46,7 +61,7 @@ export const getCerts = async () => {
     return await fetch(certURL + (dataSearch ? '?' + new URLSearchParams(dataSearch) : ''),
         {
             method: 'GET',
-            headers: {headers}
+            headers: headers
         })
         .then(async response => {
             const data = await response.json();
@@ -64,7 +79,7 @@ export const getCerts = async () => {
 export const getCert = async (id) => {
     return await fetch(certURL + `/${id}`, {
         method: 'GET',
-        headers: {headers}
+        headers: headers
     })
         .then(async response => response.json())
 }

@@ -4,7 +4,6 @@ import {useNavigate, useSearchParams} from "react-router-dom";
 import React, {useState} from "react";
 import {CertEditModel} from "./UtilModal";
 import {Form} from "antd";
-import Input from "antd/es/input/Input";
 
 const certName = 'certName';
 const tagName = 'tagName';
@@ -88,7 +87,8 @@ function Header(props) {
                         <FormControl onChange={handleChange}
                                      size="sm" type='text' placeholder='Search'
                                      className='mr-sm-1 header-btn' style={{maxWidth: '60%'}}
-                                     name="search" value={inputs.search || search.searchValue}
+                                     name="search"
+                                     value={inputs.search || (search.searchValue === ' ' ? undefined : search.searchValue)}
                         />
                         <Button onClick={handleSubmit} type="submit" size="sm" variant='outline-info'>Search</Button>
                     </Form>

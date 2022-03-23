@@ -2,7 +2,7 @@ import {message, Space, Table, Tag} from "antd";
 import {CertDeleteModel, CertEditModel, CertViewModel} from "./UtilModal";
 import React, {useState} from "react";
 import {getCertSearchData} from "./Pagination";
-import {useNavigate, useSearchParams} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {isRoleAdmin} from "./UtilUserData";
 import {deleteCert} from "./UtilCert";
 
@@ -11,7 +11,6 @@ const sortDate = 'sortDate'
 
 export const CreateTable = (props) => {
 
-    const [searchParams, setSearchParams] = useSearchParams();
     const [certs, setCerts] = useState({...props});
     const [table, setTable] = useState({page: 1});
     const navigate = useNavigate();
@@ -37,17 +36,17 @@ export const CreateTable = (props) => {
     const handleTableClick = (pagination, filters, sorter, extra) => {
         if (table.page !== pagination.current) {
             setTable({page: pagination.current});
-        } else {
-            const searchData = getCertSearchData();
-            if (sorter.columnKey === "modifiedDate") {
-                searchData.sortDate = sorter.order === "ascend" ? 'ASC' : sorter.order === "descend" ? 'DESC' : '';
-            }
-            if (sorter.columnKey === "name") {
-                searchData.sortName = sorter.order === "ascend" ? 'ASC' : sorter.order === "descend" ? 'DESC' : '';
-            }
-            navigate(window.location.pathname + "?" + new URLSearchParams(searchData));
-            window.location.reload();
+            return;
         }
+        const searchData = getCertSearchData();
+        if (sorter.columnKey === "modifiedDate") {
+            searchData.sortDate = sorter.order === "ascend" ? 'ASC' : sorter.order === "descend" ? 'DESC' : '';
+        }
+        if (sorter.columnKey === "name") {
+            searchData.sortName = sorter.order === "ascend" ? 'ASC' : sorter.order === "descend" ? 'DESC' : '';
+        }
+        navigate(window.location.pathname + "?" + new URLSearchParams(searchData));
+        window.location.reload();
     }
 
     const columns = [
@@ -57,12 +56,7 @@ export const CreateTable = (props) => {
             key: 'name',
             defaultSortOrder: searchUrl.get(sortName) === 'ASC' ? "ascend" : searchUrl.get(sortName) === 'DESC' ? "descend" : "",
             sorter: () => {
-            }
-            /*sorter: (a, b) => {
-                let A = a.name.toUpperCase();
-                let B = b.name.toUpperCase();
-                return (A < B) ? -1 : (A > B) ? 1 : 0;
-            }*/,
+            },
         },
         {
             title: 'Description',
@@ -137,7 +131,7 @@ export const CreateTable = (props) => {
 
     return (
         <>
-            <Table dataSource={dataSource} columns={columns} onChange={handleTableClick}/>;
+            <Table dataSource={dataSource} columns={columns} onChange={handleTableClick} scroll={{ y: 715 }}/>;
         </>
     );
 }

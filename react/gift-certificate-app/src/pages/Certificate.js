@@ -3,7 +3,7 @@ import {message} from "antd";
 import Header from '../components/Header';
 import {isRoleAdmin} from '../components/UtilUserData'
 import {getCerts} from '../components/UtilCert'
-import {CreatePagination, getCertSearchData, removeCertSearchData, setCertSearchData} from '../components/Pagination'
+import {CreatePagination, removeCertSearchData, setCertSearchData} from '../components/Pagination'
 import Footer from "../components/Footer";
 import {CreateTable} from "../components/CertTable";
 
