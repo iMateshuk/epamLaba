@@ -5,7 +5,6 @@ import Input from "antd/es/input/Input";
 import {WithContext as ReactTags} from 'react-tag-input';
 import {addOrEditCert} from "./UtilCert";
 import {useSearchParams} from "react-router-dom";
-import Text from "antd/es/typography/Text";
 
 export const CertViewModel = (props) => {
 
