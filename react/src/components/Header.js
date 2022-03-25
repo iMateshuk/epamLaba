@@ -8,6 +8,9 @@ import {Form} from "antd";
 const certName = 'certName';
 const tagName = 'tagName';
 
+const urlMain = "/gift-certificate-app";
+const urlLogin = '/gift-certificate-app/login';
+
 function Header(props) {
 
     let headerName = 'UI';
@@ -98,9 +101,9 @@ function Header(props) {
                      style={{width: '30%', color: 'grey', textAlign: 'right'}}>{userLogin}</div>
                 {!window.location.pathname.includes('login') ?
                     <Button className='header-btn' variant="outline-secondary" size="sm"
-                            onClick={() => chooseAction("/gift-certificate-app/login")}>{buttonLogin}</Button>
+                            onClick={() => chooseAction(urlLogin)}>{buttonLogin}</Button>
                     : <Button className='header-btn' variant="outline-secondary" size="sm"
-                              onClick={() => chooseAction("/gift-certificate-app/certificates")}>{buttonMain}</Button>}
+                              onClick={() => chooseAction(urlMain)}>{buttonMain}</Button>}
             </Navbar>
         </>
     );

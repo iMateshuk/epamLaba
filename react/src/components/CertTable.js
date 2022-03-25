@@ -7,7 +7,9 @@ import {isRoleAdmin} from "./UtilUserData";
 import {deleteCert} from "./UtilCert";
 
 const sortName = 'sortName';
-const sortDate = 'sortDate'
+const sortDate = 'sortDate';
+
+const urlMain = "/gift-certificate-app";
 
 export const CreateTable = (props) => {
 
@@ -45,7 +47,7 @@ export const CreateTable = (props) => {
         if (sorter.columnKey === "name") {
             searchData.sortName = sorter.order === "ascend" ? 'ASC' : sorter.order === "descend" ? 'DESC' : '';
         }
-        navigate(window.location.pathname + "?" + new URLSearchParams(searchData));
+        navigate(urlMain + "?" + new URLSearchParams(searchData));
         window.location.reload();
     }
 

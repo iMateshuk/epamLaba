@@ -1,4 +1,13 @@
-dependencies{
+def props = new Properties()
+file("$rootDir/controller/src/main/resources/application.properties").withInputStream {
+    props.load(it)
+}
+def dev = props['spring.profiles.active']
+
+dependencies {
 
     implementation project(':service')
+}
+if (dev == "dev") {
+    compileJava.dependsOn ':react:buildReactApp'
 }

@@ -1,7 +1,7 @@
 import {getUserToken} from './UtilUserData'
 import {getCertSearchData} from './Pagination'
 
-const certURL = window.location.pathname;
+const certURL = '/gift-certificate-app/certificates';
 
 const headers = {
     'Accept': 'application/json',

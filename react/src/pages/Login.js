@@ -4,6 +4,9 @@ import {getUserLogin, setUserData} from '../components/UtilUserData'
 import Header from '../components/Header';
 import Footer from "../components/Footer";
 
+const urlMain = "/gift-certificate-app";
+const urlLogin = '/gift-certificate-app/login';
+
 function Login() {
 
     const navigate = useNavigate();
@@ -41,7 +44,7 @@ function Login() {
             body: JSON.stringify(inputs)
         };
 
-        fetch('/gift-certificate-app/login', requestOptions)
+        fetch(urlLogin, requestOptions)
             .then(
                 async response => {
                     const isJson = response.headers.get('content-type')?.includes('application/json');
@@ -56,7 +59,7 @@ function Login() {
 
                     //add userData to xStorage
                     setUserData(data);
-                    navigate("/gift-certificate-app/certificates");
+                    navigate(urlMain);
                 }
             )
             .catch(
@@ -70,7 +73,7 @@ function Login() {
 
     useEffect(() => {
         if (getUserLogin() !== undefined) {
-            navigate("/gift-certificate-app/certificates");
+            navigate(urlMain);
         }
     })
 
