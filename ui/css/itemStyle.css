@@ -6,30 +6,31 @@ body{
 }
 
 .flexContainer{
-    width: 90%;
-    min-width: 800px;
-    margin: 0 auto;
+    width: 80%;
+    height: 300px;
     display: flex;
-    flex: 100%;
+    margin-left: 20px;
+}
+.box{
+    flex: 1;
+    margin-left: 70px;
+    width: 1200px;
+    height: 300px;
+    background-color: gray;
 }
 aside {
-    flex: 1;
+    flex: 2;
     margin-left: 20px;
     padding: 1%;
     background-color: rgb(255, 255, 255);
-    width: 10%;
-}
-
-.box{
-    width: 90%;
-    min-width: 1200px;
-    height: 300px;
-    background-color: gray;
+    max-width: 20%;
+    border: solid;
 }
 
 .sideBox{
     width: 15%;
     min-width: 100px;
+    border: solid;
 }
 
 .Buy{
