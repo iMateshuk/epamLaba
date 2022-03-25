@@ -2,11 +2,6 @@ apply plugin: "com.github.node-gradle.node"
 apply plugin: 'base'
 node {
     version = '16.14.0'
-    /*npmVersion = '8.3.1'
-    download = false
-    workDir = file("${project.buildDir}/nodejs")
-    npmWorkDir = file("${project.buildDir}/npm")
-    nodeModulesDir = file("${project.projectDir}")*/
 }
 
 task appNpmBuild(type: NpmTask) {
@@ -17,17 +12,14 @@ task execNpm(type: Exec) {
     doFirst {
         workingDir = file("$rootDir/react")
         commandLine = ['cmd', '/c', "npm run build"]
-        /*commandLine = ['cmd', '/c', "${project.projectDir}/reactBuild.bat"]*/
-        // cmd /C start D:/Projects/WorkSpaces/WorldCleaner/devserver/start.bat
     }
 }
 task copyWebApp(type: Copy) {
-    /*dependsOn('execNpm')*/
     from "$rootDir/react/public"
     into "$rootDir/controller/build/resources/main/static/."
 }
 
-task buildReactApp(type: NodeTask, dependsOn: ['npmInstall','copyWebApp']) {
+task buildReactApp(type: NodeTask, dependsOn: ['npmInstall', 'copyWebApp']) {
     script = project.file("$rootDir/react/node_modules/webpack/bin/webpack.js")
     args = [
             '--mode', 'development',

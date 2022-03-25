@@ -133,7 +133,7 @@ export const CreateTable = (props) => {
 
     return (
         <>
-            <Table dataSource={dataSource} columns={columns} onChange={handleTableClick} scroll={{ y: 715 }}/>;
+            <Table dataSource={dataSource} columns={columns} onChange={handleTableClick} scroll={{y: 715}}/>;
         </>
     );
 }
