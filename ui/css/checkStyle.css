@@ -1,0 +1,57 @@
+body{
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    font-family: 'Arial', sans-serif;
+}
+
+.h2 {
+    color: #ffffff;
+    background-color: #707070;
+    padding: 5px;
+}
+h2 {
+    margin-left: 26%;
+}
+
+.box{
+    width: 100px;
+    height: 100px;
+    background-color: gray;
+}
+
+.tdBox{
+    width: 100px;
+}
+.table{
+    margin-left: 26%;
+    margin-right: auto;
+    border-bottom-style: solid;
+}
+
+.total{
+    margin-left: auto;
+    margin-right: auto;
+}
+.buttons{
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid;
+}
+.But{
+    text-align: center;
+    height: 25px;
+    width: 150px;
+}
+#Checkout{
+    color: #ffffff;
+    background-color: green;
+}
+.text{
+    height: 50px;
+    width: 600px;
+    padding: 30px;
+}
+.free{
+    width: 100px;
+}

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <title>Add New Item</title>
+    <link rel="stylesheet" type="text/css" href="css/secStyle.css"/>
+    <link rel="stylesheet" type="text/css" href="css/footerStyle.css"/>
+    <link rel="stylesheet" type="text/css" href="css/headerStyle.css"/>
+</head>
+
+<body>
+
+<header>
+    <p class="left">
+        <b>Logo</b>
+    </p>
+
+    <p class="center">
+        <input type="search" name="q" placeholder="Search by item name" class="search">
+        <select name="Categories" class="categories">
+            <option value="rigatoni">All Categories</option>
+        </select>
+    </p>
+
+    <p class="right">
+    <table>
+        <tr>
+            <td><i class="material-icons">favorite</i></td>
+            <td><i class="material-icons">shopping_cart</i></td>
+            <td><a href="#">Sign Up</a></td>
+            <td><b>|</b></td>
+            <td><a href="#">Login</a></td>
+        </tr>
+    </table>
+    </p>
+</header>
+<br>
+<main>
+    <div class="h2">
+        <h2>Add New Item</h2>
+    </div>
+    <div class="tbl">
+        <table class="table">
+            <tr>
+                <td>Company</td>
+                <td class="td_center"></td>
+                <td>Item Name</td>
+            </tr>
+            <tr>
+                <td><input type="text" name="Company" id="Company"></td>
+                <td class="td_center"></td>
+                <td><input type="text" name="ItemName" id="ItemName"></td>
+            </tr>
+            <tr>
+                <td>Category</td>
+                <td class="td_center"></td>
+                <td>Short Description</td>
+            </tr>
+            <tr>
+                <td>
+                    <select name="CategoryName" id="CategoryName">
+                        <option value="1">Category Name</option>
+                    </select>
+                </td>
+                <td class="td_center"></td>
+                <td rowspan="3"><textarea id="txtshort" name="txtshort" rows="4" cols="21"></textarea></td>
+            </tr>
+            <tr>
+                <td>Valid to</td>
+                <td class="td_center"></td>
+            </tr>
+            <tr>
+                <td><input id="date" type="date" value="2022-12-31"></td>
+            </tr>
+            <tr>
+                <td>Price</td>
+                <td class="td_center"></td>
+                <td>Long Description</td>
+            </tr>
+            <tr>
+                <td><input type="text" name="Price" id="Price"></td>
+                <td class="td_center"></td>
+                <td rowspan="3"><textarea id="txtlong" name="txtlong" rows="4" cols="21"></textarea></td>
+            </tr>
+            <tr>
+                <td>Images</td>
+                <td class="td_center"></td>
+            </tr>
+            <tr>
+                <td><input type="text" name="Images" id="Images"></td>
+                <td class="td_center"></td>
+            </tr>
+            <tr>
+                <td class="td_center"></td>
+                <td colspan="2" align="right">
+                    <input type="submit" name="Back" id="Back" value="Back">
+                    <input type="submit" name="Save" id="Save" value="Save">
+                </td>
+            </tr>
+        </table>
+    </div>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+apply plugin: "com.github.node-gradle.node"
+apply plugin: 'base'
+node {
+    version = '16.14.0'
+}
+
+task appNpmBuild(type: NpmTask) {
+    args = ['run', 'build']
+}
+
+task execNpm(type: Exec) {
+    doFirst {
+        workingDir = file("$rootDir/react")
+        commandLine = ['cmd', '/c', "npm run build"]
+    }
+}
+task copyWebApp(type: Copy) {
+    from "$rootDir/react/public"
+    into "$rootDir/controller/build/resources/main/static/."
+}
+
+task buildReactApp(type: NodeTask, dependsOn: ['npmInstall', 'copyWebApp']) {
+    script = project.file("$rootDir/react/node_modules/webpack/bin/webpack.js")
+    args = [
+            '--mode', 'development',
+            '--entry', "$rootDir/react/src/index.js",
+            '-o', "$rootDir/controller/build/resources/main/static/dist"
+    ]
+}

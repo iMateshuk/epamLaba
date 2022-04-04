@@ -1,0 +1,79 @@
+body{
+    margin: 0;
+    padding: 0;
+    background-color: rgba(255, 255, 255, 0.73);
+    font-family: 'Arial', sans-serif;
+}
+nav {
+    color: #ffffff;
+    background-color: #707070;
+    padding: 5px;
+}
+.main{
+    width: 90%;
+    min-width: 800px;
+    margin: 0 auto;
+}
+
+.line{
+    margin: 0 auto;
+    display: flex;
+    flex: 100%;
+}
+
+.headTable{
+    background-color: #707070;
+    color: #000000;
+    width:100%;
+    text-align: center;
+}
+
+.box{
+    width: 50px;
+    height: 50px;
+    background-color: white;
+    margin: 0 auto;
+}
+
+.coupon {
+    width: 80%;
+    max-width: 235px;
+}
+
+
+.container {
+    padding: 2px 16px;
+    background-color: #f1f1f1;
+}
+
+.description{
+    font-size: 11px;
+}
+
+.expire{
+    font-size: 10px;
+    color: #6e6e6e;
+    text-align: right;
+}
+
+.icons{
+    text-align: right;
+}
+
+.bigBox{
+    width: 200px;
+    height: 200px;
+    background-color: #7a7a7a;
+    margin: 0 auto;
+}
+
+a{
+    text-decoration: none;
+}
+
+.search{
+    width: 300px;
+}
+.search, .categories{
+    height: 40px;
+}

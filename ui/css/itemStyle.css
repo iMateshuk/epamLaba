@@ -1,0 +1,54 @@
+body{
+    margin: 0;
+    padding: 0;
+    background-color: rgb(158, 158, 158);
+    font-family: 'Arial', sans-serif;
+}
+
+.flexContainer{
+    width: 80%;
+    height: 300px;
+    display: flex;
+    margin-left: 20px;
+}
+.box{
+    flex: 1;
+    margin-left: 70px;
+    width: 1200px;
+    height: 300px;
+    background-color: gray;
+}
+aside {
+    flex: 2;
+    margin-left: 20px;
+    padding: 1%;
+    background-color: rgb(255, 255, 255);
+    max-width: 20%;
+    border: solid;
+}
+
+.sideBox{
+    width: 15%;
+    min-width: 100px;
+    border: solid;
+}
+
+.Buy{
+    font-size: 11px;
+}
+
+.Time{
+    font-size: 13px;
+}
+
+a {
+    text-decoration: none;
+    color: #00bbff;
+}
+
+.footer {
+    margin-left: 97px;
+    height: 200px;
+    width: 62%;
+    text-align: justify;
+}

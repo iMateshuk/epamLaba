@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <title>User Login</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/headerStyle.css"/>
+    <link rel="stylesheet" type="text/css" href="css/footerStyle.css"/>
+</head>
+
+<body>
+
+<header>
+    <p class="left">
+        <b>Logo</b>
+    </p>
+
+    <p class="center">
+        <input type="search" name="q" placeholder="Search by item name" class="search">
+        <select name="Categories" class="categories">
+            <option value="rigatoni">All Categories</option>
+        </select>
+    </p>
+
+    <p class="right">
+        <table>
+            <tr>
+                <td><i class="material-icons">favorite</i></td>
+                <td><i class="material-icons">shopping_cart</i></td>
+                <td><a href="#">Sign Up</a></td>
+                <td><b>|</b></td>
+                <td><a href="#">Login</a></td>
+            </tr>
+        </table>
+    </p>
+</header>
+
+<main>
+    <div class="logo">
+        <span class="dot"> <h1>Logo</h1></span>
+    </div>
+
+    <div class="login">
+        <form method="post" action="login">
+            <input type="text" name="Login" id="Login" placeholder="Login">
+            <br><br>
+            <input type="Password" name="Pass" id="Pass" placeholder="Password">
+            <br><br>
+            <input type="submit" name="log" id="log" value="Login">
+            <br><br>
+        </form>
+    </div>
+</main>
+
+
+<footer>
+    <p>©Авторские права никому не принадлежат, 2022. Все права защищены.</p>
+</footer>
+
+</body>
+</html>

@@ -44,7 +44,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDAO {
   @Override
   public List<GiftCertificateEntity> findAll(Map<String, String> parameters, int pageNumber, int pageSize) {
     return entityManager.createQuery(queryBuilder.buildQuery(parameters))
-        .setFirstResult(pageNumber * pageSize)
+        .setFirstResult(pageSize * (pageNumber - 1))
         .setMaxResults(pageSize)
         .getResultList();
   }

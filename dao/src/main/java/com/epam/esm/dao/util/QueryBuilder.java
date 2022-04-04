@@ -83,12 +83,19 @@ public class QueryBuilder {
   private List<Predicate> createPredicates(Root<GiftCertificateEntity> root, CriteriaBuilder builder,
                                            Map<String, String> params, AbstractQuery<GiftCertificateEntity> query) {
     List<Predicate> predicates = new ArrayList<>();
+    Predicate predicate;
 
     Arrays.stream(PredicateParameter.values())
         .filter(param -> param.toString().matches(SEARCH_REG_EX) && params.get(param.toString()) != null)
         .forEach(param -> predicates.add(
             builder.like(root.get(param.getSQL()), LIKE + params.get(param.toString()) + LIKE))
         );
+
+    if (!predicates.isEmpty()) {
+      predicate = builder.or(predicates.toArray(new Predicate[0]));
+      predicates.clear();
+      predicates.add(predicate);
+    }
 
     Join<GiftCertificateEntity, TagEntity> join = root.join(TAGS_ATTRIBUTE_NAME, JoinType.LEFT);
     Stream.of(PredicateParameter.values())

@@ -36,6 +36,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       httpSecurity = httpSecurity
           .authorizeRequests()
           .antMatchers("/").permitAll()
+          .antMatchers("/dist/react-app.js").permitAll()
+          .antMatchers("/dist/react-app.js.map").permitAll()
           .antMatchers("/h2-console/**").permitAll()
           .and()
           .headers().frameOptions().disable()
